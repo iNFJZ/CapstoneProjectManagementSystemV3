@@ -1,0 +1,322 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#support {
+    display: flex;
+    height: auto;
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+.main {
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.formSupport {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+
+.titlePage {
+    margin: 16px 20px;
+    color: #1C1F27;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.formSupport {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px;
+    flex-direction: column;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+    height: -webkit-fill-available;
+}
+
+.requestHeader {
+    margin: 0 24px;
+    width: 95%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8vh;
+}
+
+.showRequestbtn {
+    height: fit-content;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    margin-left: 16px;
+    cursor: pointer;
+    color: #7470E9;
+    width: fit-content;
+    padding: 8px;
+    height: fit-content;
+    background-color: rgba(116, 112, 233, 0.2);
+}
+
+.searchRequest {
+    display: flex;
+}
+
+.searchNameRequest {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    height: 40px;
+    width: 360px;
+    margin-right: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.searchNameRequest>i {
+    margin-right: 12px;
+}
+
+#searchNameRequestInput {
+    outline: none;
+    border: none;
+}
+
+.requestMain {
+    margin: 24px;
+    width: 95%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: block;
+    align-items: center;
+    flex-wrap: wrap;
+    height: -webkit-fill-available;
+}
+
+h2 {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    font-size: 20px;
+    margin-bottom: 0px;
+}
+
+.titleRequest {
+    width: 100%;
+    display: grid;
+    /* height: 45px; */
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border-bottom: 1px solid #1c1f27;
+    /* margin: 0px 16px; */
+    padding-right: 20px;
+    padding-bottom: 0px;
+    /* align-items: center; */
+    grid-template-columns: 2fr 2fr 2fr 3fr 1fr;
+    text-align: left;
+}
+
+.informSupportRequest {
+    width: 100%;
+    display: grid;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1F27;
+    padding: 10px;
+    /* margin: 10px 10px 10px 10px; */
+    grid-template-columns: 2fr 2fr 2fr 3fr 1fr;
+    /* padding-right: 20px; */
+    border-bottom: 1px solid #ccc;
+    text-align: left;
+}
+
+.informSupportRequest p {
+    margin-right: 20px;
+}
+
+.changeBtn {
+    width: 10em;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 8px;
+    border: none;
+    background-color: #7470E9;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 600;
+    outline: none;
+}
+
+.processedStatus {
+    width: 10em;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-align: center;
+    border: none;
+    color: #23C16B;
+    background-color: rgba(35, 193, 107, 0.2);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 1440px) {
+    .titlePage {
+        margin: 12px;
+    }
+
+    .requestHeader {
+        margin: 0 12px;
+    }
+
+    .requestMain {
+        margin: 24px;
+    }
+}
+
+.filter {
+    width: 100%;
+    display: flex;
+    margin: 12px 0;
+    height: 40px;
+    justify-content: center;
+}
+
+.filterDropdown {
+    min-width: 160px;
+    position: relative;
+    margin-right: 12px;
+    text-align: center;
+}
+
+.filterDropdown * {
+    box-sizing: border-box;
+    /* width: 32%; */
+    height: fit-content;
+    /* padding: 8px; */
+    /* border-radius: 8px; */
+}
+
+.filter select {
+    height: 40px;
+    width: fit-content;
+    /* background: rgba(116, 112, 233, 0.05); */
+    border: 2px solid #2a2f3b;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #1c1f27;
+    transition: 0.3s;
+    margin-right: 12px;
+    /* text-align: center; */
+}
+
+.studentid,
+.supportid,
+.title {
+    display: flex
+}
+
+.popupshow {
+    margin-left: 10px
+}
+
+.popup-content p {
+    font-weight: 400;
+}
+
+.limitCharacter {
+    text-overflow: ellipsis;
+    width: -webkit-fill-available;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+
+.titleRequest p {
+    font-size: 16px;
+    margin-right: 20px;
+}
+
+.filterButton {
+    height: 40px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    /* margin-left: 16px; */
+    cursor: pointer;
+    color: #7470E9;
+    background-color: rgba(116, 112, 233, 0.2);
+    width: 100px;
+    /* text-align: center; */
+    width: fit-content;
+}
+
+.informSupportRequest p {
+    margin-bottom: 0px;
+}
+
+div#file-wrapper {
+    height: fit-content;
+}
+
+input#query {
+    height: fit-content;
+    padding: 7px;
+    width: 400px;
+    border-radius: 8px;
+    border: 1px solid black;
+    /* opacity: 0.5; */
+    /* color: black; */
+}
+
+div#pagination {
+    margin-top: 3%;
+}

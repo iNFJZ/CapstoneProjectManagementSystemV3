@@ -1,0 +1,329 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    height: 64px;
+    border-bottom: 1px solid rgba(28, 31, 39, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.header__left {
+    margin-left: 16px;
+    cursor: pointer;
+}
+
+    .header__left > a {
+        color: #F27227;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 21px;
+        text-decoration: none;
+        display: flex;
+    }
+
+    .header__left a img {
+        height: 24px;
+        width: 100px;
+        padding-right: 8px;
+    }
+
+.header__right {
+    position: relative;
+    margin-left: auto;
+    display: flex;
+    flex-wrap: nowrap;
+    padding-right: 24px;
+    align-items: center;
+}
+
+    .header__right > p:first-child {
+        margin-right: 24px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1C1F27;
+    }
+
+.showNoti {
+    position: relative;
+}
+
+.btnNoti {
+    border: 0;
+    background-color: white;
+    cursor: pointer;
+    padding-right: 36px;
+    font-size: 20px;
+}
+
+.numberNotifi {
+    font-weight: 600;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: -40%;
+    background-color: rgb(221, 12, 12);
+    right: 50%;
+    color: #FFFFFF;
+    border-radius: 50%;
+    text-align: center;
+}
+
+.displayNoti {
+    position: absolute;
+    top: calc(100% + 20px);
+    right: 40px;
+    width: calc(100vw - 40px);
+    max-width: 500px;
+    height: 600px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 20%);
+    border-radius: 4px;
+    padding: 20px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .5s ease-out;
+    z-index: 1;
+}
+
+.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.displayNotiHeader {
+    display: flex;
+    margin-top: 20px;
+}
+
+    .displayNotiHeader a {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1C1F27;
+        margin-right: 20px;
+        border: none;
+        background-color: #FFFFFF;
+        cursor: pointer;
+    }
+
+        .displayNotiHeader a.active {
+            color: #7470E9;
+        }
+
+.listNoti {
+    height: 420px;
+    margin-top: 20px;
+    list-style: none;
+    overflow: hidden;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+    .listNoti li {
+        width: 98%;
+        padding: 10px 0;
+        /* margin-bottom: 8px; */
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+        .listNoti li b {
+            font-size: 18px;
+        }
+
+        .listNoti li:hover {
+            background-color: #ccc;
+        }
+
+.showTime {
+    color: #35b2ec;
+    margin-top: 4px;
+}
+
+.notify-content {
+    display: flex;
+    width: 95%;
+    flex-direction: column;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #ccc;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #777;
+    border-radius: 5px;
+}
+
+.unReadMark::before {
+    display: block;
+    content: "";
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: #3b35ec;
+    margin: 8px 0 0 20px;
+}
+
+#loadMore {
+    width: 200px;
+    color: #3b35ec;
+    display: block;
+    text-align: center;
+    margin: 20px auto;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: .3s;
+    text-decoration: none;
+}
+
+
+.basicInformation {
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+}
+
+.basicInformation--username {
+    font-weight: 600;
+    font-size: 16px;
+    color: #1C1F27;
+    margin-right: 12px;
+}
+
+.basicInformation > img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.dropdownProfile {
+    float: right;
+    margin: 10px 12px 0 0;
+    width: fit-content;
+    height: fit-content;
+    background-color: #FFFFFF;
+    color: black;
+    border-radius: 8px;
+    position: absolute;
+    right: 12px;
+    box-shadow: 0px 4px 20px rgb(0 0 0 / 20%);
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in 100ms;
+    z-index: 1;
+    padding: 20px;
+}
+
+.btnProfile:hover .dropdownProfile {
+    visibility: visible;
+    opacity: 1;
+}
+
+.showProfile {
+    display: flex;
+    /* padding: 12px 0 0 24px; */
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+    .showProfile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        margin-top: 12px;
+    }
+
+.showProfile__info {
+    width: 80%;
+    padding: 12px;
+    margin-left: 12px;
+    text-decoration: none;
+    color: #1C1F27;
+}
+
+    .showProfile__info:hover {
+        color: #FFFFFF;
+        background-color: rgba(116, 112, 233, 0.8);
+        border-radius: 8px;
+    }
+
+    .showProfile__info:active {
+        color: #1C1F27;
+    }
+
+.showProfile__info--username {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.showProfile__info--email {
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.listDropdown {
+    margin: 16px 24px 32px 0;
+    width: 100%;
+}
+
+
+#logOut {
+    margin: 0 auto;
+    width: 320px;
+    height: 48px;
+    padding: 0 24px;
+    color: #FFFFFF;
+    background-color: #7470E9;
+    font-size: 16px;
+    font-weight: 600;
+    border: 0px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popupTitle {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.userGuide {
+    text-decoration: none;
+    margin-right: 24px;
+    font-weight: 600;
+    color: black;
+}
+
+    .userGuide:active {
+        color: black;
+    }
+
+    .userGuide:hover {
+        color: #F27227;
+    }
+
+.notify-content p {
+    margin-bottom: 0px
+}
+
+.tox-notifications-container {
+    display: none !important;
+}

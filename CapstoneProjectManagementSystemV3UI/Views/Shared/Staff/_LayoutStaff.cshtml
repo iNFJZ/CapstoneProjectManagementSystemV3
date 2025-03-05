@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="referrer" content="no-referrer" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="/css/common/header.css">
+    <link rel="stylesheet" href="/css/common/footer.css">
+    <link rel="icon" type="image/x-icon" href="/img/FPT_logo_2010.svg.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+</head>
+<body id="registrationForm">
+    <div class="header">
+        <div class="header__left">
+            <a href="/SemesterManage/Index">
+                <img src="~/img/logofpt.png" />
+                <p>Call4Project</p>
+            </a>
+        </div>
+        <div class="header__right">
+            <a href="/StaffUserGuide/Index" class="userGuide" target="_blank">User Guide</a>
+            <div class="showNoti">
+                <button class="btnNoti"><i class="fa-solid fa-bell"></i></button>
+                <p class="numberNotifi"></p>
+                <div class="displayNoti">
+                    <h1>Notification</h1>
+                    <div class="displayNotiHeader">
+                        <a href="#" class="unRead active">Unread</a>
+                        <a href="#" class="all">All</a>
+                    </div>
+                    <ul class="listNoti">
+                    </ul>
+                    <a href="#" id="loadMore">Load More</a>
+                </div>
+            </div>
+            <div class="btnProfile" id="btnProfile">
+                <div class="basicInformation">
+                    @* <p class="basicInformation--username">@(_sessionExtensionService.GetObjectFromJson<User>(Context.Session, "sessionAccount")?.UserName)</p> *@
+                    @* <img src="@Url.Content(_sessionExtensionService.GetObjectFromJson<User>(Context.Session,"sessionAccount")?.Avatar)" alt=""> *@
+                </div>
+                <div class="dropdownProfile" style="width: fit-content; height: fit-content" id="dropdownProfile">
+                    <a href="/User/SignOut" id="logOut">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+    <div class="footer">
+        <div class="footerContent">
+            <div class="introPlatform">
+                <div class="webName">
+                    <img src="~/img/logoFPT.png" />
+                    <p>Capstone Project Registration System</p>
+                </div>
+                <div class="introPlatformDes">
+                    <p>
+                        This is a platform that allows students to quickly register for a project group and receive assistance.
+                    </p>
+                </div>
+            </div>
+            <div class="information">
+                <p class="footerTitle">Information</p>
+                <div class="inforDesFooter">
+                    <a href="/SemesterManage/Index">Home</a>
+                    <a href="/AboutUs/Index">About</a>
+                </div>
+            </div>
+            <div class="address">
+                <p class="footerTitle">Address</p>
+                <div class="addressDesFooter">
+                    <div class="locationFooter">
+                        <i class="uil uil-location-point"></i>
+                        <a href="https://uni.fpt.edu.vn">https://uni.fpt.edu.vn</a>
+                        @*<p>Đất Thổ Cư Hòa Lạc, Km29 Đường Cao Tốc 08, Thạch Hoà, Thạch Thất, Hà Nội 10000</p>*@
+                    </div>
+                    @*<div class="mailFooter">
+                    <i class="uil uil-envelope"></i>
+                    <p>daihocfpt@fpt.edu.vn</p>
+                    </div>
+                    <div class="phoneNumFooter">
+                    <i class="uil uil-phone"></i>
+                    <p>024 7300 1866</p>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    @{
+        // Read session data
+            // var user = _sessionExtensionService.GetObjectFromJson<User>(Context.Session, "sessionAccount");
+            // string userId = user != null ? user.UserID : "";
+        }
+    </script>
+    <script src="/js/student/student_sidebarleft.js"></script>
+    <script src="/js/signalr/dist/browser/signalr.js"></script>
+    <script src="/js/common/header.js"></script>
+</body>
+</html>

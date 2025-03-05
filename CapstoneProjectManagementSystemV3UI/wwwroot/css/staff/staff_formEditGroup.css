@@ -1,0 +1,984 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.editSpe {
+    display: flex;
+    height: auto;
+}
+
+.formSupport {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    /* margin: 20px; */
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+.main {
+    FONT-WEIGHT: 200;
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.titlePage {
+    margin: 1em;
+    color: #1C1F27;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.addPro {
+    display: flex;
+    flex-direction: column;
+    margin: 24px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+}
+
+.createPro {
+    display: flex;
+}
+
+.create button {
+    margin-top: auto;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.editPro,
+.savePro,
+.deletePro {
+    width: 100px;
+    height: 40px;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+    .editPro > i,
+    .savePro > i,
+    .deletePro > i {
+        margin-right: 8px;
+    }
+
+.saveAll {
+    width: 150px;
+    height: 50px;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    background-color: #7470E9;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    cursor: pointer;
+}
+
+    .saveAll > i {
+        margin-right: 8px;
+    }
+
+.pro {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 18px;
+}
+
+.pro__left {
+    flex-basis: 30%;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.smallTitle {
+    font-size: 16px;
+    font-weight: 400;
+    /* margin-bottom: 8px; */
+    color: #808080;
+}
+
+input {
+    outline: none;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+    input:focus {
+        border: 1px solid #327dec;
+    }
+
+    input:disabled {
+        border: none;
+        background-color: #FFFFFF;
+        padding: 0;
+    }
+
+.info--left > input {
+    width: 6em;
+}
+
+.info--right > input {
+    width: 18em;
+}
+
+.pro__left--info {
+    /* display: flex; */
+}
+
+.info--left {
+    margin-right: 20px;
+}
+
+.pro__right {
+    flex-basis: 70%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.pro__right--info {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.infoInput {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 8px;
+    width: 100%;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.info--abbrev, .info--maxMember, .info--fullname {
+    margin-right: 1em;
+}
+
+    .info--fullname > input {
+        width: 18em;
+    }
+
+    .info--abbrev > input, .info--maxMember > input {
+        width: 8em;
+    }
+
+.deleteSpe {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    color: #7470E9;
+    background-color: #FFFFFF;
+    margin-top: 2%;
+}
+
+.addSpe {
+    width: 400px;
+    height: 48px;
+    border: 1px solid #7470E9;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 auto;
+}
+
+    .addSpe > i {
+        margin-right: 12px;
+    }
+
+#addPro {
+    width: 70%;
+    height: 100px;
+    border: 1px solid #7470E9;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 auto;
+    border-radius: 16px;
+}
+
+    #addPro > i {
+        margin-right: 12px;
+    }
+
+.hide-btn {
+    display: none;
+}
+
+@media screen and (max-width: 1440px) {
+    .titlePage {
+        margin: 16px;
+    }
+
+    .addPro {
+        margin: 16px;
+    }
+
+    .pro__left {
+        flex-basis: 10%;
+    }
+
+    .pro__right {
+        flex-basis: 90%;
+    }
+
+    .infoInput {
+        width: 100%;
+    }
+
+    input {
+        width: 180px;
+    }
+
+    .info--right > input {
+        width: 14em;
+    }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+.showForm {
+    width: 100%;
+    height: 175vh;
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hide-form {
+    display: none;
+}
+
+.formCreateNew {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    background-color: #FFFFFF;
+    position: relative;
+    left: 20%;
+    top: 6%;
+}
+
+    .formCreateNew > p:first-child {
+        margin-bottom: 40px;
+    }
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.formName {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 25px;
+}
+
+.categorize {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+    .categorize > p:first-child {
+        font-weight: 700;
+        font-size: 14px;
+        color: #7470E9;
+    }
+
+.selectedSpe {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* margin-top: 20px; */
+    flex-wrap: wrap;
+}
+
+.selectedSpe--left,
+.selectedSpe--right {
+    width: 50%;
+}
+
+    .selectedSpe--left p:first-child,
+    .selectedSpe--right p:first-child {
+        margin-bottom: 20px;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+    .selectedSpe--left p:nth-child(2),
+    .selectedSpe--right p:nth-child(2) {
+        margin-bottom: 20px;
+        margin-left: 20px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .selectedSpe--left span,
+    .selectedSpe--right span {
+        color: #F74055;
+    }
+
+
+.dropdownSpe {
+    max-width: 60%;
+    position: relative;
+    margin-right: 12px;
+}
+
+    .dropdownSpe * {
+        box-sizing: border-box;
+    }
+
+    .dropdownSpe select {
+        height: 40px;
+        width: 100%;
+        background: rgba(116, 112, 233, 0.05);
+        border: 2px #1C1F27 solid;
+        color: #1C1F27;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        border: 1px solid #ccc;
+        transition: 0.3s;
+        margin-right: 12px;
+        padding-left: 20px;
+        outline: none;
+    }
+
+.englishTitle {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.titleForm {
+    margin-bottom: 20px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+    .titleForm span {
+        color: #F74055;
+    }
+
+.TM {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.TM--left {
+    width: 47%;
+}
+
+.TM--right {
+    width: 52%;
+}
+
+.text {
+    margin-bottom: 20px;
+    font-weight: 400;
+    font-size: 14px;
+    margin-left: 20px;
+}
+
+.inputContent {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px 16px 20px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1C1F27;
+    border: 1px solid rgba(28, 31, 39, 0.3);
+    margin-bottom: 20px;
+}
+
+    .inputContent:focus {
+        outline: none;
+        border: 1px solid #7470E9;
+    }
+
+input {
+}
+
+    input:focus {
+    }
+
+    input:disabled {
+        border: none;
+        background-color: #FFFFFF;
+        padding: 0;
+    }
+
+.shortTitle {
+    width: 100%;
+    /* margin-bottom: 20px; */
+}
+
+    .shortTitle > p:first-child {
+        font-size: 14px;
+        font-weight: 600;
+        /* color: #7470E9; */
+        margin-bottom: 20px;
+    }
+
+#desDetail {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 20px 16px 20px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1C1F27;
+    border: 1px solid rgba(28, 31, 39, 0.3);
+    margin-bottom: 20px;
+}
+
+    #desDetail:focus {
+        outline: none;
+        border: 1px solid #7470E9;
+    }
+
+.shortTitle--ele :where(li, li i) {
+    display: flex;
+    align-items: center;
+}
+
+.shortTitle--ele ul {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 7px;
+    margin: 12px 0;
+    border-radius: 5px;
+    border: 1px solid #a6a6a6;
+}
+
+    .shortTitle--ele ul li {
+        color: #333;
+        margin: 4px 3px;
+        list-style: none;
+        border-radius: 5px;
+        background: #F2F2F2;
+        padding: 5px 8px 5px 10px;
+        border: 1px solid #e3e1e1;
+    }
+
+        .shortTitle--ele ul li i {
+            height: 20px;
+            width: 20px;
+            color: #808080;
+            margin-left: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 50%;
+            background: #dfdfdf;
+            justify-content: center;
+        }
+
+    .shortTitle--ele ul input {
+        flex: 1;
+        padding: 5px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+
+.member {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+    .member > p:nth-child(2) {
+        color: #1C1F27;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+.existMem {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* margin-top: 20px; */
+    align-items: center;
+}
+
+.nameMem {
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
+    width: 440px;
+    margin-bottom: 10px;
+}
+
+    .nameMem img {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        margin-right: 20px;
+    }
+
+    .nameMem p {
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+.existMem > p:last-child {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.addMem {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.addnewMem {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+    .addnewMem input {
+        width: 90%;
+        display: flex;
+        align-items: center;
+        padding: 20px 16px 20px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #1C1F27;
+        border: 1px solid rgba(28, 31, 39, 0.3);
+        margin-bottom: 20px;
+    }
+
+        .addnewMem input:focus {
+            outline: none;
+            border: 1px solid #7470E9;
+        }
+
+#btnAdd,
+#btnSave {
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+    border: 1px solid #7470E9;
+    color: #7470E9;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px;
+}
+
+    #btnAdd:hover,
+    #btnSave:hover {
+        border: none;
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.buttonCreate {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.btnDiscard,
+.btnDelete {
+    cursor: pointer;
+    /* width: 100px; */
+    /* height: 48px; */
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.btnChangeGNforStu,
+.btnSaveGNforStu {
+    cursor: pointer;
+    width: 70px;
+    height: 35px;
+    padding: 0 8px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.btnDiscard,
+.btnDelete {
+    margin-right: 12px;
+    background: rgba(28, 31, 39, 0.05);
+    color: #1C1F27;
+}
+
+.btnChangeGNforStu,
+.btnSaveGNforStu {
+    margin-right: 100px;
+    margin-left: 12px;
+    background: #FFFFFF;
+    color: #1C1F27;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.groupNameOfStudent {
+    font-weight: 600;
+    font-size: 14px;
+    padding: 8px;
+    width: 100px;
+    height: 30px;
+    margin-left: 24px;
+}
+
+.btnCre {
+    cursor: pointer;
+    /* width: 100px; */
+    height: 55px;
+    padding: 0 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.btnDelGroup {
+    cursor: pointer;
+    width: 150px;
+    height: 55px;
+    padding: 0 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+
+.btnCre {
+    background: #7470E9;
+    color: #FFFFFF;
+}
+
+.btnDelGroup {
+    margin-right: 50px;
+    background: #c13a3a;
+    color: #FFFFFF;
+}
+
+.btnCre:disabled {
+    opacity: 0.6;
+    cursor-pointer: not-allowed;
+}
+
+/*cmt*/
+
+.formSubmitRegistration {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    background-color: #FFFFFF;
+    position: relative;
+    left: 20%;
+    top: 6%;
+    overflow-y: scroll;
+    height: 600px;
+}
+
+.member {
+    display: flex;
+    flex-direction: column;
+}
+
+.memInGroup {
+    display: flex;
+}
+
+.imageMem {
+    display: flex;
+    margin-left: 20px;
+}
+
+    .imageMem img {
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        margin-right: 8px;
+    }
+
+.supervisor {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+.arr {
+    height: 10px;
+    width: 10px;
+    border-right: 2px solid #202020;
+    border-bottom: 2px solid #202020;
+    transform: rotate(45deg);
+    margin: 4px 0 0 12px;
+    cursor: pointer;
+}
+
+.inputSupervisorInform {
+    width: 100%;
+    margin-top: 20px;
+    display: none;
+}
+
+.show--inputSupervisorInform {
+    display: block;
+}
+
+.supervisorInform {
+    width: 100%;
+}
+
+.titleSupervisor {
+    color: #7470E9;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.basicInformSupervisor {
+    display: flex;
+    margin: 12px 0;
+}
+
+.submitForm {
+    width: 100%;
+}
+
+.inputInformSupervisor {
+    margin-right: 20px;
+}
+
+    .inputInformSupervisor p {
+        margin-bottom: 12px;
+        font-size: 12px;
+        font-weight: 600;
+        color: rgba(28, 31, 39, 0.5);
+    }
+
+    .inputInformSupervisor input {
+        padding: 20px 16px 20px 24px;
+        height: 40px;
+        width: 200px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+        .inputInformSupervisor input:focus {
+            outline: none;
+            border: 1px solid #7470E9;
+        }
+
+    .inputInformSupervisor textarea {
+        padding: 20px 16px 20px 24px;
+        height: 120px;
+        width: 640px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+    }
+
+        .inputInformSupervisor textarea:focus {
+            outline: none;
+            border: 1px solid #7470E9;
+        }
+
+#checked {
+    margin-right: 8px;
+}
+
+
+/*    Yes/No form confirm*/
+
+.showJoinForm,
+.showCancelForm,
+.showDeleteForm,
+.showNotifyForm,
+.showDeleteGroupForm,
+.showGroupingForm,
+.showFinishGroupingForm,
+.showExportForm,
+.showImportForm {
+    width: 100%;
+    height: 175vh;
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hide-form {
+    display: none;
+    z-index: 1000;
+}
+
+.YNpopup {
+    width: 30vw;
+    height: 20vh;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 35%;
+    left: 35%;
+}
+
+.YNpopup_Export {
+    padding-top: 24px;
+    width: 30vw;
+    height: fit-content;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 35%;
+    left: 35%;
+}
+
+.YNpopup_Import {
+    padding-top: 24px;
+    width: fit-content;
+    height: fit-content;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 35%;
+    left: 35%;
+    padding: 20px;
+}
+
+.YNpopup > p:first-child,
+.YNpopup_Export > p:first-child {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 35px;
+    text-align: center;
+}
+
+.YNbutton {
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+}
+
+    .YNbutton button,
+    .YNbutton_2 button,
+    .okButton button {
+        cursor: pointer;
+        width: 100px;
+        height: 40px;
+        border: none;
+        margin-top: 1vh;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+
+.YNbutton_2,
+.okButton {
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+
+.yesBtnJoin,
+.yesBtnCancel,
+.yesBtnDelete,
+.yesBtnDeleteGroup,
+.yesBtnGrouping,
+.yesBtnFinishGrouping,
+.okBtn {
+    background-color: #7470E9;
+    color: #FFFFFF;
+}
+
+.hide-btn {
+    display: none;
+}

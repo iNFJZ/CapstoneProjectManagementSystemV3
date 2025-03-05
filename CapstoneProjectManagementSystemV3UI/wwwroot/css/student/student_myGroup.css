@@ -1,0 +1,666 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#myGroup {
+    display: flex;
+    height: auto;
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+
+.main {
+    height: auto;
+    flex-basis: 90%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.sidebar--right {
+    flex-basis: 30%;
+    height: auto;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    top: 0;
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset;
+    background-color: rgba(116, 112, 233, 0.05);
+}
+
+.bigTitle {
+    font-weight: 600;
+    font-size: 24px;
+    margin: 24px;
+    color: #7470E9;
+}
+
+.informGroup {
+    background: #FFFFFF;
+    margin: 24px;
+    width: 94%;
+    padding: 24px;
+    height: -webkit-fill-available;
+}
+
+.introGroup {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.nameProject {
+    display: flex;
+    align-items: center;
+}
+
+    .nameProject img {
+        width: 58px;
+        height: 58px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+.inforGro {
+    display: flex;
+    flex-direction: column;
+}
+
+    .inforGro > p:first-child {
+        font-weight: 600;
+        font-size: 20px;
+    }
+
+    .inforGro > p:last-child {
+        font-size: 16px;
+        font-weight: 500;
+        color: rgba(28, 31, 39, 0.5);
+        margin-top: 6px;
+        font-style: italic;
+    }
+
+.btnAddMem {
+    display: flex;
+    margin-right: 24px;
+    align-items: center;
+}
+
+    .btnAddMem button {
+        margin-right: 12px;
+        height: 40px;
+        border-radius: 8px;
+        outline: none;
+        padding: 0 12px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.5s;
+    }
+
+    .btnAddMem > button:first-child {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 160px;
+        background-color: #FFFFFF;
+        border: 1px solid #7470E9;
+        color: #7470E9;
+    }
+
+    .btnAddMem button:first-child i {
+        margin-right: 10px;
+    }
+
+.deleteGroup {
+    width: 120px;
+    background-color: #FFFFFF;
+    border: 1px solid #7470E9;
+    color: #7470E9;
+}
+
+.btnAddMem button:hover {
+    background-color: #7470E9;
+    border: none;
+    color: #FFFFFF;
+}
+
+/*.createDate {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(28, 31, 39, 0.5);
+}*/
+
+.title {
+    font-size: 16px;
+    font-weight: 400;
+    color: rgba(100, 100, 111, 0.8)
+}
+
+.content {
+    font-size: 16px;
+    font-weight: 600;
+    font-style: italic;
+    margin: 12px 0 12px 20px;
+    word-break: break-word;
+    display: flex;
+}
+
+.keywordText {
+    display: flex;
+    margin-top: 12px;
+}
+
+    .keywordText p {
+        padding: 4px 8px;
+        background-color: rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-right: 8px;
+    }
+
+.someInforms {
+    display: flex;
+    width: 80%;
+    margin-top: 24px;
+    flex-direction: column;
+}
+
+.someInforms--top, .someInforms--bottom {
+    display: flex;
+    width: 100%;
+}
+
+.abbreviations, .vietnamTitle, .professional, .specialty {
+    flex-basis: 50%;
+    line-height: 24px;
+}
+
+
+.numMember {
+    width: 50%;
+    display: flex;
+    margin-right: 60px;
+    justify-content: space-between;
+}
+
+.members {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.informMember {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: baseline;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    width: 60%;
+}
+
+    .info img {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+.memInfo a {
+    text-decoration: none;
+    color: #1C1F27;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+    .memInfo a:hover {
+        text-decoration: underline;
+    }
+
+.memInfo p {
+    color: rgba(28, 31, 39, 0.5);
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.role {
+    font-weight: 600;
+    font-size: 14px;
+    color: rgba(28, 31, 39, 0.5);
+}
+
+.menuMember button {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    padding: 0 8px;
+    border-radius: 8px;
+    border: none;
+    background-color: rgba(28, 31, 39, 0.1);
+    transition: all 1s;
+}
+
+.menuMember__dropdown {
+    width: 200px;
+    position: absolute;
+    right: 22%;
+    background-color: #FFFFFF;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+}
+
+.show--menuMember__dropdown {
+    visibility: visible;
+    opacity: 1;
+}
+
+.menuMember__dropdown a {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    color: #1C1F27;
+    padding: 12px;
+    width: 100px;
+    width: 100%;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+    .menuMember__dropdown a:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+
+.menuMember button:hover {
+    background-color: rgba(28, 31, 39, 0.3);
+}
+
+.submitRegistration {
+    height: 200px;
+    width: 90%;
+    display: flex;
+    background-color: #FFFFFF;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 6%;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+    .submitRegistration > p:first-child {
+        font-weight: 700;
+        font-size: 20px;
+        color: #7470E9;
+        margin-bottom: 12px;
+    }
+
+    .submitRegistration > p:nth-child(2) {
+        font-weight: 600;
+        font-size: 14px;
+        color: #202020;
+        margin-bottom: 12px;
+        text-align: center;
+    }
+
+    .submitRegistration > p:nth-child(3) {
+        font-weight: 400;
+        font-size: 12px;
+        color: #202020;
+        margin-bottom: 12px;
+    }
+
+.submitFormRegis,
+.changeTopic,
+.reSubmit,
+.leaveFinalGroup,
+.cancelRegistration {
+    height: 50px;
+    width: 120px;
+    padding: 0 16px;
+    background-color: #7470E9;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+    .submitFormRegis:disabled {
+        opacity: 0.6;
+        cursor-pointer: not-allowed;
+    }
+
+.requestMember {
+    height: 500px;
+    width: 90%;
+    display: flex;
+    background-color: #FFFFFF;
+    flex-direction: column;
+    margin: 6%;
+    padding: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.intromemRequest {
+    display: flex;
+    justify-content: space-between;
+}
+
+.informmemRequest {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-basis: 70%;
+    padding: 4px;
+    flex-wrap: wrap;
+    border-radius: 8px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+}
+
+    .informmemRequest:hover {
+        cursor: pointer;
+    }
+
+    .informmemRequest > img {
+        width: 56px;
+        height: 56px;
+        border-radius: 8px;
+        margin-right: 12px;
+    }
+
+.basicInformMemRequest {
+    line-height: 20px;
+}
+
+.namememRequest {
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #1C1F27;
+}
+
+    .namememRequest:hover {
+        text-decoration: underline;
+    }
+
+.specialimemRequest {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(28, 31, 39, 0.5);
+}
+
+.timememRequest {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(28, 31, 39, 0.3);
+}
+
+.desAboutYourSelf {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in;
+}
+
+
+    .desAboutYourSelf textarea {
+        width: 100%;
+        border-radius: 8px;
+        margin-top: 12px;
+        padding: 4px;
+        resize: none;
+    }
+
+.informmemRequest:hover .desAboutYourSelf {
+    visibility: visible;
+    opacity: 1;
+    display: block;
+}
+
+.buttonAccept {
+    flex-basis: 30%;
+    display: flex;
+    margin-top: 8px;
+    padding-left: 4px;
+    margin-bottom: 10%;
+    flex-direction: column;
+}
+
+    .buttonAccept button {
+        width: 60px;
+        height: 40px;
+        cursor: pointer;
+        border-radius: 8px;
+        padding: 0 8px;
+        transition: all 0.3s ease-in;
+    }
+
+        .buttonAccept button:hover {
+            background-color: #7470E9;
+            color: #FFFFFF;
+        }
+
+.acceptButton {
+    margin-right: 8px;
+    color: #FFFFFF;
+    background-color: #7470E9;
+    border: none;
+}
+
+.rejectButton {
+    color: #7470E9;
+    background-color: #FFFFFF;
+    border: 1px solid #7470E9;
+}
+
+
+/*    Yes/No form confirm*/
+
+.showAcceptForm,
+.showRejectForm,
+.showChangeLeadForm,
+.showRemoveMemForm,
+.showDeleteGroupForm,
+.showLeaveGroupForm,
+.showWarningForm,
+.showCancelRegisForm {
+    width: 100%;
+    height: 140vh;
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hide-Acceptform,
+.hide-Rejectform,
+.hide-ChangeLeadform,
+.hide-RemoveMemform,
+.hide-DeleteGroupform,
+.hide-LeaveGroupform,
+.hide-Warningform,
+.hide-CancelRegisform {
+    display: none;
+    z-index: 1000;
+}
+
+.hide-DeleteGroupform, .hide-Warningform {
+    z-index: 1000
+}
+
+.YNpopup {
+    width: 32vw;
+    height: fit-content;
+    padding-bottom: 20px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 35%;
+    left: 35%;
+}
+
+    .YNpopup > p:first-child {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 40px;
+        text-align: center;
+    }
+
+.YNbutton {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+
+    .YNbutton button {
+        cursor: pointer;
+        width: 100px;
+        height: 40px;
+        border: none;
+        /*margin-top: 1vh;*/
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+.yesBtnAccept,
+.yesBtnReject,
+.yesBtnChangeLead,
+.yesBtnRemoveMem,
+.yesBtnDeleteGroup,
+.yesBtnLeaveGroup,
+.yesBtnWarning,
+.yesBtnCancelRegis {
+    background-color: #7470E9;
+    color: #FFFFFF;
+}
+
+.changeBtn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+    .changeBtn button {
+        width: 160px;
+        height: 48px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #7470E9;
+        background-color: #FFFFFF;
+        border: 1px solid #7470E9;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-right: 20px;
+    }
+
+.btnChangeFinalGroup {
+    width: 180px;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #7470E9;
+    background-color: #FFFFFF;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    .changeBtn button:hover, .btnChangeFinalGroup:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.btnChangeMember {
+    margin-left: 12px;
+}
+
+.showMember {
+    margin-top: 18px;
+}
+
+@media only screen and (max-width: 1440px) {
+    .YNpopup {
+        width: 50vw;
+        height: 24vh;
+        left: 25%;
+    }
+
+    .informmemRequest > img {
+        width: 20px;
+        height: 24px;
+        border-radius: 0;
+    }
+
+    .namememRequest {
+        font-size: 12px;
+    }
+
+    .buttonAccept button {
+        width: 45px;
+        padding: 0;
+    }
+}
+
+.formRequest {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+}
+
+.content > p:last-child {
+    color: red;
+    margin-left: 10px;
+    font-weight: 600;
+    font-style: normal;
+}
+
+.role p {
+    font-size: 16px
+}

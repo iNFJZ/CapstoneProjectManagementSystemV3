@@ -1,0 +1,813 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#manageChangeTopic {
+    display: flex;
+    height: auto;
+}
+
+#manageRegisteredGroup {
+    display: flex;
+    height: auto;
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    position: sticky;
+    top: 0;
+}
+
+
+.main {
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+}
+
+    .main > p:first-child {
+        font-weight: 600;
+        font-size: 24px;
+        margin: 24px;
+    }
+
+.registHeader1 {
+    margin: 24px;
+    width: 95%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    align-items: center;
+}
+
+.requestHeader {
+    margin: 24px;
+    width: 95%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8vh;
+    margin-top: 0px;
+}
+
+.chooseTypeRequest {
+    display: flex;
+}
+
+    .chooseTypeRequest button {
+        height: 40px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        margin-left: 16px;
+        cursor: pointer;
+        color: rgba(28, 31, 39, 0.5);
+        background-color: rgba(28, 31, 39, 0.05);
+    }
+
+    .chooseTypeRequest .active {
+        color: #7470E9;
+        background-color: rgba(116, 112, 233, 0.2);
+    }
+
+.searchRequest {
+    display: flex;
+}
+
+.searchNameRequest {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#searchNameRequestInput {
+    padding: 12px;
+    height: 40px;
+    width: 360px;
+    margin-right: 16px;
+    border-radius: 8px;
+}
+
+.searchNameRequest > i {
+    margin-right: 12px;
+    position: absolute;
+    left: 20px;
+}
+
+#searchNameRequestInput {
+    border: 1px solid #ccc;
+    width: 320px;
+    padding-left: 40px;
+    outline: none;
+}
+
+    #searchNameRequestInput:focus {
+        border: 1px solid #4472f1;
+    }
+
+.requestMain, .acceptedMain, .rejectedMain {
+    margin: 24px;
+    width: 97%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+h2 {
+    width: 100%;
+    text-align: center;
+    padding: 40px;
+}
+
+.showRequestTopic, .showRequestRejected, .showRequestAccepted {
+    margin: 24px;
+    width: 97%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.formSupport {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+.titleAccepted, .informRejectedRequest {
+    width: 100%;
+    display: grid;
+    /* height: 45px; */
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border-bottom: 1px solid #ccc;
+    /* margin: 0 16px; */
+    grid-template-columns: 0fr 2fr 2fr 2fr 2fr 1fr 1fr;
+}
+
+.titleRejected {
+    width: 100%;
+    display: grid;
+    /* height: 45px; */
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border-bottom: 1px solid #1c1f27;
+    /* margin: 0 16px; */
+    grid-template-columns: 0fr 2fr 2fr 2fr 2fr 1fr 1fr;
+}
+
+.title{
+    width: 100%;
+    display: grid;
+    /* height: 45px; */
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border-bottom: 1px solid #1c1f27;
+    /* margin: 0 16px; */
+    grid-template-columns: 4fr 0fr;
+}
+.informRequestAccepted {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1C1F27;
+    padding: 16px;
+    margin: 0 16px 10px 16px;
+    border-bottom: 1px solid #ccc;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.informRequest {
+    width: 100%;
+    display: grid;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1C1F27;
+    padding: 16px;
+    /* margin: 0 16px 10px 16px; */
+    border-bottom: 1px solid #ccc;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    grid-template-columns: 4fr 0fr;
+}
+
+.showTitleRequest {
+    flex-basis: 85%;
+    display: grid;
+    grid-template-columns: 0fr 2fr 2fr 1fr 2fr;
+}
+
+.showInformRequest {
+    flex-basis: 85%;
+    display: grid;
+    grid-template-columns: 0fr 2fr 2fr 1fr 2fr;
+}
+
+
+.showInformRequest {
+    cursor: pointer;
+    transition: all 0.5s;
+    padding: 20px 0;
+    align-items: center;
+}
+
+.informRequestAccepted, .informRejectedRequest {
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+    .showInformRequest:hover, .informRequestAccepted:hover, .informRejectedRequest:hover {
+        background-color: #ccc;
+        border-radius: 8px;
+    }
+
+.showTitleRequest > p:first-child,
+.showInformRequest > p:first-child {
+    flex-basis: 5%;
+    padding-right: 20px;
+    width: 50px;
+}
+
+.showTitleRequest > p:nth-child(2),
+.showInformRequest > p:nth-child(2) {
+    flex-basis: 15%;
+    padding-right: 20px;
+}
+
+.showTitleRequest > p:nth-child(3),
+.showInformRequest > p:nth-child(3) {
+    flex-basis: 20%;
+    padding-right: 20px;
+}
+
+.showTitleRequest > p:nth-child(4),
+.showInformRequest > p:nth-child(4) {
+    flex-basis: 20%;
+    padding-right: 20px;
+}
+
+.showTitleRequest > p:last-child,
+.showInformRequest > p:last-child {
+    flex-basis: 20%;
+    padding-right: 20px;
+    word-break: break-all;
+}
+
+.title > p:last-child,
+.informRequest > div:last-child {
+    flex-basis: 20%;
+    /* padding-right: 20px; */
+    word-break: break-all;
+    width: 200px;
+}
+
+.nameGroup {
+    text-decoration: none;
+    color: #7470E9;
+}
+
+    .nameGroup:hover {
+        text-decoration: underline;
+    }
+
+.titleAccepted > p:nth-child(3),
+.informRequestAccepted > p:nth-child(3) {
+    flex-basis: 30%;
+    padding-right: 20px;
+}
+
+.titleRejected > p:nth-child(3),
+.informRejectedRequest > p:nth-child(3) {
+    flex-basis: 20%;
+    padding-right: 20px;
+}
+
+.titleAccepted > p:nth-child(4),
+.informRequestAccepted > p:nth-child(4) {
+    flex-basis: 30%;
+    padding-right: 20px;
+}
+
+.titleRejected > p:nth-child(4),
+.informRejectedRequest > p:nth-child(4) {
+    flex-basis: 20%;
+    padding-right: 20px;
+    word-break: break-all;
+}
+
+.titleAccepted > p:nth-child(5),
+.informRequestAccepted > p:nth-child(5) {
+    flex-basis: 10%;
+    padding-right: 20px;
+}
+
+.titleRejected > p:nth-child(5),
+.informRejectedRequest > p:nth-child(5) {
+    flex-basis: 15%;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+
+
+p {
+    width: 100%;
+    word-wrap: break-word;
+}
+
+.buttonRequest {
+    display: flex;
+    /* justify-content: center; */
+}
+
+    .buttonRequest button {
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        height: 40px;
+        width: fit-content;
+        border: none;
+        cursor: pointer;
+        /* margin-left: 12px; */
+        padding-left: 8px;
+        padding-right: 8px;
+    }
+
+.acceptedStatus, .rejectedStatus {
+    display: flex;
+    /* margin-top: -35px; */
+    /* justify-content: center; */
+}
+
+.rejectBtn {
+    color: rgba(28, 31, 39, 0.8);
+    background-color: rgba(28, 31, 39, 0.05);
+    margin-left: 12px;
+}
+
+.acceptBtn {
+    color: #FFFFFF;
+    background-color: #7470E9;
+    /* margin-left: 0px; */
+}
+
+#acceptedStatus, #rejectedStatus {
+    padding: 8px 12px;
+    /* margin: 0 12px; */
+    border-radius: 8px;
+    text-align: center;
+    width: fit-content;
+}
+
+#acceptedStatus {
+    color: #23C16B;
+    background-color: rgba(35, 193, 107, 0.1);
+}
+
+#rejectedStatus {
+    color: rgba(28, 31, 39, 0.5);
+    background-color: rgba(28, 31, 39, 0.1);
+}
+
+
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 12px 20px 0;
+}
+
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination i {
+        width: 32px;
+        height: 32px;
+        background-color: rgba(28, 31, 39, 0.05);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .pagination i:hover {
+            color: #FFFFFF;
+            background-color: #7470E9;
+        }
+
+.numPage {
+    display: flex;
+    margin-left: 20px;
+}
+
+.number {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.5s;
+    text-decoration: none;
+}
+
+    .number:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.paginationactive {
+    color: #FFFFFF;
+    background-color: #7470E9;
+}
+
+.showDetailRequest, .showDetailRejectedRequest {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.popup {
+    display: flex;
+    height: auto;
+    max-height: 640px;
+    flex-direction: column;
+    align-items: center;
+    width: 60%;
+    background-color: #FFFFFF;
+    position: relative;
+    left: 20%;
+    top: 10%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+    .popup > p:first-child {
+        font-size: 30px;
+        font-weight: 600;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+.changeTopic {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 40px 0;
+    padding: 0 40px;
+}
+
+.titleShowDetailRequest {
+    margin-bottom: 20px;
+}
+
+    .titleShowDetailRequest p {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0 auto;
+    }
+
+.titleShowDetailRequest, .showEnglishNameRequest, .showVietNameseNameRequest, .showAbbreviationRequest {
+    display: flex;
+    margin-bottom: 12px;
+}
+
+    .titleShowDetailRequest > p:first-child, .showEnglishNameRequest > p:first-child, .showVietNameseNameRequest > p:first-child, .showAbbreviationRequest > p:first-child {
+        flex-basis: 50%;
+        display: flex;
+        margin-right: 10px;
+    }
+
+    .titleShowDetailRequest > p:last-child, .showEnglishNameRequest > p:last-child, .showVietNameseNameRequest > p:last-child, .showAbbreviationRequest > p:last-child {
+        flex-basis: 50%;
+        display: flex;
+        margin-left: 10px;
+    }
+
+    .titleShowDetailRequest p span, .showEnglishNameRequest p span, .showVietNameseNameRequest p span, .showAbbreviationRequest p span {
+        flex-basis: 48%;
+        font-weight: 600;
+        font-size: 16px;
+        color: rgba(28, 31, 39, 0.5);
+    }
+
+    .titleShowDetailRequest p b, .showEnglishNameRequest p b, .showVietNameseNameRequest p b, .showAbbreviationRequest p b {
+        flex-basis: 68%;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+
+.emailSupervisorRequest, .reasonChangeRequest, .reasonReject {
+    width: 100%;
+    display: flex;
+    margin-bottom: 20px;
+    padding: 0 40px;
+}
+
+.titleRequest {
+    flex-basis: 28%;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(28, 31, 39, 0.5);
+}
+
+.emailSupervisorRequest > p:last-child, .reasonChangeRequest > p:last-child, .reasonReject > p:last-child {
+    flex-basis: 60%;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.closeFormDetailBtn, .closeFormDetailRejectBtn {
+    margin-bottom: 20px;
+    width: 160px;
+    height: 48px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #7470E9;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+
+.showFormConfirm {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hide-form {
+    display: none;
+    z-index: 1000;
+}
+
+.formRequestConfirm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 38%;
+    height: fit-content;
+    background-color: #FFFFFF;
+    position: relative;
+    left: 33%;
+    top: 35%;
+    border-radius: 8px;
+}
+
+.formNameConfirm {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 40px 0;
+    text-align: center;
+}
+
+.btnSubmitConfirm {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+    .btnSubmitConfirm button {
+        width: 100px;
+        height: 40px;
+        padding: 0 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        border-radius: 8px;
+        margin: 0 24px 24px 0;
+    }
+
+.discardBtn {
+    background-color: rgba(28, 31, 39, 0.05);
+    color: rgba(28, 31, 39, 0.8);
+}
+
+
+.submitBtn {
+    color: #FFFFFF;
+    background-color: #7470E9;
+}
+
+
+
+.showFormCommentReject {
+    width: 100%;
+    height: 118vh;
+    position: fixed;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+}
+
+.popupCommentReject {
+    width: fit-content;
+    height: fit-content;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    padding: 20px;
+}
+
+    .popupCommentReject > p:first-child {
+        font-size: 16px;
+        font-weight: 600;
+        margin: 20px;
+        text-align: center;
+    }
+
+    .popupCommentReject textarea {
+        outline: none;
+        padding: 8px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+.button {
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+
+    .button button {
+        cursor: pointer;
+        width: 100px;
+        height: 40px;
+        border: none;
+        margin-top: 2vh;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+.rejectFormBtn {
+    background-color: #7470E9;
+    color: #FFFFFF;
+    margin-right: 20px;
+}
+
+#textAreaComent {
+    resize: none;
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 40px 60px 0;
+}
+
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination p {
+        width: 150px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .pagination i {
+        width: 32px;
+        height: 32px;
+        background-color: rgba(28, 31, 39, 0.05);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .pagination i:hover {
+            color: #FFFFFF;
+            background-color: #7470E9;
+        }
+
+.numPage {
+    display: flex;
+    margin-left: 20px;
+}
+
+.number {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.5s;
+    text-decoration: none;
+}
+
+    .number:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.paginationactive {
+    color: #FFFFFF;
+    background-color: #7470E9;
+}
+
+@media screen and (max-width: 1440px) {
+    .main > p:first-child {
+        margin: 12px;
+    }
+
+    .requestHeader {
+        margin: 0 12px;
+    }
+
+    .showRequestTopic, .showRequestRejected, .showRequestAccepted {
+        margin: 12px;
+    }
+}
+
+.showErrorMessage {
+    color: red;
+    font-size: 14px;
+    font-weight: 600;
+    width: 78%;
+    margin-top: 12px;
+}
+
+
+.rejectFormBtn {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.limitCharacter {
+    text-overflow: ellipsis;
+    width: -webkit-fill-available;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.titleRejected > p:first-child {
+    width: 40px
+}
+
+.informRejectedRequest > p:first-child {
+    width: 40px
+}

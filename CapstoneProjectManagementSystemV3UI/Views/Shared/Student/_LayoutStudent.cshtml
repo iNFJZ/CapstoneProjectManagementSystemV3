@@ -1,0 +1,279 @@
+@{
+    var statusStudentHaveIdea = Convert.ToBoolean(TempData["StatusStudentHaveIdea"]);
+}
+@using System.Web
+@using Infrastructure.Entities
+@using Infrastructure.Services.CommonServices.SessionExtensionService
+@inject ISessionExtensionService _sessionExtensionService
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <meta name="referrer" content="no-referrer" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="/css/common/header.css">
+    <link rel="stylesheet" href="/css/common/footer.css">
+    <link rel="icon" type="image/x-icon" href="/img/FPT_logo_2010.svg.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+
+
+    <style>
+        /* CSS styles for the popup */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+        }
+
+        .popup-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="header">
+
+        <div class="header__left">
+            <a href="/StudentHome/Index">
+                <img src="~/img/logofpt.png" />
+                <p>Call4Project</p>
+            </a>
+        </div>
+        <div class="header__right">
+            <a href="/UserGuide/Index" class="userGuide" id="openPopupUG" style="font-size:15px">User Guide</a>
+            <div class="overlay" id="overlay"></div> <!-- Overlay layer -->
+            <div class="popup_userguide" id="userGuidePopup">
+                <div class="popup-content-userguide">
+                    <button class="popup-close-btn" id="closePopupUG"><p style="width: 35px">&times;</p></button>
+                    <h3 style="margin-bottom: 20px">User Guide</h3>
+                    <div class="popup_content">
+                        <button class="popup-button" data-pdf="/img/Introduce how to use Capstone Project Registration System for Student.pdf">English</button>
+                        <button class="popup-button" data-pdf="/img/Hướng dẫn cách sử dụng website Đăng kí làm Đồ án cho Sinh viên.pdf">Vietnamese</button>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                .popup-button {
+                    display: inline-block;
+                    /* width: 5em; */
+                    /* height: 40px; */
+                    border-radius: 8px;
+                    background-color: #7470e9;
+                    color: #FFFFFF;
+                    outline: none;
+                    border: none;
+                    font-size: 14px;
+                    font-weight: 600;
+                    padding: 8px;
+                }
+
+                .popup_userguide {
+                    display: none;
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background-color: white;
+                    padding: 20px;
+                    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+                    z-index: 1000;
+                }
+
+                .popup-content-userguide {
+                    text-align: center;
+                    width: 300px;
+                    height: fit-content;
+                    /* flex-direction: column-reverse; */
+                }
+
+                .popup_userguide.active {
+                    display: block;
+                }
+
+                .popup-close-btn {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    border: none;
+                    cursor: pointer;
+                }
+
+                .overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    z-index: 999; /* Z-index lower than popup */
+                }
+
+                    .overlay.active {
+                        display: block;
+                    }
+            </style>
+
+            <script>
+                document.getElementById("openPopupUG").addEventListener("click", function (event) {
+                    event.preventDefault();
+                    var userGuidePopup = document.getElementById("userGuidePopup");
+                    var overlay = document.getElementById("overlay");
+                    overlay.classList.add("active");
+                    userGuidePopup.classList.add("active");
+                });
+
+                document.getElementById("closePopupUG").addEventListener("click", function (event) {
+                    closePopupUG();
+                });
+
+                document.getElementById("overlay").addEventListener("click", function (event) {
+                    closePopupUG();
+                });
+
+                function closePopupUG() {
+                    var userGuidePopup = document.getElementById("userGuidePopup");
+                    var overlay = document.getElementById("overlay");
+                    if (userGuidePopup.classList.contains("active")) {
+                        userGuidePopup.classList.remove("active");
+                    }
+                    if (overlay.classList.contains("active")) {
+                        overlay.classList.remove("active");
+                    }
+                }
+
+                var popupButtons = document.querySelectorAll(".popup-button");
+                for (var i = 0; i < popupButtons.length; i++) {
+                    popupButtons[i].addEventListener("click", function () {
+                        var pdfSource = this.getAttribute("data-pdf");
+                        window.open(pdfSource, "_blank");
+                        closePopupUG(); // Close the popup after opening PDF
+                    });
+                }
+
+                window.addEventListener("keydown", function (event) {
+                    if (event.key === "Escape") {
+                        closePopupUG();
+                    }
+                });
+            </script>
+
+            <div class="showNoti">
+                <button class="btnNoti"><i class="fa-solid fa-bell"></i></button>
+                <p class="numberNotifi"></p>
+                <div class="displayNoti">
+                    <h1>Notification</h1>
+                    <div class="displayNotiHeader">
+                        <a class="unRead active">Unread</a>
+                        <a class="all">All</a>
+                    </div>
+                    <ul class="listNoti">
+                    </ul>
+                    <a id="loadMore">Load More</a>
+                </div>
+            </div>
+            <div class="btnProfile" id="btnProfile">
+                <div class="basicInformation">
+                    <p class="basicInformation--username">@(_sessionExtensionService.GetObjectFromJson<User>(Context.Session, "sessionAccount")?.UserName)</p>
+                    <img src="@Url.Content(_sessionExtensionService.GetObjectFromJson<User>(Context.Session,"sessionAccount")?.Avatar)" alt="">
+                </div>
+                <div class="dropdownProfile" id="dropdownProfile">
+                    <div class="showProfile">
+                        <img src="@Url.Content(_sessionExtensionService.GetObjectFromJson<User>(Context.Session,"sessionAccount")?.Avatar)" alt="">
+                        <a href="/StudentProfile/Index" class="showProfile__info">
+                            <p class="showProfile__info--username">@(_sessionExtensionService.GetObjectFromJson<User>(Context.Session, "sessionAccount")?.UserName)</p>
+                            <p class="showProfile__info--email">@(_sessionExtensionService.GetObjectFromJson<User>(Context.Session, "sessionAccount")?.FptEmail)</p>
+                        </a>
+                    </div>
+                    <a href="/User/SignOut" id="logOut">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+    <div class="footer">
+        <div class="footerContent">
+            <div class="introPlatform">
+                <div class="webName">
+                    <img src="~/img/logoFPT.png" />
+                    <p>Capstone Project Registration System</p>
+                </div>
+                <div class="introPlatformDes">
+                    <p>
+                        This is a platform that allows students to quickly register for a project group and receive assistance.
+                    </p>
+                </div>
+            </div>
+            <div class="information">
+                <p class="footerTitle">Information</p>
+                <div class="inforDesFooter">
+                    <a href="/StudentHome/Index">Home</a>
+                    <a href="/AboutUs/Index">About</a>
+                </div>
+            </div>
+            <div class="address">
+                <p class="footerTitle">Address</p>
+                <div class="addressDesFooter">
+                    <div class="locationFooter">
+                        <i class="uil uil-location-point"></i>
+                        <a href="https://uni.fpt.edu.vn">https://uni.fpt.edu.vn</a>
+                        @*<p>Đất Thổ Cư Hòa Lạc, Km29 Đường Cao Tốc 08, Thạch Hoà, Thạch Thất, Hà Nội 10000</p>*@
+                    </div>
+                    @*<div class="mailFooter">
+                    <i class="uil uil-envelope"></i>
+                    <p>daihocfpt@fpt.edu.vn</p>
+                    </div>
+                    <div class="phoneNumFooter">
+                    <i class="uil uil-phone"></i>
+                    <p>024 7300 1866</p>
+                    </div>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        @{
+            // Read session data
+            var user = _sessionExtensionService.GetObjectFromJson<User>(Context.Session, "sessionAccount");
+            string userId = user != null ? user.UserId : "";
+        }
+                                                                                var userId = '@userId';
+
+    </script>
+    <script src="/js/student/student_sidebarleft.js"></script>
+    <script src="/js/signalr/dist/browser/signalr.js"></script>
+    <script src="/js/common/header.js"></script>
+</body>
+</html>

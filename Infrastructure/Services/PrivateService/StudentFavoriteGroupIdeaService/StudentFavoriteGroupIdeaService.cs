@@ -1,0 +1,116 @@
+﻿using Infrastructure.Entities;
+using Infrastructure.Entities.Common.ApiResult;
+using Infrastructure.Repositories.GroupIdeaRepository;
+using Infrastructure.Repositories.Student_FavoriteGroupIdeaRepository;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Infrastructure.Services.PrivateService.Student_FavoriteGroupIdeaService
+{
+    public class StudentFavoriteGroupIdeaService : IStudentFavoriteGroupIdeaService
+    {
+        private readonly IStudentFavoriteGroupIdeaRepository _studentFavoriteGroupIdeaRepository;
+        private readonly IGroupIdeaRepository _groupIdeaRepository;
+        public StudentFavoriteGroupIdeaService(IStudentFavoriteGroupIdeaRepository studentFavoriteGroupIdeaRepository,
+            IGroupIdeaRepository groupIdeaRepository)
+        {
+            _studentFavoriteGroupIdeaRepository = studentFavoriteGroupIdeaRepository;
+            _groupIdeaRepository = groupIdeaRepository;
+        }
+
+        public async Task<ApiResult<bool>> AddRecord(string studentId, int groupId)
+        {
+            try
+            {
+                var newRecord = new StudentFavoriteGroupIdea
+                {
+                    StudentId = studentId,
+                    GroupIdeaId = groupId
+                };
+
+                await _studentFavoriteGroupIdeaRepository.CreateAsync(newRecord);
+
+                return new ApiSuccessResult<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<bool>($"Lỗi khi thêm bản ghi: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResult<bool>> DeleteAllRecordOfAGroupIdea(int groupIdeaId)
+        {
+            try
+            {
+                var records = (await _studentFavoriteGroupIdeaRepository
+                    .GetByCondition(s => s.GroupIdeaId == groupIdeaId && s.DeletedAt == null))
+                    .ToList();
+
+                if (!records.Any())
+                {
+                    return new ApiErrorResult<bool>("Không tìm thấy bản ghi nào để xóa.");
+                }
+
+                foreach (var record in records)
+                {
+                    record.DeletedAt = DateTime.UtcNow;
+                    await _studentFavoriteGroupIdeaRepository.UpdateAsync(record);
+                }
+                return new ApiSuccessResult<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<bool>($"Lỗi khi xóa bản ghi: {ex.Message}");
+            }
+        }
+
+        public async Task<ApiResult<bool>> DeleteRecord(string studentId, int groupIdeaId)
+        {
+            var record = await _studentFavoriteGroupIdeaRepository.GetById(s => s.StudentId == studentId && s.GroupIdeaId == groupIdeaId && s.DeletedAt == null);
+            record.DeletedAt = DateTime.Now;
+            await _studentFavoriteGroupIdeaRepository.UpdateAsync(record);
+            return new ApiSuccessResult<bool>(true);
+        }
+
+        public async Task<ApiResult<List<StudentFavoriteGroupIdea>>> GetFavoriteIdeaListByStudentId(string studentId)
+        {
+            try
+            {
+                var favoriteIdeas = await _studentFavoriteGroupIdeaRepository.GetByCondition(s => s.StudentId == studentId && s.DeletedAt == null);
+
+                if (!favoriteIdeas.Any())
+                {
+                    return new ApiErrorResult<List<StudentFavoriteGroupIdea>>("Không tìm thấy ý tưởng yêu thích nào.");
+                }
+
+                var groupIdeaIds = favoriteIdeas.Select(s => s.GroupIdeaId).ToList();
+                var groupIdeas = await _groupIdeaRepository.GetByCondition(g => groupIdeaIds.Contains(g.GroupIdeaId));
+
+
+                // Map GroupIdea vào từng StudentFavoriteGroupIdea
+                foreach (var idea in favoriteIdeas)
+                {
+                    idea.GroupIdea = groupIdeas.FirstOrDefault(g => g.GroupIdeaId == idea.GroupIdeaId);
+                }
+
+                return new ApiSuccessResult<List<StudentFavoriteGroupIdea>>(favoriteIdeas);
+            }
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<List<StudentFavoriteGroupIdea>>($"Lỗi khi lấy danh sách: {ex.Message}");
+            }
+        }
+        public async Task<ApiResult<StudentFavoriteGroupIdea>> GetRecord(string studentId, int groupId)
+        {
+            var record = await _studentFavoriteGroupIdeaRepository.GetById(s => s.StudentId == studentId && s.GroupIdeaId == groupId && s.DeletedAt == null);
+            if (record == null)
+            {
+                return new ApiErrorResult<StudentFavoriteGroupIdea>("Không tìm thấy bản ghi phù hợp");
+            }
+            return new ApiSuccessResult<StudentFavoriteGroupIdea>(record); 
+        }
+    }
+}

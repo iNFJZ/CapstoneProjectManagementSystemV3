@@ -1,0 +1,29 @@
+﻿{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:35769",
+      "sslPort": 44393
+    }
+  },
+  "profiles": {
+    "CapstoneProjectManagementSystemV3UI": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchUrl": "https://localhost:7012/AdminLoginAs/Index",
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7012;http://localhost:5019",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

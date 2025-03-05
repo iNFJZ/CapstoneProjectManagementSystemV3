@@ -1,0 +1,110 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#loginAs {
+    display: flex;
+    height: auto;
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+
+.main {
+    flex-basis: 125%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    overflow-x: auto;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+.formLoginAs {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px;
+    height: -webkit-fill-available;
+    flex-direction: column;
+    align-items: center;
+    width: 40vw;
+    padding-top: 110px;
+}
+
+    .formLoginAs > p:first-child {
+        font-weight: 600;
+        font-size: 24px;
+        margin: 24px;
+    }
+
+.inputLoginAs {
+    width: 80%;
+    display: flex;
+    align-items: center;
+}
+
+    .inputLoginAs > p:first-child {
+        font-size: 16px;
+        font-weight: 600;
+        margin-right: 12px;
+    }
+
+.inputEmailOfStu {
+    width: 320px;
+    height: 32px;
+    margin-right: 12px;
+    padding: 20px 10px;
+    outline: none;
+    border-radius: 8px;
+    border: 1px solid #CCC;
+    font-size: 16px;
+}
+
+    .inputEmailOfStu:focus {
+        border: 1px solid #4892f7;
+    }
+
+.btnLoginAs {
+    width: 120px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid #7470E9;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.5s;
+}
+
+    .btnLoginAs:hover {
+        background-color: #7470E9;
+        color: #FFFFFF;
+    }
+
+
+.sidebar {
+    margin-bottom: 114px;
+}

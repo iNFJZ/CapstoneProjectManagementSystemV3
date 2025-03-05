@@ -1,0 +1,16 @@
+﻿
+.accessDenied {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 96vh;
+    font-weight: 600;
+    color: #F74055;
+    flex-direction:column;
+}
+
+.accessDenied > p:first-child{
+    font-size:24px;
+
+}

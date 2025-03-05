@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "LoginAs Page";
+}
+<link rel="stylesheet" href="/css/admin/admin_loginAs.css">
+<div class="homepage" id="loginAs">
+    @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
+    <div class="main">
+        <div class="formLoginAs">
+            <p>Login As</p>
+            <div class="inputLoginAs">
+                <p>User Email</p>
+                <input class="inputEmailOfStu" id="inputEmailOfOtherRole" placeholder="Input email of other roles" />
+                <button class="btnLoginAs" id="btnLoginAs">Login As</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/admin/admin_loginAs.js"></script>
+
+
+

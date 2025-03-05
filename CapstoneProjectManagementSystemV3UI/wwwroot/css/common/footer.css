@@ -1,0 +1,105 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.footer {
+    width: 100%;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    line-height: 1.4;
+    padding: 40px;
+    height: auto;
+    font-size: 16px;
+    box-shadow: rgb(204 219 232) 3px 3px 6px 0px inset, rgb(255 255 255 / 50%) -3px -3px 6px 1px inset;
+    /* font-weight: 600; */
+    /* margin-top: 63%; */
+    /* padding-left: 60px; */
+}
+
+.footerContent {
+    width: 70%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.introPlatform {
+    flex-basis: 60%;
+}
+
+.address {
+    flex-basis: 20%;
+}
+
+.information {
+    flex-basis: 20%;
+}
+
+.webName {
+    display: flex;
+    font-size: 20px;
+    font-weight: 600;
+    color: #F27227;
+}
+
+    .webName > img {
+        width: 100px;
+        margin-right: 8px;
+    }
+
+.introPlatformDes {
+    padding-right: 20px;
+}
+
+    .introPlatformDes > p:first-child {
+        margin-top: 20px;
+    }
+
+.footerTitle {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.inforDesFooter, .addressDesFooter {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.inforDesFooter {
+    display: flex;
+    flex-direction: column;
+}
+
+    .inforDesFooter a {
+        text-decoration: none;
+        color: #7470E9;
+        margin-bottom: 0.5em;
+    }
+
+        .inforDesFooter a:hover {
+            text-decoration: underline;
+        }
+
+        .inforDesFooter a:active {
+            color: #7470E9;
+        }
+
+.locationFooter, .mailFooter, .phoneNumFooter {
+    display: flex;
+    margin-bottom: 0.5em;
+}
+
+.locationFooter, .mailFooter, .phoneNumFooter {
+    display: flex;
+}
+
+.addressDesFooter i {
+    margin-right: 8px;
+    font-size: 18px;
+}

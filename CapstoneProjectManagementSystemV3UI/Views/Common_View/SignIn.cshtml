@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="icon" href="../img/FPT_logo_2010.svg.png">
+    <title>Login</title>
+    <link rel="stylesheet" href="/css/common/signin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+          integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://apis.google.com/js/api:client.js"></script>
+    <script src="~/js/student/student_externalSiginGoogle.js"></script>
+</head>
+<body>
+    <div class="loginAccount">
+        <div class="title">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.1214 19.036C22.4061 16.0304 27.3245 10.9298 30.148 4.55408C28.3264 2.64137 25.9583 1.27514 23.408 0.455408L22.0417 0C21.9507 0.182163 21.8596 0.455419 21.8596 0.637582C19.6736 6.83113 15.2106 11.8406 9.19925 14.6641C5.00949 16.6679 1.91271 20.3112 0.455408 24.6831L0 26.0493C0.182163 26.1404 0.455412 26.2315 0.637575 26.2315C2.36813 26.8691 4.09867 27.6888 5.73814 28.6907C8.01518 24.592 11.6584 21.1309 16.1214 19.036Z" fill="#F27227" />
+                <path d="M42.5348 19.4004C39.1648 24.501 34.5196 28.5996 28.7815 31.3321C24.1363 33.518 20.5841 37.6167 18.9447 42.5351L18.4893 44.0835C20.2198 45.6319 22.3147 46.816 24.5917 47.5446L25.9579 48C26.049 47.8179 26.1401 47.5446 26.1401 47.3625C28.3261 41.1689 32.7891 36.1594 38.8005 33.3359C42.9902 31.3321 46.1781 27.6888 47.5443 23.3169L47.9997 21.9507C46.087 21.4042 44.2653 20.4934 42.5348 19.4004Z" fill="#16B14B" />
+                <path d="M14.8467 39.3472C17.1237 33.8823 21.3135 29.4193 26.6873 26.869C31.6057 24.5009 35.7043 20.8576 38.5279 16.3946C36.433 14.3908 34.7024 12.1138 33.4273 9.38135C30.0573 15.5749 24.7746 20.5844 18.3078 23.6812C14.5734 25.4117 11.5677 28.4174 9.74609 32.0607C11.7499 33.9734 13.3894 36.3415 14.6645 38.9829C14.6645 38.9829 14.7556 39.1651 14.8467 39.3472Z" fill="#1169B0" />
+            </svg>
+            <p>Call4Project</p>
+        </div>
+        <div class="formLogin" style="height:400px">
+            <div class="formLoginGG">
+                <div class="intro">
+                    <h1>Sign In</h1>
+                    <p>
+                        The first platform for finding teammates, seeking for the <br />
+                        Capstone Project idea in FPT University
+                    </p>
+                </div>
+                <div id="textError">@TempData["ErrorMessage"]</div>
+                <div class="logIn">
+                    <div class="selectCampus">
+                        <label for="campus">Select Campus</label>
+                        <select name="campus" id="campus">
+                            <option value="" class="optionCampus" select>--Select Campus--</option>
+                            <option value="HL" class="optionCampus">Hoa Lac</option>
+                            <option value="CT" class="optionCampus">Can Tho</option>
+                            <option value="HCM" class="optionCampus">Ho Chi Minh</option>
+                            <option value="DN" class="optionCampus">Da Nang</option>
+                            <option value="QN" class="optionCampus">Quy Nhon</option>
+                            <option value="QA" class="optionCampus">Analytics</option>
+                        </select>
+                    </div>
+                    <div class="signIn">
+                        <div class="signInGG">
+                            @*<form action="/ExternalSignIn/OnPost?returnUrl=@ViewBag.ReturnUrl" method="post">*@
+                            <button class="signGG" id="signinGg">
+                                <img src="../img/Google__G__Logo.svg.png" alt="">
+                                <p id="signGG">Sign in with @@fpt.edu.vn</p>
+                            </button>
+
+                            @*</form>*@
+                            <p>or</p>
+                            <a href="/User/SignInByAffiliateAccount" id="signInForm">Sign in with Email & Password</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script>startApp();</script>
+</body>
+</html>
+
+

@@ -1,0 +1,99 @@
+﻿@using CapstoneProjectManagementSystemV3UI.Models
+@using Infrastructure.Entities
+@*roleId = 1-student, 2-supervisor, 3-staff, 4-devhead, 5-admin*@
+
+﻿@{
+    Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "List User Page";
+    var lstUser = ViewBag.users as List<User>;
+}
+<link rel="stylesheet" href="/css/admin/admin_listuser.css">
+<div class="homepage" id="listuser">
+    @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
+
+    <div class="main">
+        <div class="requestMain">
+            <div class="listSupportQuestion" style="display: flex; flex-direction: row">
+                <p class="formTitle" style="margin-right: 20px">List Users in System</p>
+            </div>
+            <form action="Index" method="GET" class="listform">
+                <div class="searchDiv">
+                    <div class="gridcolumn">
+                        <label for="mail">Search (by Mail of fullName):  </label>
+                        <input type="text" id="mail" name="search" value="@ViewBag.search">
+                    </div>
+
+                    @* <div class="gridcolumn">
+                    <label for="name">Full name:</label>
+                    <input type="text" id="name" name="name" value="@ViewBag.fullName">
+                    </div>
+                    *@
+                    <div class="gridcolumn">
+                        <label for="role" style="padding-top: 8px; margin-left: 50px">Choose a role:  </label>
+
+
+                        <select name="role" id="role">
+                            <option value="">All Role</option>
+                            @foreach (var r in (ViewBag.roles as List<CapstoneProjectManagementSystemV3UI.Models.Role>) ?? new List<CapstoneProjectManagementSystemV3UI.Models.Role>())
+                            {
+                                <option value="@r.roleId">@r.roleName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="button"><input type="submit" value="Search" class="filterButton" id="btnSearch"></div>
+            </form>
+            <div>
+                <div>
+                    @if (ViewBag.users.Count != 0)
+                    {
+                        <div class="requestMain" style="margin-bottom: 0px; margin-top: 0px; padding-top: 0px;">
+                            <div class="titleRequest">
+                                <p>No.</p>
+                                <p>FPT Email (Login Email)</p>
+                                <p>Full Name</p>
+                                <p>Role</p>
+                                <p>Action</p>
+                            </div>
+                            @{
+                                var number = ((ViewBag.pageIndex - 1) * ViewBag.totalPage)+1;
+                            }
+                            @foreach (var u in lstUser)
+                            {
+                                
+                                <div class="informSupportRequest">
+                                    
+                                    <p>@number</p>
+                                    <p>@u.FptEmail</p>
+                                    <p>@u.FullName</p>
+                                    <p>@u.Role.RoleName</p>
+                                    <p>
+                                        <button class="btnloginAs" value="@u.FptEmail">LoginAs</button>
+                                        @if (u.Role.RoleId == 3 || u.Role.RoleId == 4)
+                                        {
+                                            <button class="btn-delete" value="@u.UserId">Delete</button>
+                                        }
+                                    </p>
+                                    @{
+                                        number = number + 1;
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                    }
+                </div>
+
+                <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+
+                <script src="~/js/util/paging.js"></script>
+                <script>
+                    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+                </script>
+                <script src="~/js/admin/admin_listUser.js"></script>
+            </div>
+        </div>
+    </div>
+</div>

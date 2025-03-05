@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "/Views/Shared/Staff/_LayoutStaff.cshtml";
+    ViewData["Title"] = "LoginAs Page";
+}
+<link rel="stylesheet" href="/css/staff/staff_loginAs.css">
+<div class="homepage" id="loginAs">
+    @await Html.PartialAsync("/Views/Shared/Staff/_LayoutSidebarLeftStaff.cshtml")
+    <div class="main">
+        <div class="formLoginAs">
+            <p>Login As</p>
+            <div class="inputLoginAs">
+                <p>Student Email</p>
+                <input class="inputEmailOfStu" id="inputEmailOfStudent" placeholder="Input email of student" />
+                <button class="btnLoginAs" id="btnLoginAs">Login As</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/staff/staff_loginAs.js"></script>
+
+
+

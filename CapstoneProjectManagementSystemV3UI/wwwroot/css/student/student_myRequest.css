@@ -1,0 +1,650 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#myRequest {
+    display: flex;
+    height: auto;
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+
+.main {
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    overflow-x: auto;
+    width: 100%;
+}
+
+    .main > p:first-child {
+        font-weight: 600;
+        font-size: 24px;
+        margin: 24px;
+    }
+
+.formRequest {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px;
+    flex-direction: column;
+    margin-bottom: 0px;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+.sumInfo {
+    width: 100%;
+    height: 70vh;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.requestHeader {
+    margin: 0 24px;
+    width: 95%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 8vh;
+}
+
+.chooseTypeRequest {
+    display: flex;
+}
+
+    .chooseTypeRequest button {
+        height: 40px;
+        padding: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        margin-left: 16px;
+        cursor: pointer;
+        color: rgba(28, 31, 39, 0.5);
+        background-color: rgba(28, 31, 39, 0.05);
+    }
+
+    .chooseTypeRequest .active {
+        color: #7470E9;
+        background-color: rgba(116, 112, 233, 0.2);
+    }
+
+
+.dropdownStatus {
+    height: 40px;
+    width: 120px;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin-left: 22px;
+    cursor: pointer;
+    font-weight: 400;
+    font-size: 14px;
+}
+
+.statusChoose {
+    position: absolute;
+    right: 61%;
+    top: 22%;
+    list-style: none;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: #FFFFFF;
+    padding: 8px;
+    width: 120px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all 0.5s ease;
+}
+
+.selected {
+    width: 80px;
+}
+
+.show--status {
+    visibility: visible;
+    opacity: 1;
+}
+
+.statusChoose li {
+    margin-bottom: 4px;
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+    .statusChoose li:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.arr {
+    height: 8px;
+    width: 8px;
+    border-right: 2px solid #202020;
+    border-bottom: 2px solid #202020;
+    transform: rotate(45deg);
+    margin: 0 12px 4px 20px;
+    cursor: pointer;
+    transition: all 0.6s;
+}
+
+.active-arr {
+    transform: rotate(-135deg);
+    margin-top: 4px;
+}
+
+.requestMain {
+    margin: 24px;
+    width: 96%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.titleRequest {
+    width: 97%;
+    display: flex;
+    height: 45px;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(28, 31, 39, 0.5);
+    padding: 16px;
+    border-bottom: 1px solid #ccc;
+    margin: 0 16px;
+}
+
+.accp,
+.pend,
+.reje {
+    width: 100%;
+}
+
+.informGroupRequestAccepted,
+.informGroupRequestPending,
+.informGroupRequestRejected {
+    width: 97%;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1C1F27;
+    padding: 16px;
+    margin: 0 16px 40px 16px;
+}
+
+    .titleRequest > p:first-child,
+    .informGroupRequestAccepted > p:first-child,
+    .informGroupRequestPending > p:first-child,
+    .informGroupRequestRejected > p:first-child {
+        flex-basis: 5%;
+    }
+
+.titleRequest > p:nth-child(2),
+.nameProjectRequest {
+    flex-basis: 30%;
+    line-height: 21px;
+}
+
+.nameProjectRequest {
+    color: #7470E9;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+    .nameProjectRequest:hover {
+        text-decoration: underline;
+    }
+
+.titleRequest > p:nth-child(3),
+.informGroupRequestAccepted > p:nth-child(3),
+.informGroupRequestPending > p:nth-child(3),
+.informGroupRequestRejected > p:nth-child(3) {
+    flex-basis: 35%;
+    line-height: 21px;
+}
+
+.titleRequest > p:nth-child(4),
+.informGroupRequestAccepted > p:nth-child(4),
+.informGroupRequestPending > p:nth-child(4),
+.informGroupRequestRejected > p:nth-child(4) {
+    flex-basis: 10%;
+    margin-right: 40px;
+    text-align: center;
+}
+
+.pendingStatus, .acceptStatus, .rejectStatus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.pendingStatus {
+    color: #F27227;
+    background-color: rgba(242, 114, 39, 0.05);
+}
+
+.acceptStatus {
+    color: #23C16B;
+    background-color: rgba(35, 193, 107, 0.05);
+}
+
+.rejectStatus {
+    color: rgba(28, 31, 39, 0.5);
+    background-color: rgba(28, 31, 39, 0.05);
+}
+
+.titleRequest > p:nth-child(5),
+.informGroupRequestAccepted > .buttonAccept,
+.informGroupRequestPending > .buttonAccept,
+.informGroupRequestRejected > .buttonAccept {
+    flex-basis: 20%;
+    text-align: center;
+}
+
+.informGroupRequestAccepted > .buttonAccept {
+    display: flex;
+    justify-content: center;
+}
+
+.acceptBtn, .rejectBtn, .cancelBtn {
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    height: 40px;
+    width: 80px;
+    border: none;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+.acceptBtn {
+    color: #FFFFFF;
+    background-color: #7470E9;
+    margin-bottom: 6px;
+}
+
+.rejectBtn {
+    color: #FFFFFF;
+    background-color: #dd4040;
+}
+
+.cancelBtn {
+    color: #FFFFFF;
+    background-color: #ed9a25;
+}
+
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 12px 20px 0;
+}
+
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination i {
+        width: 32px;
+        height: 32px;
+        background-color: rgba(28, 31, 39, 0.05);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .pagination i:hover {
+            color: #FFFFFF;
+            background-color: #7470E9;
+        }
+
+.numPage {
+    display: flex;
+    margin-left: 20px;
+}
+
+.number {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.5s;
+    text-decoration: none;
+}
+
+    .number:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.paginationactive {
+    color: #FFFFFF;
+    background-color: #7470E9;
+}
+
+.invitedMain {
+    margin: 24px;
+    /* width: 95%; */
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 0px;
+}
+
+.titleInvited {
+    width: 100%;
+    display: grid;
+    height: 45px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border-bottom: 1px solid #1c1f27;
+    margin: 0 16px;
+    grid-template-columns: 0fr 2fr 4fr 2fr;
+}
+
+.informGroupInvited {
+    width: 100%;
+    display: grid;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1C1F27;
+    padding: 16px;
+    margin: 0 16px 0px 16px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    grid-template-columns: 0fr 2fr 4fr 2fr;
+    border-bottom: 1px solid #ccc;
+}
+
+    .titleInvited > p:first-child,
+    .informGroupInvited > p:first-child {
+        flex-basis: 5%;
+        width: 40px;
+    }
+
+.titleInvited > p:nth-child(2),
+.nameProjectInvited {
+    flex-basis: 30%;
+    line-height: 21px;
+    margin-right: 60px;
+}
+
+.nameProjectInvited {
+    color: #7470E9;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+    .nameProjectInvited:hover {
+        text-decoration: underline;
+    }
+
+.titleInvited > p:nth-child(3),
+.informGroupInvited > p:nth-child(3) {
+    flex-basis: 40%;
+    line-height: 21px;
+    margin-right: 60px;
+}
+
+
+.titleInvited > p:nth-child(4),
+.informGroupInvited > .buttonAccept {
+    flex-basis: 15%;
+    text-align: center;
+}
+
+.informGroupInvited > .buttonAccept {
+    display: flex;
+    justify-content: center;
+}
+
+.acceptBtn, .rejectBtn {
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    height: 40px;
+    width: 80px;
+    border: none;
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin: 20px 12px 20px 0;
+}
+
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination i {
+        width: 32px;
+        height: 32px;
+        background-color: rgba(28, 31, 39, 0.05);
+        border-radius: 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+
+        .pagination i:hover {
+            color: #FFFFFF;
+            background-color: #7470E9;
+        }
+
+.numPage {
+    display: flex;
+    margin-left: 20px;
+}
+
+.number {
+    width: 32px;
+    height: 32px;
+    margin-right: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.5s;
+    text-decoration: none;
+}
+
+    .number:hover {
+        color: #FFFFFF;
+        background-color: #7470E9;
+    }
+
+.paginationactive {
+    color: #FFFFFF;
+    background-color: #7470E9;
+}
+
+.hide--list {
+    display: none;
+}
+
+/*    Yes/No form confirm*/
+
+.showJoinForm,
+.showCancelForm,
+.showDeleteForm,
+.showNotifyForm,
+.showNotify2Form {
+    width: 100%;
+    height: 140vh;
+    position: absolute;
+    top: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
+.hide-form,
+.hide-Joinform,
+.hide-Cancelform,
+.hide-Deleteform,
+.hide-Notifyform,
+.hide-Notify2form {
+    display: none;
+}
+
+.YNpopup {
+    width: 36vw;
+    /* height: 20vh; */
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    position: fixed;
+    top: 35%;
+    left: 33%;
+    padding: 20px;
+}
+
+    .YNpopup > p:first-child {
+        font-size: 16px;
+        font-weight: 600;
+        /* margin: 40px; */
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+.YNbutton {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    /* grid-template-columns: 1fr 1fr; */
+}
+
+    .YNbutton button {
+        cursor: pointer;
+        width: 100px;
+        height: 40px;
+        border: none;
+        /*margin-top: 1vh;*/
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+.okButton {
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+
+    .okButton button {
+        cursor: pointer;
+        width: 100px;
+        height: 40px;
+        border: none;
+        /*margin-top: 1vh;*/
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+.yesBtnJoin,
+.yesBtnCancel,
+.yesBtnDelete,
+.okBtn,
+.okBtn2 {
+    background-color: #7470E9;
+    color: #FFFFFF;
+}
+
+.textNoRequest {
+    width: 100%;
+    text-align: center;
+    color: red;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 32px;
+}
+
+@media only screen and (max-width: 1440px) {
+    .noBtnCancel {
+        margin-right: 30%;
+    }
+
+    .main > p:first-child {
+        margin: 12px;
+    }
+
+    .requestHeader {
+        margin: 0 12px;
+    }
+
+    .requestMain, .invitedMain {
+        margin: 24px;
+    }
+}
+
+.limitCharacter {
+    text-overflow: ellipsis;
+    width: -webkit-fill-available;
+    white-space: nowrap;
+    overflow: hidden;
+}

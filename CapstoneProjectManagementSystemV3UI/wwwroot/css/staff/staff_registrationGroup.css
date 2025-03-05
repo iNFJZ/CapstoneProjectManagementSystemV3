@@ -1,0 +1,839 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	font-family: 'Montserrat', sans-serif;
+}
+
+.registrationForm {
+	display: flex;
+	height: auto;
+}
+
+.sidebar--left {
+	flex-basis: 15%;
+	height: 93vh;
+	border: none;
+	left: 0;
+	overflow-x: hidden;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+}
+
+
+.main {
+	height: auto;
+	flex-basis: 117%;
+	display: flex;
+	flex-direction: column;
+	background-color: rgba(116, 112, 233, 0.05);
+	box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+	overflow: hidden;
+	overflow-x: auto;
+	/* margin: 24px; */
+}
+
+	.main > p:first-child {
+		font-weight: 600;
+		font-size: 24px;
+		margin: 24px;
+	}
+
+.registHeader1 {
+	margin: 24px;
+	width: 95%;
+	border-radius: 8px;
+	background-color: #FFFFFF;
+	align-items: center;
+}
+
+.registHeader {
+	margin: 24px;
+	/* width: 95%; */
+	border-radius: 8px;
+	background-color: #FFFFFF;
+	display: flex;
+	/* justify-content: space-between; */
+	/* align-items: center; */
+	height: fit-content;
+	flex-direction: column;
+	padding: 20px;
+	/* margin-top: 0px; */
+	margin-bottom: 0px;
+}
+
+.chooseTypeRequest {
+	display: flex;
+}
+
+	.chooseTypeRequest button {
+		height: 40px;
+		padding: 12px;
+		font-size: 14px;
+		font-weight: 600;
+		border-radius: 8px;
+		border: none;
+		margin-left: 16px;
+		cursor: pointer;
+		color: rgba(28, 31, 39, 0.5);
+		background-color: rgba(28, 31, 39, 0.05);
+	}
+
+	.chooseTypeRequest .active {
+		color: #7470E9;
+		background-color: rgba(116, 112, 233, 0.2);
+	}
+
+.searchRequest {
+	display: flex;
+	/* margin-top: 20px; */
+	margin-left: 15px;
+}
+
+.searchNameRequest {
+	display: flex;
+	align-items: center;
+	padding: 12px;
+	height: 40px;
+	width: 360px;
+	margin-right: 16px;
+	border: 1px solid #ccc;
+	border-radius: 8px;
+}
+
+	.searchNameRequest > i {
+		margin-right: 12px;
+	}
+
+#searchNameRequestInput {
+	outline: none;
+	border: none;
+}
+
+.requestMain, .acceptedMain, .rejectedMain {
+	margin: 24px;
+	width: 95%;
+	border-radius: 8px;
+	background-color: #FFFFFF;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+h2 {
+	width: 100%;
+	text-align: center;
+	padding: 40px;
+}
+
+
+.titleRequest,
+.titleAcceptedRequest,
+.titleRejectedRequest {
+	width: 100%;
+	display: grid;
+	height: 45px;
+	align-items: center;
+	font-size: 16px;
+	font-weight: 600;
+	color: rgba(28, 31, 39, 0.5);
+	padding: 16px;
+	border-bottom: 1px solid #1c1f27;
+	margin: 0 16px;
+	grid-template-columns: 7fr 1fr 1fr;
+}
+
+.titleRequest2 {
+	width: 100%;
+	display: grid;
+	height: 45px;
+	align-items: center;
+	font-size: 16px;
+	font-weight: 600;
+	color: rgba(28, 31, 39, 0.5);
+	padding: 16px;
+	border-bottom: 1px solid #1c1f27;
+	margin: 0 16px;
+	grid-template-columns: 7fr 2fr;
+}
+
+.formTitle {
+	flex-basis: 85%;
+	display: flex;
+	font-size: 16px;
+}
+
+.formAcceptedTitle,
+.formRejectedTitle {
+	flex-basis: 70%;
+	font-size: 16px;
+	display: flex;
+}
+
+.informRequest {
+	width: 100%;
+	display: grid;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 600;
+	color: #1C1F27;
+	padding: 16px;
+	margin: 0 16px 10px 16px;
+	border-bottom: 1px solid #ccc;
+	grid-template-columns: 7fr 1fr 1fr;
+}
+
+.informRequest2 {
+	width: 100%;
+	display: grid;
+	align-items: center;
+	font-size: 14px;
+	font-weight: 600;
+	color: #1C1F27;
+	padding: 16px;
+	margin: 0 16px 10px 16px;
+	border-bottom: 1px solid #ccc;
+	grid-template-columns: 7fr 2fr;
+}
+
+.displayForm {
+	flex-basis: 85%;
+	display: flex;
+	transition: all 0.5s;
+	align-items: center;
+	padding: 4px;
+	border-radius: 8px;
+}
+
+.displayAcceptedForm, .displayRejectedForm {
+	flex-basis: 70%;
+	display: flex;
+	transition: all 0.5s;
+	align-items: center;
+	padding: 4px;
+	border-radius: 8px;
+}
+
+	.displayForm:hover,
+	.displayAcceptedForm:hover,
+	.displayRejectedForm:hover {
+		background-color: #ccc;
+		cursor: pointer;
+	}
+
+	.formTitle > p:first-child,
+	.formAcceptedTitle > p:first-child,
+	.formRejectedTitle > p:first-child,
+	.displayForm > p:first-child,
+	.displayAcceptedForm > p:first-child,
+	.displayRejectedForm > p:first-child {
+		flex-basis: 10%;
+		padding-right: 20px;
+	}
+
+
+.formTitle > p:nth-child(2),
+.formAcceptedTitle > p:nth-child(2),
+.formRejectedTitle > p:nth-child(2),
+.nameProjectRequest {
+	flex-basis: 40%;
+	padding-right: 20px;
+}
+
+.nameProjectRequest {
+	color: #7470E9;
+	padding-right: 20px;
+}
+
+.formTitle > p:nth-child(3),
+.formAcceptedTitle > p:nth-child(3),
+.formRejectedTitle > p:nth-child(3),
+.displayForm > p:nth-child(3),
+.displayAcceptedForm > p:nth-child(3),
+.displayRejectedForm > p:nth-child(3) {
+	flex-basis: 25%;
+	padding-right: 20px;
+}
+
+.formTitle > p:nth-child(4),
+.formAcceptedTitle > p:nth-child(4),
+.formRejectedTitle > p:nth-child(4),
+.supervisor {
+	flex-basis: 25%;
+	padding-right: 20px;
+}
+
+.supervisor {
+	display: flex;
+	flex-direction: column;
+}
+
+	.supervisor p:first-child {
+		/* padding-bottom: 12px; */
+	}
+
+.acceptStatus, .rejectStatus {
+	flex-basis: 15%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 8px;
+	border-radius: 8px;
+	text-align: center;
+	width: fit-content;
+}
+
+.acceptStatus {
+	color: #23C16B;
+	background-color: rgba(35, 193, 107, 0.05);
+}
+
+.rejectStatus {
+	color: rgba(28, 31, 39, 0.5);
+	background-color: rgba(28, 31, 39, 0.05);
+}
+
+.reason {
+	flex-basis: 15%;
+	/* padding: 8px 12px; */
+	padding-right: 20px;
+	padding-left: 26px;
+}
+
+.status {
+	flex-basis: 15%;
+	/* text-align: center; */
+}
+
+.titleRequest > p:last-child,
+.titleAcceptedRequest > p:last-child,
+.titleRejectedRequest > p:last-child,
+.displayForm > .buttonAccept {
+	flex-basis: 15%;
+	/* text-align: center; */
+	/* width: 16px; */
+	padding-right: 20px;
+	padding-left: 26px;
+}
+
+.titleRequest2 > p:last-child {
+	flex-basis: 15%;
+	/* text-align: center; */
+	/* width: 16px; */
+	padding-right: 20px;
+	padding-left: 20px;
+}
+
+.buttonAccept {
+	margin-left: 20px;
+	display: flex;
+}
+
+.acceptBtn, .rejectBtn {
+	font-size: 14px;
+	font-weight: 600;
+	border-radius: 8px;
+	height: 40px;
+	width: 80px;
+	border: none;
+	cursor: pointer;
+	margin-right: 12px;
+}
+
+.acceptBtn {
+	color: #FFFFFF;
+	background-color: #7470E9;
+}
+
+.rejectBtn {
+	color: rgba(28, 31, 39, 0.8);
+	background-color: rgba(28, 31, 39, 0.05);
+}
+
+.reject {
+	font-size: 14px;
+	font-weight: 600;
+	border-radius: 8px;
+	height: 40px;
+	width: fit-content;
+	border: none;
+	cursor: pointer;
+	color: rgba(28, 31, 39, 0.8);
+	background-color: rgba(28, 31, 39, 0.05);
+	margin: 0 auto;
+	padding: 8px;
+}
+
+.pagination {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin: 20px 12px 20px 0;
+}
+
+	.pagination a {
+		text-decoration: none;
+	}
+
+	.pagination i {
+		width: 32px;
+		height: 32px;
+		background-color: rgba(28, 31, 39, 0.05);
+		border-radius: 8px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		transition: all 0.5s;
+	}
+
+		.pagination i:hover {
+			color: #FFFFFF;
+			background-color: #7470E9;
+		}
+
+.numPage {
+	display: flex;
+	margin-left: 20px;
+}
+
+.number {
+	width: 32px;
+	height: 32px;
+	margin-right: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.5s;
+	text-decoration: none;
+}
+
+	.number:hover {
+		color: #FFFFFF;
+		background-color: #7470E9;
+	}
+
+.paginationactive {
+	color: #FFFFFF;
+	background-color: #7470E9;
+}
+
+.hide--list {
+	display: none;
+}
+
+.commentReject {
+	width: 100%;
+	height: 118vh;
+	position: absolute;
+	top: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+
+.popup {
+	width: fit-content;
+	height: fit-content;
+	padding-bottom: 20px;
+	background-color: #FFFFFF;
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	position: fixed;
+	top: 30%;
+	padding-left: 20px;
+	left: 35%;
+	padding-right: 20px;
+}
+
+	.popup > p:first-child {
+		font-size: 16px;
+		font-weight: 600;
+		margin: 20px;
+	}
+
+	.popup textarea {
+		outline: none;
+		padding: 8px;
+		border-radius: 8px;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+.button {
+	display: flex;
+	justify-content: space-between;
+	width: 40%;
+}
+
+	.button button {
+		cursor: pointer;
+		width: 100px;
+		height: 40px;
+		border: none;
+		margin-top: 2vh;
+		border-radius: 8px;
+		font-size: 12px;
+		font-weight: 600;
+	}
+
+.submitBtn {
+	background-color: #7470E9;
+	color: #FFFFFF;
+}
+
+
+#textAreaComent {
+	resize: none;
+}
+
+.showFormConfirm {
+	width: 100%;
+	height: 100vh;
+	position: fixed;
+	top: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.hide-form {
+	display: none;
+}
+
+.formRequestConfirm {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: fit-content;
+	height: 160px;
+	background-color: #FFFFFF;
+	position: relative;
+	left: 36%;
+	top: 32%;
+	border-radius: 8px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.formNameConfirm {
+	font-size: 20px;
+	font-weight: 600;
+	margin: 40px 0;
+}
+
+.btnSubmitConfirm {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+
+	.btnSubmitConfirm button {
+		width: 100px;
+		height: 40px;
+		padding: 0 24px;
+		font-size: 16px;
+		font-weight: 600;
+		cursor: pointer;
+		border: none;
+		border-radius: 8px;
+		margin: 0 24px 24px 0;
+	}
+
+.discardBtn {
+	background-color: rgba(28, 31, 39, 0.05);
+	color: rgba(28, 31, 39, 0.8);
+}
+
+
+.submitBtn {
+	color: #FFFFFF;
+	background-color: #7470E9;
+}
+
+.pagination {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin: 20px 0 60px 0;
+}
+
+	.pagination a {
+		text-decoration: none;
+	}
+
+	.pagination p {
+		width: 150px;
+		font-size: 16px;
+		font-weight: 600;
+	}
+
+	.pagination i {
+		width: 32px;
+		height: 32px;
+		background-color: rgba(28, 31, 39, 0.05);
+		border-radius: 8px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: pointer;
+		transition: all 0.5s;
+	}
+
+		.pagination i:hover {
+			color: #FFFFFF;
+			background-color: #7470E9;
+		}
+
+.numPage {
+	display: flex;
+	margin-left: 20px;
+}
+
+.formSupport {
+	display: flex;
+	background-color: #FFFFFF;
+	border-radius: 8px;
+	padding: 20px;
+	/* margin: 20px; */
+	flex-direction: column;
+}
+
+.formTitle1 {
+	font-size: 24px;
+	font-weight: 600;
+	color: #7470E9;
+	/* margin: 32px 0 8px 0; */
+}
+
+.number {
+	width: 32px;
+	height: 32px;
+	margin-right: 12px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: all 0.5s;
+	text-decoration: none;
+}
+
+	.number:hover {
+		color: #FFFFFF;
+		background-color: #7470E9;
+	}
+
+.paginationactive {
+	color: #FFFFFF;
+	background-color: #7470E9;
+}
+
+@media screen and (max-width: 1440px) {
+	.main > p:first-child {
+		margin: 12px;
+	}
+
+	.registHeader {
+		/* margin: 0 12px; */
+	}
+
+	.requestMain, .acceptedMain, .rejectedMain {
+		margin: 24px;
+	}
+}
+
+.showErrorMessage {
+	color: red;
+	font-size: 14px;
+	font-weight: 600;
+	width: 78%;
+	margin-top: 12px;
+}
+
+#reject1Btn, #reject2Btn {
+	cursor: not-allowed;
+	opacity: 0.5;
+}
+
+/*Phase 2*/
+
+.btnImport {
+	margin-right: 40px;
+	padding: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	color: #FFFFFF;
+	background-color: #db5b07;
+	border-radius: 10px;
+	border: none;
+}
+
+.import p {
+	font-size: 16px;
+	font-weight: 600;
+	padding: 8px;
+	margin-top: 16px;
+}
+
+.import form input {
+	font-size: 14px;
+	font-weight: 500;
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+.import form button {
+	font-size: 14px;
+	font-weight: 500;
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+.importCheckConditionFile {
+	margin-right: 30px;
+	padding: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	color: #1C1F27;
+	width: 100%;
+	background-color: #FFFFFF;
+	margin-top: 20px;
+}
+
+.import {
+	text-align: center;
+}
+
+.btnGetTemplate {
+	border-radius: 8px;
+	background-color: #7470e9;
+	color: white;
+	border: none;
+}
+
+.importCheckCondition {
+	margin-top: 20px;
+	padding: 10px;
+	margin-right: 20px;
+	font-size: 15px;
+	font-weight: 600;
+	color: #FFFFFF;
+	background-color: #60b177;
+	border-radius: 10px;
+	border: none;
+}
+
+.YNpopup {
+	width: 30vw;
+	height: 20vh;
+	background-color: #FFFFFF;
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	position: fixed;
+	top: 35%;
+	left: 35%;
+}
+
+.YNpopup_Import {
+	padding-top: 24px;
+	width: fit-content;
+	height: fit-content;
+	background-color: #FFFFFF;
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	position: fixed;
+	top: 35%;
+	left: 35%;
+	padding: 20px;
+}
+
+.YNpopup > p:first-child {
+	font-size: 16px;
+	font-weight: 600;
+	margin: 35px;
+	text-align: center;
+}
+
+.YNbutton {
+	display: flex;
+	justify-content: space-between;
+	width: 40%;
+}
+
+	.YNbutton button,
+	.YNbutton_2 button {
+		cursor: pointer;
+		width: 100px;
+		height: 40px;
+		border: none;
+		margin-top: 1vh;
+		border-radius: 8px;
+		font-size: 16px;
+		font-weight: 600;
+		margin-bottom: 20px;
+	}
+
+.YNbutton_2 {
+	display: flex;
+	justify-content: center;
+	width: 40%;
+}
+
+.showImportForm {
+	width: 100%;
+	height: 175vh;
+	position: absolute;
+	top: 0;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+.inforProject button, input[type=button] {
+	cursor: pointer;
+	padding: 8px;
+	border: none;
+	border-radius: 8px;
+	color: white;
+	width: fit-content;
+	background-color: #7470e9;
+}
+
+	button:hover, input[type=button]:hover {
+		/*background-color: #99e5ae;*/
+		color: #000;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+	}
+
+.btn-importData {
+	/* margin-bottom: 1%; */
+	margin-top: 10px;
+}
+
+.listUngroupedStudentsForAdd {
+	height: fit-content;
+	overflow-y: auto;
+}
+
+.limitCharacter {
+	display: block;
+	display: -webkit-box;
+	max-width: 100%;
+	margin: 0 auto;
+	font-size: 16px;
+	line-height: 1.4;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
