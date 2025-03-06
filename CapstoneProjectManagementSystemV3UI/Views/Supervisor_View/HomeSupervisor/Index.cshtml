@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+    Layout = "/Views/Shared/Mentor/_LayoutMentor.cshtml";
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tiêu đề trang</title>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="/css/student/student_homepage.css">
+</head>
+<body>
+    
+   
+@await Html.PartialAsync("/Views/Shared/Mentor/_LayoutSidebarLeftMentor.cshtml")
+    
+
+    
+<script src="/js/student/student_homepage.js"></script>
+
+</body>
+</html>

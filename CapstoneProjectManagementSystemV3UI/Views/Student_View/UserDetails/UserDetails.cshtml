@@ -1,0 +1,155 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "UserDetails Page";
+}
+<link rel="stylesheet" href="/css/student/student_userDetails.css">
+<div class="viewProfile">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <p>Your Profile</p>
+        <div class="showProfile">
+            <div class="showProfile__avatar">
+                <p class="bigTitle">Avatar</p>
+                <img src="../img/3d-nft-art.png" alt="">
+                <div class="contactInfomation">
+                    <p class="bigTitle">Contact Information</p>
+                    <div class="formContactInfo__phoneNumber">
+                        <p class="smallTitle">Phone Number</p>
+                        <input type="text" value="0123456789" id="phoneContactInfo" disabled>
+                    </div>
+                    <div class="formContactInfo__email">
+                        <p class="smallTitle">Email</p>
+                        <input type="text" value="nhatm1309@gmail.com" id="emailContactInfo" disabled>
+                    </div>
+                    <div class="formContactInfo__facebook">
+                        <p class="smallTitle">Facebook</p>
+                        <textarea name="faceBookContactInfo" id="faceBookContactInfo" cols="30" rows="2"
+                                  disabled>https://www.facebook.com/profile.php?id=100005406494731</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="showProfile__basicInfo">
+                <p class="bigTitle">Basic Information</p>
+                <div class="formBasicInfo">
+                    <div class="formBasicInfo__name">
+                        <p class="smallTitle">Name</p>
+                        <input type="text" value="Trinh Minh Nhat" id="nameBasicInfo" disabled>
+                    </div>
+                    <div class="formBasicInfo__rollNumber">
+                        <p class="smallTitle">Roll Number</p>
+                        <p class="content">HE41446</p>
+                    </div>
+                    <div class="formBasicInfo__curriculum">
+                        <p class="smallTitle">Curriculum</p>
+                        <input type="text" value="BSE_IS_14D" id="curriculumBasicInfo" disabled>
+                    </div>
+                    <div class="formBasicInfo__professional">
+                        <p class="smallTitle">Professional</p>
+                        <input type="text" value="Software Engineer" id="professionalBasicInfo" disabled>
+                    </div>
+                    <div class="formBasicInfo__gender">
+                        <p class="smallTitle">Gender</p>
+                        <div class="selectGender">
+                            <input type="radio" id="male" name="genderUser" value="male" disabled="disabled" checked="checked">
+                            <label for="male">Male</label><br>
+                            <input type="radio" id="female" name="genderUser" value="female" disabled="disabled">
+                            <label for="female">Female</label><br>
+                            <input type="radio" id="other" name="genderUser" value="other" disabled="disabled">
+                            <label for="other">Other</label>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__email">
+                        <p class="smallTitle">Email</p>
+                        <p class="content">nhattmhe141446@fpt.edu.vn</p>
+                    </div>
+                    <div class="formBasicInfo__bio">
+                        <p class="smallTitle">Description</p>
+                        <textarea name="bioInfo" id="bioInfo" cols="50" rows="5"
+                                  disabled>Chuyên về Backend Java, có kinh nghiệm làm 1 số dự án Spring boots, khá thành thạo sử dụng Entity Framework, code theo mô hình MVC, Restful API. Biết code cơ bản html, css, javaScript. Biết 1 chút về C#, từng làm dự án ASP.net core MVC.</textarea>
+                    </div>
+                    <div class="formBasicInfo__bio">
+                        <p class="smallTitle">Expected role</p>
+                        <p class="content">Backend, TechLead </p>
+                    </div>
+                    <div class="button">
+                        <button class="btnCancel">Cancel</button>
+                        <button class="btnSave">Submit</button>
+                    </div>
+                </div>
+                @*<div class="formBasicInfo__alternativeEmail">
+                    <p class="bigTitle">Personal Email</p>
+                    <div class="alternativeMail">
+                        <p class="smallTitle">Alternative Email</p>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                             xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z"
+                                  fill="#F74055" />
+                        </svg>
+                        <p class="addMailNotifi">Add an alternative email</p>
+                        <button id="btnAddAlternativeForm">Add</button>
+                    </div>
+                </div>*@
+            </div>
+            @*<div class="showProfile__editBtn">
+                <button class="editProfile" id="editProfileBtn">
+                    <i class="fa-solid fa-pen"></i>Edit My
+                    Profile
+                </button>
+            </div>*@
+        </div>
+    </div>
+    <div class="alternativeMail__popup hide-form">
+        <div class="inputMailpopup">
+            <p>Alternative Email</p>
+            <p>In case that your Google account has expired, you can use your alternate email address to sign in.</p>
+            <div class="alternativeEmail__popup">
+                <p>Email</p>
+                <input type="text" id="alternativeEmailInput" placeholder="Enter your email">
+            </div>
+            <div class="buttonPopup">
+                <button class="cancelBtn">Cancel</button>
+                <button class="continueBtn" id="continueBtn__alternativeMail" disabled>Continue</button>
+            </div>
+        </div>
+        <div class="inputVerifypopup hide__popup">
+            <p>Verify Your Alternative Email</p>
+            <p>
+                Enter the verify code sent to <span>nhattm1309@gmail.com</span>. Didn't get the
+                code?<button>Resend</button>
+            </p>
+            <div class="verifyCode__popup">
+                <p>Verification Code</p>
+                <input type="text" id="verifyCodeInput" placeholder="Enter vefification code">
+            </div>
+            <div class="buttonPopup">
+                <button class="cancelBtn">Cancel</button>
+                <button class="continueBtn" id="continueBtn__verifyCode" disabled>Continue</button>
+            </div>
+        </div>
+        <div class="inputSetPasspopup hide__popup">
+            <p>Set Password</p>
+            <p>Use this password for your next sign-in using your alternate email address</p>
+            <div class="setPass__popup">
+                <p>Password</p>
+                <div class="inputPass">
+                    <input type="password" id="passalternativeMailInput" placeholder="Enter your password">
+                    <i class="fa-solid fa-eye-slash showHidePW"></i>
+                </div>
+            </div>
+            <div class="setPass__popup">
+                <p>Confirm Password</p>
+                <div class="inputConfirmPass">
+                    <input type="password" id="confirmpassalternativeMailInput" placeholder="Confirm your password">
+                    <i class="fa-solid fa-eye-slash showHideConfirmPW"></i>
+                </div>
+            </div>
+            <div class="buttonPopup">
+                <button class="cancelBtn">Cancel</button>
+                <button class="continueBtn" id="submitBtn">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="/js/student/student_userDetails.js"></script>

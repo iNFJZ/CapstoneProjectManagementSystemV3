@@ -1,0 +1,488 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#manageDevhead {
+    display: flex;
+    height: auto;
+}
+
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+.main {
+    /* width: 90%; */
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    /* overflow-x: auto; */
+}
+
+.titlePage {
+    margin: 16px 20px;
+    color: #1C1F27;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.filterButton {
+    height: 40px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    /* margin-left: 16px; */
+    cursor: pointer;
+    color: #7470E9;
+    background-color: rgba(116, 112, 233, 0.2);
+    width: 100px;
+    /* text-align: center; */
+}
+
+.requestMain {
+    margin-left: 24px;
+    margin-right: 24px;
+    width: 96%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    /* display: flex; */
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+    margin-bottom: 24px;
+    margin: 24px;
+    /* padding-top: 0px; */
+    /* margin-top: 0px; */
+}
+
+.titleRequest {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr;
+    height: 45px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border-bottom: 1px solid black;
+    margin: 16px;
+    margin-bottom: 0px;
+}
+
+.informSupportRequest {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1F27;
+    padding: 16px;
+    margin: 0 16px 20px 16px;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 0px;
+}
+
+    .titleRequest > p:first-child,
+    .informSupportRequest > p:first-child {
+        flex-basis: 30%;
+        padding-right: 20px;
+    }
+
+    .titleRequest > p:nth-child(2),
+    .informSupportRequest > p:nth-child(2) {
+        flex-basis: 30%;
+        padding-right: 20px;
+        word-break: break-all;
+    }
+
+    .titleRequest > p:last-child,
+    .informSupportRequest > p:last-child {
+        flex-basis: 20%;
+        padding-right: 20px;
+    }
+
+
+@media screen and (max-width: 1440px) {
+    .titlePage {
+        margin: 12px;
+    }
+
+    .requestHeader {
+        margin: 0 12px;
+    }
+
+    .requestMain {
+        margin: 24px;
+    }
+}
+
+.filter {
+    width: 100%;
+    display: flex;
+    margin: 12px 0;
+    height: 40px;
+    justify-content: center;
+}
+
+.filterDropdown {
+    min-width: 160px;
+    position: relative;
+    margin-right: 12px;
+}
+
+    .filterDropdown * {
+        box-sizing: border-box;
+    }
+
+.filter select {
+    height: 40px;
+    width: 200px;
+    background: rgba(116, 112, 233, 0.05);
+    border: 2px #2a2f3b solid;
+    border-radius: 40px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+    margin-right: 12px;
+    text-align: center;
+}
+
+.formRequest {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    /* margin: 20px; */
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+.gridcolumn {
+    display: flex;
+    /* margin-bottom: 10px; */
+    margin-left: 0%;
+    align-items: center;
+}
+
+    .gridcolumn label {
+        /* FONT-WEIGHT: 500; */
+        flex-basis: 30%;
+        /* padding-top: 10px; */
+        /* padding-left: 20%; */
+        flex-basis: 38%;
+        /* padding-top: 10px; */
+        /* padding-left: 6%; */
+        padding-right: 0%;
+    }
+
+    .gridcolumn input {
+        flex-basis: 56%;
+        padding: 10px;
+        border-radius: 8px;
+        height: fit-content;
+        border-color: rgba(0,0,0,.4);
+    }
+
+    .gridcolumn select {
+        /* width: initial; */
+        padding: 5px;
+        padding: 10px;
+        /* flex-basis: 50%; */
+        border-radius: 8px;
+        border-color: black;
+        /* border-style: solid; */
+        height: fit-content;
+    }
+
+.button {
+    text-align: center;
+    /* margin-top: 10px; */
+    /* margin-bottom: 10px; */
+}
+
+.listSupportQuestion {
+    margin-bottom: 20px;
+}
+
+.searchDiv {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.informSupportRequest:hover {
+    border-radius: 8px;
+    background-color: #ccc;
+}
+
+.gender {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.active {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.tableForm {
+    margin: 20px;
+    width: revert;
+    padding: 30px;
+    /* padding-left: 30%; */
+    padding-left: 10%;
+    padding-top: 0px;
+}
+
+.item {
+    display: flex;
+    padding: 10px;
+    /* font-size: 16px; */
+    grid-template-columns: 1fr 1fr;
+    /* width: 66%; */
+}
+
+    .item > p:first-child {
+        flex-basis: 20%;
+    }
+
+    .item > p:last-child, .item > div:last-child {
+    }
+
+    .item input {
+        border-radius: 8px;
+        padding: 5px;
+        font-size: 14px;
+        border: 1px solid black;
+        /* width: 50%; */
+    }
+
+p {
+    font-size: 18px;
+}
+
+select.select-profession {
+    padding: 8px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+input.maxgroups {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-left: 20px;
+    width: 13%;
+    border-radius: 8px;
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid black;
+}
+
+input.checkbox-devhead {
+}
+
+input[type="button"] {
+    color: #fff;
+    background-color: #7470e9;
+    border: none;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 8px;
+    width: fit-content;
+}
+
+label {
+}
+
+}
+
+.item > p:first-child {
+    flex-basis: 30%;
+}
+
+.item > p:last-child {
+    flex-basis: 50%;
+}
+
+.contentForm {
+    display: flex;
+    flex-direction: column;
+    /* margin-left: 8px; */
+}
+
+.itemForm {
+    display: flex;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 130%;
+    /* width: auto; */
+    align-items: baseline;
+}
+
+    .itemForm > select:first-child {
+        flex-basis: 30%;
+        margin-right: 39px;
+    }
+
+    .itemForm > div:nth-child(2) {
+        flex-basis: 25%;
+        /* padding-left: 23px; */
+    }
+
+    .itemForm > div:last-child {
+        flex-basis: 30%;
+    }
+
+input#feMail {
+    width: 50%;
+}
+
+input#fullName {
+    width: 50%;
+}
+
+p.gender {
+}
+
+.itemButton {
+    display: flex;
+    flex-direction: row;
+}
+
+.clickButton {
+    flex-basis: 21%;
+}
+
+.buttonForm {
+    margin-top: 20px;
+    text-align: center;
+    margin-left: -5%;
+}
+
+button#btn-update {
+    color: white;
+    border: none;
+    background-color: #7066e0;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 19px;
+    cursor: pointer;
+}
+
+button#btn-cancel {
+    color: white;
+    border: none;
+    background-color: #b8b7c2;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 19px;
+    cursor: pointer;
+    margin-right: 30px;
+}
+
+.listform {
+    margin-left: 6%;
+    display: grid;
+    /* margin-right: 20%; */
+    grid-template-columns: 4fr 1fr;
+}
+
+.listSupportQuestion {
+    margin-bottom: 20px;
+}
+
+.searchDiv {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    width: 100%;
+}
+
+button.btn-delete {
+    padding: 3px;
+    border: none;
+    color: white;
+    background-color: #7470e9;
+    border-radius: 8px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+div#pagination {
+    margin-top: 20px;
+}
+.requestMain1 {
+    margin-left: 24px;
+    margin-right: 24px;
+    width: 96%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 2px solid #1C1F27;
+}
+.titleRequest {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr;
+    height: 45px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border: 1px solid #1C1F27; /* Viền cho tiêu đề bảng */
+    margin: 16px;
+    margin-bottom: 0px;
+}
+.informSupportRequest {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 3fr 3fr 1fr;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1F27;
+    padding: 16px;
+    margin: 0 16px 20px 16px;
+    border-bottom: 1px solid #ccc; /* Viền cho từng hàng dữ liệu */
+    margin-bottom: 0px;
+    border-left: 1px solid #ccc; /* Viền dọc bên trái */
+    border-right: 1px solid #ccc; /* Viền dọc bên phải */
+}
+/*.requestMain {
+    margin-left: 24px;
+    margin-right: 24px;
+    width: 96%;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    padding: 20px;
+    margin-bottom: 24px;
+    border: 1px solid #ccc;*/ /* Thêm viền cho phần chứa bảng */
+/*}*/

@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "CreateIdea Page";
+}
+<link rel="stylesheet" href="/css/common/accessDenied.css" />
+<div class="homepage" id="createIdea">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="accessDenied">
+            <p>
+                You are ineligible to create a project!
+            </p>
+        </div>
+    </div>
+</div>

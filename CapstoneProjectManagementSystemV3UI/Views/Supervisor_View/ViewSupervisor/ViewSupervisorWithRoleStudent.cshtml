@@ -1,0 +1,80 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "View Supervisor Page";
+}
+<link rel="stylesheet" href="/css/student/student_viewSupervisor.css">
+<div class="homepage" id="viewSupervisorByStudent">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="requestMain">
+            <div class="formSupport" style="display: flex; flex-direction: row">
+                <p class="formTitle" style="margin-right: 20px">The list of Supervisor in this Semester</p>
+            </div>
+
+            <form action="~/ViewSupervisor/ViewSupervisorWithRoleStudent" method="GET" class="listform">
+                <div class="gridcolumn">
+                    <label for="mail">FE Email Or Name:</label>
+                    <input type="text" id="mail" name="search" value="@ViewBag.search" placeholder="FE Email or Name">
+                </div>
+
+           
+                <div class="button"><input type="submit" value="Search" class="filterButton"></div>
+            </form>
+            <div>
+                <div>
+                    @if (ViewBag.supervisors.Count != 0 && ViewBag.supervisors!=null)
+                    {
+                        
+                        <div class="requestMain" style="margin-bottom: 0px; margin-top: 0px">
+                            <div class="titleRequest">
+                                <p>No.</p>
+                                <p>FullName</p>
+                                <p>Email</p>
+                               
+                                <p>Action</p>
+                            </div>
+                            @{
+                                var count = 0;
+                            }
+                            @foreach (var u in ViewBag.supervisors)
+                            {
+                              
+                                    count++;
+                                    <div class="informSupportRequest">
+                                        @*<p>@count</p>*@
+                                        <p>@u.RowNum</p>
+                                        <p>@u.User.FullName</p>
+                                        <p>@u.FeEduEmail</p>
+                                        
+                                        <p>
+                                        <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;">
+                                                <a style="text-decoration: none; color: white" href="/ViewSupervisor/DetailSupervisorWithRoleStudent/@u.SupervisorID">View</a>
+                                            </button>
+                                        </p>
+                                    </div>
+                                
+
+                            }
+                        </div>
+                       
+                    }else{
+                      <h4 style="color: red; text-align: center">Nothing to display!</h4>
+                  }
+
+                   
+                </div>
+
+                <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+
+                <script src="/js/util/paging.js"></script>
+                <script>
+                    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

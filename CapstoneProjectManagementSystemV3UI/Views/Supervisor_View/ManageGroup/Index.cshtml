@@ -1,0 +1,475 @@
+﻿﻿﻿@{
+    if (ViewBag.isDevHead)
+    {
+        Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    }
+    else
+    {
+        Layout = "/Views/Shared/Mentor/_LayoutMentor.cshtml";
+    }
+    ViewData["Title"] = "Group Page";
+}
+@using Infrastructure.Entities;
+
+<link rel="stylesheet" href="/css/supervisor/supervisor_registerRequest.css">
+
+@*<link rel="stylesheet" href="/css/student/student_formChangeTopic.css">
+<link rel="stylesheet" href="/css/staff/staff_manageChangTopic.css">
+<link rel="stylesheet" href="/css/staff/staff_registrationGroup.css">
+<link rel="stylesheet" href="/css/staff/staff_showDetailRegistrationGroup.css">*@
+
+
+<div class="homepage" id="registerRequest">
+    @if (ViewBag.isDevHead)
+    {
+        @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    }
+    else
+    {
+        @await Html.PartialAsync("/Views/Shared/Mentor/_LayoutSidebarLeftMentor.cshtml")
+    }
+    <div class="main">
+        <div class="requestChangeFull">
+            <div class="formRequest" style=" padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */">
+                <p class="formTitle">Manage Group</p>
+
+                <div class="chooseTypeRequest">
+                    <button class="listRegitrationBtn active" id="listRegitrationBtn">List Registration</button>
+                    <button class="teamRegistrationBtn" id="teamRegistrationBtn">Group you're assigned</button>
+                </div>
+
+
+                <div class="listRegitration">
+
+                    <div class="title1" style=" font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border: 1px solid #1C1F27; /* Viền cho tiêu đề bảng */
+    margin: 16px;
+    margin-bottom: 0px;">
+                            <p> No.</p>
+                            <p>Topic</p>
+                            <p>Major</p>
+                            <p style="display : flex; position : relative;">
+                                Status <i class="fa-solid fa-filter" onclick="toggle()" style="cursor : pointer; margin-left: 8px"></i>
+                                <div class="status-filter-menu" style="display : none; position : absolute;top: 36%;
+                                                              left: 71%;
+                                                              background-color: #f9f9f9;
+                                                              padding: 10px;
+                                                             border: 1px solid #ccc;
+                                                            ">
+                                    <h2 style="color: #7470E9"> Status Filter</h2>
+                                    <ul>
+                                        <li class="status-filter-item">
+                                            <p class="itemFlex">All </p>
+                                            <input class="mini" type="checkbox" name="statuses-all" value="0" @if (ViewBag.status0 == 0
+                                               && ViewBag.status1 == 1 && ViewBag.status2 == 2)
+                                            {
+                                                <text>checked</text>
+                                            }
+                                            />
+                                        </li>
+                                        <li class="status-filter-item">
+                                            <p class="itemFlex">Pending </p>
+                                            <input class="mini" type="checkbox" name="statuses" value="0" @if (ViewBag.status0 == 0)
+                                            {
+                                                <text>checked</text>
+                                            }
+                                            />
+                                        </li>
+                                        <li class="status-filter-item">
+                                            <p class="itemFlex">Accepted</p>
+                                            <input class="mini" type="checkbox" name="statuses" value="1" @if (ViewBag.status1 == 1)
+                                            {
+                                                <text>checked</text>
+                                            } />
+                                        </li>
+                                        <li class="status-filter-item">
+                                            <p class="itemFlex">Rejected</p>
+                                            <input class="mini" type="checkbox" name="statuses" value="2" @if (ViewBag.status2 == 2)
+                                            {
+                                                <text>checked</text>
+                                            } />
+                                        </li>
+                                    </ul>
+                                    <div style="display :flex; justify-content: center;align-items: center;"> <button class="buttonSave" onclick="saveFilterByStatus()">Save</button> </div>
+                                </div>
+                            </p>
+                            <p>Response</p>
+                        </div>
+                    @if (ViewBag.requests != null && ViewBag.requests.Count > 0)
+                    {
+                        int count = 1;
+
+                        foreach (var item in ViewBag.requests)
+                        {
+                            <div class="detailFormChange detailFormChange1" id="@item.RegisteredGroupID">
+
+                                <p>@count</p>
+                                <p class="groupName limitCharacter">@item.GroupIdea.ProjectEnglishName</p>
+                                <p class="limitCharacter">@item.GroupIdea.Specialty.SpecialtyFullName</p>
+                                <div>
+                                    @if (ViewBag.isBeforeDeadline)
+                                    {
+                                        if (@item.RegisterdGroupSupervisors[0].Status == 0)
+                                        {
+                                            <button class="floating-button" id="accept" onclick="UpdateStatusRegisterGroup(event, 1, '@item.RegisteredGroupID')">Accept</button>
+                                            <button class="floating-button" id="reject" onclick="UpdateStatusRegisterGroup(event, 2, '@item.RegisteredGroupID')">Reject</button>
+                                        }
+                                        else if (@item.RegisterdGroupSupervisors[0].Status == 1)
+                                        {
+                                            <p>Accepted</p>
+                                            <button class="floating-button" onclick="UpdateStatusRegisterGroup(event, 0, '@item.RegisteredGroupID')">Cancel</button>
+                                        }
+                                        else
+                                        {
+                                            <p>Rejected</p>
+                                            <button id="cancel" onclick="UpdateStatusRegisterGroup(event, 0, '@item.RegisteredGroupID')">Cancel</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        @if (@item.RegisterdGroupSupervisors[0].Status == 0)
+                                        {
+                                            <text>No Action</text>
+                                        }
+                                        else if (@item.RegisterdGroupSupervisors[0].Status == 1)
+                                        {
+                                            <text>Accepted</text>
+                                        }
+                                        else
+                                        {
+                                            <text>Rejected</text>
+                                        }
+                                    }
+                                </div>
+                                <p>
+                                    @if (!ViewBag.isBeforeDeadline)
+                                    {
+                                        @if (@item.RegisterdGroupSupervisors[0].IsAssigned == true)
+                                        {
+                                            <text>Approved</text>
+                                        }
+                                        else if (@item.RegisterdGroupSupervisors[0].IsAssigned == false)
+                                        {
+                                            <text>Rejected</text>
+                                        }
+                                    }
+                                </p>
+                            </div>
+                            count++;
+                        }
+                    }
+                    else
+                    {
+                    }
+
+                    <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+
+                    <div class="showForm hide-form">
+                        <div class="formSubmitRegistration">
+                            <div class="closeFormBtn">
+                                <i class="fa-solid fa-x"></i>
+                            </div>
+                            <p class="formName">Team Registration</p>
+                            <div class="form">
+                                <div class="informGroup">
+                                    <div class="introGroup">
+                                        <div class="nameProject">
+                                            <img src="~/img/logo-truong-dai-hoc-fpt.jpg" alt="">
+                                            <div class="inforProject">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="someInforms">
+                                        <div class="someInforms--above">
+                                            <div class="vietnamTitle">
+                                                <p class="title_popup">Vietnamese Title</p>
+                                                <p class="content">Phần mềm quản lý đồ án</p>
+                                            </div>
+                                            <div class="abbreviations">
+                                                <p class="title_popup">Abbreviations</p>
+                                                <p class="content">CPM</p>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="someInforms--below">
+                                            <div class="professional">
+                                                <p class="title_popup">Professional</p>
+                                                <p class="content">Software Engineer</p>
+                                            </div>
+                                            <div class="specialty">
+                                                <p class="title_popup">Specialty</p>
+                                                <p class="content">Web Development</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="someInforms">
+                                        <div class="description">
+                                            <p class="title_popup">Description</p>
+                                            <p class="content">Check description</p>
+                                        </div>
+                                    </div>
+                                    <div class="supervisorInspect">
+                                        <p class="title_popup">Supervisor Wishes</p>
+                                        <div class="supervisorName">
+                                            <div class="supervisorInform">
+                                                <p class="titleSupervisor">Supervisor</p>
+                                                <div class="basicInformSupervisor" id="basicInformSupervisor">
+                                                    <div class="inputInformSupervisor">
+                                                        <p>Full Name</p>
+                                                        <p>Trinh Minh Nhat</p>
+                                                    </div>
+                                                    <div class="inputInformSupervisor">
+                                                        <p>Idea</p>
+                                                        <p>Edunext</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="commentStudent">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="showMember">
+                                    <p class="title_popup">Members</p>
+                                    <div class="numMember">
+                                        <p>Total: <span>6 members</span></p>
+                                    </div>
+                                    <div class="members">
+                                        <div class="showInfomember" id="memberinfor">
+                                            <div class="info">
+                                                <img src="" alt="">
+                                                <div class="memInfo">
+                                                </div>
+                                            </div>
+                                            <div class="role">
+                                                <p>Member</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="teamRegistration">
+                    @*Final group*@
+
+                    @if (ViewBag.finalGroups != null && ViewBag.finalGroups.Count > 0)
+                    {
+                        <div class="title" style="border-bottom: 1px solid #ccc;">
+                            <p> No.</p>
+                            <p>Semester</p>
+                            <p>Group name</p>
+                            <p>Topic</p>
+                            <p>Major</p>
+                            <p>Final report</p>
+                        </div>
+                        int countFinal = 1;
+
+                        foreach (var item in ViewBag.finalGroups)
+                        {
+                            <div class="finalGroup-popup" id="@item.FinalGroupID">
+                                <input class="finalGroup-@item.FinalGroupID" value="@item.GroupName" hidden>
+                                <p>@countFinal</p>
+                                <p>@item.Semester.SemesterCode</p>
+                                <p>@item.GroupName</p>
+                                <p class="groupName">@item.ProjectEnglishName</p>
+                                <p>@item.Specialty.SpecialtyFullName</p>
+                                <div>
+                                    @if (@item.Semester.SemesterID != ViewBag.currentSemesterId)
+                                    {
+                                        @if (@item.IsConfirmFinalReport == null)
+                                        {
+                                            <button class="floating-button" onclick="ConfirmFinalReport(event, 1, '@item.FinalGroupID')">Confirm</button>
+                                            <button class="floating-button" onclick="ConfirmFinalReport(event, 2, '@item.FinalGroupID')">Reject</button>
+                                        }
+                                        else if (@item.IsConfirmFinalReport == true)
+                                        {
+                                            <p class="margin-top: 4px;">Confirmed</p>
+                                            <button class="floating-button" onclick="ConfirmFinalReport(event, 0, '@item.FinalGroupID')">Cancel</button>
+                                        }
+                                        else
+                                        {
+                                            <p class="margin-top: 4px;">Rejected</p>
+                                            <button onclick="ConfirmFinalReport(event, 0, '@item.FinalGroupID')">Cancel</button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            countFinal++;
+                        }
+
+                    }
+                    else
+                    {
+
+                    }
+
+                    <div class="showForm hide-form">
+                        <div class="formSubmitRegistration">
+                            <div class="closeFormBtn">
+                                <i class="fa-solid fa-x"></i>
+                            </div>
+                            <p class="formName">Team Registration</p>
+                            <div class="form">
+                                <div class="informGroup">
+                                    <div class="introGroup">
+                                        <div class="nameProject">
+                                            <img src="~/img/logo-truong-dai-hoc-fpt.jpg" alt="">
+                                            <div class="inforProject">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="someInforms">
+                                        <div class="someInforms--above">
+                                            <div class="vietnamTitle">
+                                                <p class="title_popup">Vietnamese Title</p>
+                                                <p class="content">Phần mềm quản lý đồ án</p>
+                                            </div>
+
+                                            <div class="abbreviations">
+                                                <p class="title_popup">Abbreviations</p>
+                                                <p class="content">CPM</p>
+                                            </div>
+                                        </div>
+                                        <div class="someInforms--below">
+                                            <div class="professional">
+                                                <p class="title_popup">Professional</p>
+                                                <p class="content">Software Engineer</p>
+                                            </div>
+                                            <div class="specialty">
+                                                <p class="title_popup">Specialty</p>
+                                                <p class="content">Web Development</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="someInforms">
+                                        <div class="description">
+                                            <p class="title_popup">Description</p>
+                                            <p class="content">Check description</p>
+                                        </div>
+                                    </div>
+                                    <div class="supervisorInspect">
+                                        <p class="title_popup">Supervisor Wishes</p>
+                                        <div class="supervisorName">
+                                            <div class="supervisorInform">
+                                                <p class="titleSupervisor">Supervisor</p>
+                                                <div class="basicInformSupervisor" id="basicInformSupervisor">
+                                                    <div class="inputInformSupervisor">
+                                                        <p>Full Name</p>
+                                                        <p>Trinh Minh Nhat</p>
+                                                    </div>
+                                                    <div class="inputInformSupervisor">
+                                                        <p>Idea</p>
+                                                        <p>Edunext</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="commentStudent">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="showMember">
+                                    <p class="title_popup">Members</p>
+                                    <div class="numMember">
+                                        <p>Total: <span>6 members</span></p>
+                                    </div>
+                                    <div class="members">
+                                        <div class="showInfomember" id="memberinfor">
+                                            <div class="info">
+                                                <img src="" alt="">
+                                                <div class="memInfo">
+                                                </div>
+                                            </div>
+                                            <div class="role">
+                                                <p>Member</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/util/paging.js"></script>
+<script type="text/javascript" src="~/js/supervisor/supervisor_manageGroup.js"></script>
+<script>
+    pagination(@ViewBag.currentPage, @ViewBag.totalPage, 2);
+</script>
+
+<style>
+    .detailFormChange button.floating-button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 5px;
+        background-color: #7470e9b0;
+        color: #fff;
+        font-size: 14px;
+    }
+
+        .detailFormChange button.floating-button:hover {
+            background-color: #7470E9;
+        }
+</style>
+
+<style>
+
+</style>
+
+<script>
+    const listRegistrationBtn = document.getElementById('listRegitrationBtn');
+    const teamRegistrationBtn = document.getElementById('teamRegistrationBtn');
+    const listRegistrationDiv = document.querySelector('.listRegitration');
+    const teamRegistrationDiv = document.querySelector('.teamRegistration');
+
+    listRegistrationBtn.addEventListener('click', function () {
+        showRegistrationDiv('listRegistration');
+        setActiveButton(this);
+    });
+
+    teamRegistrationBtn.addEventListener('click', function () {
+        showRegistrationDiv('teamRegistration');
+        setActiveButton(this);
+    });
+
+    function showRegistrationDiv(divId) {
+        if (divId === 'listRegistration') {
+            listRegistrationDiv.style.display = 'block';
+            teamRegistrationDiv.style.display = 'none';
+        } else if (divId === 'teamRegistration') {
+            listRegistrationDiv.style.display = 'none';
+            teamRegistrationDiv.style.display = 'block';
+        }
+    }
+
+    function setActiveButton(activeButton) {
+        listRegistrationBtn.classList.remove('active');
+        teamRegistrationBtn.classList.remove('active');
+        activeButton.classList.add('active');
+    }
+
+    showRegistrationDiv('listRegistration');
+    listRegistrationBtn.classList.add('active');
+
+    teamRegistrationBtn.addEventListener('click', function () {
+        showRegistrationDiv('teamRegistration');
+        setActiveButton(this);
+        showHideForm(true);
+    });
+
+
+</script>

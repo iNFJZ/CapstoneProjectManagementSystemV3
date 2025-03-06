@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "ChangeTopic Page";
+}
+<link rel="stylesheet" href="/css/student/student_formChangeTopic.css">
+<div class="homepage" id="changeTopic">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <p>Change Topic</p>
+        <div class="formTopicHeader">
+            <div class="chooseTypeRequest">
+                <button class="formChangeTopicBtn active" id="formChangeTopicBtn">Form Change Topic</button>
+                <button class="requestChangeTopicBtn" id="requestChangeTopicBtn">Request Change Topic</button>
+            </div>
+        </div>
+        <div class="formChange">
+            <div class="formDetail">
+                <div class="group">
+                    <p class="smallTitle">Group Name</p>
+                    <p class="smallTitle" id="groupName">@ViewBag.finalGroup.GroupName</p>
+                </div>
+                <div class="topicNameEL">
+                    <p class="smallTitle">New English Topic Name <span class="requi">*</span></p>
+                    <input type="text" id="topicNameEnglish" value="">
+                </div>
+                <p id="errortopicNameEnglish"></p>
+                <div class="topicNameVN">
+                    <p class="smallTitle">New Vietnamese Topic Name <span class="requi">*</span></p>
+                    <input type="text" id="topicVietNameseEnglish" value="">
+                </div>
+                <p id="errortopicNameVN"></p>
+                <div class="abbreviation">
+                    <p class="smallTitle">New Abbreviation <span class="requi">*</span></p>
+                    <input type="text" id="abbreviation" value="">
+                </div>
+                <p id="errorabbreviation"></p>
+                <div class="reasonChangeTopic">
+                    <p class="smallTitle">Reason ChangeTopic <span class="requi">*</span></p>
+                    <textarea cols="40" rows="4" type="text" id="reasonChangeTopic"></textarea>
+                </div>
+                <p id="errorreasonChangeTopic"></p>
+            </div>
+            <div class="submitForm">
+                <button class="submitBtn" value="@ViewBag.finalGroup.FinalGroupID">Submit</button>
+            </div>
+        </div>
+        <div class="requestChange hide-form">
+        </div>
+    </div>
+    <div class="showDetailRequest hide-form">
+        @*Popup request change topic*@
+        <div class="popup">
+        </div>
+    </div>
+    <div class="showFormConfirm hide-form">
+        <div class="formRequestConfirm">
+            <p class="formNameConfirm">Do you want to send request form for change topic?</p>
+            <div class="btnSubmitConfirm">
+                <button class="submitFormBtn">Submit</button>
+                <button class="discardBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/student/student_changeTopic.js"></script>

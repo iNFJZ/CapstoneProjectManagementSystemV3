@@ -1,0 +1,209 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#createuser {
+    display: flex;
+    height: auto;
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+.formRequest {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px;
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+.main {
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.titlePage {
+    margin: 16px 20px;
+    color: #1C1F27;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.profileUser1 {
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 24px;
+    margin: 20px;
+    padding-bottom: 0px;
+}
+
+.profileUser {
+    display: grid;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    /* padding: 24px; */
+    margin: 20px;
+    margin-left: 0px;
+    padding-left: 0px;
+    grid-template-columns: 1fr 1fr;
+    /* width: 50%; */
+    margin-bottom: 0px;
+}
+
+.profileUser__avatar {
+    flex-basis: 50%;
+    border-right: 1px solid rgba(204, 204, 204, 0.6);
+    padding-right: 20px;
+}
+
+.profileUser__basicInfo {
+    flex-basis: 50%;
+    padding-left: 20px;
+}
+
+input, select {
+    width: 20em;
+    height: 48px;
+    border-radius: 8px;
+    outline: none;
+    border: 1px solid rgba(28, 31, 39, 0.3);
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    flex-basis: 60%;
+}
+
+.submitFormBtn {
+    cursor: pointer;
+    width: fit-content;
+    height: fit-content;
+    border-radius: 8px;
+    background-color: #7470E9;
+    color: #FFFFFF;
+    outline: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+@media only screen and (max-width: 1440px) {
+    .formContent__right {
+        margin-left: 2em;
+    }
+
+    input {
+        width: auto;
+    }
+
+    textarea {
+        width: 48em;
+    }
+}
+
+.emailForm, .genderForm {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    /* text-align: center; */
+    margin-bottom: 20px;
+    align-items: baseline;
+}
+
+.formContent__left label {
+    flex-basis: 30%;
+    /* display: flow-root; */
+    margin-left: 150px;
+}
+
+.formContent__left span {
+    color: red;
+}
+
+.formContent__left input {
+    flex-basis: 80%;
+}
+
+.genderForm p {
+    flex-basis: 30%;
+    display: flow-root;
+    /* margin-left: 150px; */
+}
+
+.gender {
+    display: flex;
+}
+
+    .gender label {
+        /* padding-right: 20px; */
+        /* position: unset; */
+    }
+
+    .gender input {
+        height: 24px;
+    }
+
+.createButton {
+    height: 40px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: none;
+    /* margin-left: 16px; */
+    cursor: pointer;
+    color: #7470E9;
+    background-color: rgba(116, 112, 233, 0.2);
+    width: 100px;
+    /* text-align: center; */
+}
+
+label {
+    justify-content: center;
+    flex-basis: 20%;
+}
+
+select {
+    padding: 8px;
+    border-radius: 8px;
+}
+
+form {
+    margin-left: 63%;
+    width: 100%;
+}
+
+.profileUser1 {
+    padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}

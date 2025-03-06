@@ -1,0 +1,602 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "MyGroup Page";
+}
+
+<link rel="stylesheet" href="/css/student/student_myGroup.css">
+<link rel="stylesheet" href="/css/student/student_formRegist.css">
+<div class="homepage" id="myGroup">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="informGroup">
+            <div class="formRequest">
+                <p class="formTitle">My Group</p>
+            </div>
+            <div class="introGroup">
+                <div class="nameProject">
+                    <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                    <div class="inforGro">
+                        <p>@ViewBag.groupIdea.ProjectEnglishName </p>
+                        <p class="createDate">
+                            Created at:
+                            @{
+                                var created_at = @ViewBag.groupIdea.CreatedAt == null ? "Null" : @ViewBag.groupIdea.CreatedAt.ToString("dd/MM/yyyy");
+                            }
+                            @created_at
+                        </p>
+                    </div>
+                </div>
+                @if (TempData["registerStatus"] == null)
+                {
+                    @if (ViewBag.isBeforeDeadline)
+                    {
+                        <div class="btnAddMem">
+                            <button id="@ViewBag.groupIdea.GroupIdeaID" class="updateIdea">
+                                <i class="fa-solid fa-plus"></i>
+                                <p>Update Idea</p>
+                            </button>
+                            <form action="/MyGroup/DeleteGroup?projectId=@ViewBag.groupIdea.GroupIdeaID" method="post" id="formDeleteGroup"></form>
+                            <button class="deleteGroup">Delete Idea</button>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="someInforms">
+                <div class="someInforms--top">
+                    <div class="abbreviations">
+                        <p class="title">Abbreviations</p>
+                        <p class="content">@ViewBag.groupIdea.Abrrevation</p>
+                    </div>
+                    <div class="vietnamTitle">
+                        <p class="title">Vietnamese Title</p>
+                        <p class="content">@ViewBag.groupIdea.ProjectVietNameseName</p>
+                    </div>
+                </div>
+                <div class="someInforms--bottom">
+
+                    <div class="professional">
+                        <p class="title">Profession</p>
+                        <p class="content">@TempData["profession"]</p>
+                    </div>
+                    <div class="specialty">
+                        <p class="title">Specialty</p>
+                        <p class="content">@TempData["specialty"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="desIdea">
+
+                <p class="title">
+                    Description
+                </p>
+                <p class="content">
+                    @ViewBag.groupIdea.Description
+                </p>
+            </div>
+            <div class="keyword">
+                <p class="title">Keywords</p>
+                <div class="keywordText">
+                    @foreach (var tag in ViewBag.projectTagList)
+                    {
+                        <p>@tag</p>
+                    }
+                </div>
+            </div>
+            <div class="showMember">
+                <p class="title">Members</p>
+                <div class="numMember">
+                    <p>Max: <span>@ViewBag.groupIdea.MaxMember members</span></p>
+                    <p>Available Slot: <span>@TempData["availableSlot"]</span></p>
+                </div>
+                <div class="members">
+                    <div class="informMember">
+                        <div class="info">
+                            <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                            <div class="memInfo">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">@ViewBag.leader.FptEmail</a>
+                                <p>@ViewBag.leader.UserName</p>
+                            </div>
+                        </div>
+                        <div class="role">
+                            <p>Owner | Leader</p>
+                        </div>
+                        <div class="menuMember">
+                            <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div class="menuMember__dropdown">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var item in ViewBag.memberList)
+                    {
+                        <div class="informMember">
+                            <div class="info">
+                                <img src="@item.Avatar" alt="Avatar">
+                                <div class="memInfo">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">@item.FptEmail</a>
+                                    <p>@item.UserName</p>
+                                </div>
+                            </div>
+                            <div class="role">
+                                <p>Member</p>
+                            </div>
+                            <div class="menuMember">
+                                <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div class="menuMember__dropdown">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">View Profile</a>
+                                    <form action="/MyGroup/ChangeToLeader?leaderId=@ViewBag.leader.UserID&memberId=@item.UserID&projectId=@ViewBag.groupIdea.GroupIdeaID" method="post" id="form3 @item.UserID" class="changeLeadForm"></form>
+                                    <a class="changeLead" id="@item.UserID">Change to Leader</a>
+                                    <form action="/MyGroup/RemoveMember?userId=@item.UserID&projectId=@ViewBag.groupIdea.GroupIdeaID" method="post" id="form4 @item.UserID" class="removeMemForm"></form>
+                                    <a class="removeMem" id="@item.UserID">Remove Member</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div><div class="sidebar--right">
+        <p class="bigTitle">Register Group</p>
+        <div class="submitRegistration">
+            @if (TempData["registerStatus"] == null)
+            {
+                <p>Submit Registration</p>
+                @*<p>Your group has enough members and is eligible to register.</p>*@
+                <p style="color: #c20000;">If you do not submit registration within the registration deadline, your group will be <span style="font-weight: bold;">deleted</span>.</p>
+                if (ViewBag.isBeforeDeadline)
+                {
+                    <button class="submitFormRegis" id="@ViewBag.groupIdea.GroupIdeaID"
+                            style="padding: 15px 12px;width:fit-content;font-size: 14px;">
+                        Continue to choose supervisor
+                    </button>
+                }
+            }
+            @if (TempData["registerStatus"] != null)
+            {
+                @if (TempData["registerStatus"].Equals("0"))
+                {
+                    <p>Your group has been registered </p>
+                    <p style="color: red">Status: <span style="font-weight: 600">Pending</span></p>
+                    if (ViewBag.isBeforeDeadline)
+                    {
+                        <button class="cancelRegistration">Cancel Request</button>
+                        <form action="/MyGroup/CancelRegistrationRequest?projectId=@ViewBag.groupIdea.GroupIdeaID" method="post" id="formCancelRegis" hidden></form>
+                    }
+                }
+                @if (TempData["registerStatus"].Equals("1"))
+                {
+                    <p>Status: Assigning supervisor</p>
+                }
+                @if (TempData["registerStatus"].Equals("2"))
+                {
+                    <p>Your group registration has been denied  </p>
+                    <p>Staff Note: @TempData["staffComment"]</p>
+                    if (ViewBag.isBeforeDeadline)
+                    {
+                        <form action="/MyGroup/CancelRegistrationRequest?projectId=@ViewBag.groupIdea.GroupIdeaID" method="post">
+                            <button class="reSubmit" type="submit">Re-Submit</button>
+                        </form>
+                    }
+                }
+            }
+        </div>
+        @if (TempData["registerStatus"] == null)
+        {
+            <p class="bigTitle">Requests to this project</p>
+            <div class="requestMember">
+                @if (ViewBag.joinRequestList != null)
+                {
+                    <div class="memRequest">
+
+                        @foreach (var item in ViewBag.joinRequestList)
+                        {
+                            <div class="intromemRequest">
+                                <div class="informmemRequest">
+                                    <img src="@item.Avatar" alt="Avatar">
+                                    <div class="basicInformMemRequest">
+                                        <a href="/StudentProfile/Index?studentId=@item.UserId" class="namememRequest">@item.FptEmail</a>
+                                        <p class="timememRequest">@item.CreatedAt</p>
+                                    </div>
+                                    <div class="desAboutYourSelf">
+                                        <textarea name="" id="" cols="50" rows="5" disabled>@item.Message</textarea>
+                                    </div>
+                                </div>
+                                <div class="buttonAccept">
+                                    <form method="post" id="form1 @item.UserId" action="/MyGroup/AcceptRequest?userId=@item.UserId&projectId=@ViewBag.groupIdea.GroupIdeaID"></form>
+                                    <button id="@item.UserId" class="acceptButton" type="button">Accept</button>
+                                    <form method="post" id="form2 @item.UserId" action="/MyGroup/RejectRequest?userId=@item.UserId&projectId=@ViewBag.groupIdea.GroupIdeaID"></form>
+                                    <button id="@item.UserId" class="rejectButton" type="button">Reject</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                @if (ViewBag.joinRequestList == null)
+                {
+                    <div class="intromemRequest">
+                        <div class="submitRegistration">
+                            There aren't yet any requests.
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="showForm hide-form">
+        <div class="formSubmitRegistration">
+            <p class="formName">Submit Registration</p>
+            <p class="formName">Please verify the details listed below.</p>
+            <div class="form">
+                <div class="categorize">
+                    <div class="selectedSpe">
+                        <div class="selectedSpe--left">
+                            <p>Profession </p>
+                            <div class="dropdownSpe">
+                                <p class="content">@TempData["profession"]</p>
+                            </div>
+
+                        </div>
+
+                        <div class="selectedSpe--right">
+                            <p>Specialty </p>
+                            <div class="dropdownSpe">
+                                <p class="content">@TempData["specialty"]</p>
+                            </div>
+
+                        </div>
+
+                        <div class="englishTitle">
+                            <p class="titleForm">English Title </p>
+                            <p class="inputContent">@ViewBag.groupIdea.ProjectEnglishName </p>
+                        </div>
+
+                        <div class="shortTitle">
+                            <div class="shortTitle--ele">
+                                <p class="titleForm">Abbreviations for Title </p>
+                                <p class="inputContent">@ViewBag.groupIdea.Abrrevation</p>
+                            </div>
+                            <div class="shortTitle--ele">
+                                <p class="titleForm">Vietnamese Title </p>
+                                <p class="inputContent">@ViewBag.groupIdea.ProjectVietNameseName</p>
+                            </div>
+                        </div>
+                        <div class="member">
+                            <p class="titleForm">Team Members</p>
+                            <div class="memInGroup">
+                                <p>Members: <span>@ViewBag.groupIdea.NumberOfMember</span></p>
+
+                                <div class="imageMem">
+                                    <img src="@ViewBag.leader.Avatar" alt="" />
+                                    @if (ViewBag.memberList != null)
+                                    {
+                                        @foreach (var item in ViewBag.memberList)
+                                        {
+                                            <img src="@item.Avatar" alt="">
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <form action="/MyGroup/RegisterGroup" method="post" class="submitForm" id="submitFormRegis">
+                            <input hidden="hidden" name="groupId" value="@ViewBag.groupIdea.GroupIdeaID" />
+                            <p>You can choose 2 supervisors and one of their ideas for your Capstone Project (Optional)</p>
+                            <p style="font-weight: bold;">You have to fill fullname in the following form: fullname (FPT mail) <span style="color: darkred"> ex: Nguyễn Văn Anh (anhnv@fpt.edu.vn)</span></p>
+                            <p>
+                                Example Result:
+                                <img src="../img/chooseSupervisorExample.png" alt="example" style="width: 35%">
+                            </p>
+                            <p style="font-weight: bold;">If no results display to choose, this means no supervisors match</p>
+                            <br />
+                            @*Phase 1*@
+                            @*<div class="inputSupervisorInform">
+                            <div class="supervisorInform">
+                            <p class="titleSupervisor">Supervisor 1</p>
+                            <div class="basicInformSupervisor">
+                            <div class="inputInformSupervisor">
+                            <p>Full Name</p>
+                            <input type="text" name="name1" placeholder="Full name" id="name1">
+                            <p class="showErrorMessage" id="showErrorMessageFullName1"></p>
+                            </div>
+                            <div class="inputInformSupervisor">
+                            <p>Phone Number</p>
+                            <input type="text" name="phone1" placeholder="Phone Number" id="phone1">
+                            <p class="showErrorMessage" id="showErrorMessagePhone1"></p>
+
+                            </div>
+                            <div class="inputInformSupervisor">
+                            <p>Email</p>
+                            <input type="text" name="email1" placeholder="Email"  id="email1">
+                            <p class="showErrorMessage" id="showErrorMessageEmail1"></p>
+
+                            </div>
+                            </div>
+                            </div>
+                            <div class="supervisorInform">
+                            <p class="titleSupervisor">Supervisor 2</p>
+                            <div class="basicInformSupervisor">
+                            <div class="inputInformSupervisor">
+                            <p>Full Name</p>
+                            <input type="text" name="name2" placeholder="Full name" id="name2">
+                            <p class="showErrorMessage" id="showErrorMessageName2"></p>
+                            </div>
+                            <div class="inputInformSupervisor">
+                            <p>Phone Number</p>
+                            <input type="text" name="phone2" placeholder="Phone Number" id="phone2">
+                            <p class="showErrorMessage" id="showErrorMessagePhone2"></p>
+                            </div>
+                            <div class="inputInformSupervisor">
+                            <p>Email</p>
+                            <input type="text" name="email2" placeholder="Email" id="email2">
+                            <p class="showErrorMessage" id="showErrorMessageEmail2"></p>
+                            </div>
+                            </div>
+                            </div>
+                            <div class="otherComment">
+                            <p class="titleSupervisor">Other Comment</p>
+                            <textarea name="otherComment" cols="50" rows="4"
+                            placeholder="Input your comments" id="otherComment"></textarea>
+                            <p class="showErrorMessage" id="showErrorMessageOtherComment"></p>
+                            </div>
+                            </div>*@
+
+                            @*Phase 2*@
+                            <input hidden="hidden" id="professionOfGroupIdea" value="@ViewBag.professionOfGroupIdea" />
+                            <input hidden="hidden" id="specialtyOfGroupIdea" value="@ViewBag.specialtyOfGroupIdea" />
+                            
+                            <div>
+                                <!-- block suppervisor -->
+                                <p class="titleSupervisor">Supervisor 1</p>
+                                <div class="basicInformSupervisor">
+                                    <div class="inputInformSupervisor">
+                                        <p>Full Name</p>
+                                        <input type="text" id="txtSupervisor1" name="supervisorId1" placeholder="ex: Nguyễn Văn Anh (anhnv@fpt.edu.vn)">
+                                    </div>
+                                    <div class="inputInformSupervisor">
+                                        <p>Supervisor's ideas</p>
+                                        <select id="ideaOfSupervisor1" name="ideaOfSupervisor1">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <!-- block suppervisor -->
+                                <p class="titleSupervisor">Supervisor 2</p>
+                                <div class="basicInformSupervisor">
+                                    <div class="inputInformSupervisor">
+                                        <p>Full Name</p>
+                                        <input type="text" id="txtSupervisor2" name="supervisorId2" placeholder="ex: Nguyễn Văn Anh (anhnv@fpt.edu.vn)" disabled>
+                                    </div>
+                                    <div class="inputInformSupervisor">
+                                        <p>Supervisor's ideas</p>
+                                        <select id="ideaOfSupervisor2" name="ideaOfSupervisor2">
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <br />
+                                <div class="otherComment">
+                                    <p class="titleSupervisor">Other Comment</p>
+                                    <textarea name="otherComment" cols="50" rows="4"
+                                              placeholder="Input your comments" id="otherComment"></textarea>
+                                    <p class="showErrorMessage" id="showErrorMessageOtherComment"></p>
+                                </div>
+                            </div>
+                            
+                            <input type="checkbox" id="checked" name="checked" value="checked">
+                            <label for="checked" style="font-weight: bold;">I have checked carefully everything above</label><br>
+                            <div class="buttonCreate">
+                                <button class="btnDiscard" type="reset" id="btnDiscard1">Discard</button>
+                                <button class="btnCre" type="submit" id="btnCre" disabled>Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*update group*@
+    <div class="showUpdateForm hide-UpdateForm">
+        <div class="formSubmitRegistration">
+            <p class="formName">Update Group Details</p>
+            <div class="form">
+                <div class="categorize">
+                    <div class="selectedSpe">
+                        <div class="selectedSpe--left">
+                            <p>Profession </p>
+                            <div class="dropdownSpe">
+                                <p class="content">@TempData["profession"]</p>
+                            </div>
+                            <p class="profesId" id="@ViewBag.groupIdea.Profession.ProfessionID" hidden></p>
+                        </div>
+
+                        <div class="selectedSpe--right">
+                            <p>Specialty </p>
+                            <div class="dropdownSpe">
+                                <p class="content">@TempData["specialty"]</p>
+                            </div>
+                            <p class="specialId" id="@ViewBag.groupIdea.Specialty.SpecialtyID" hidden></p>
+                        </div>
+                        <div class="englishTitle">
+                            <p class="titleForm">English Title <span>*</span></p>
+                            <input id="txtEnglishTitle" class="inputContent" type="text"
+                                   required value="@ViewBag.groupIdea.ProjectEnglishName">
+                            <span id="errortxtEnglishTitle"></span>
+                        </div>
+
+                        <div class="shortTitle">
+                            <div class="shortTitle--ele">
+                                <p class="titleForm">Abbreviations for Title <span>*</span></p>
+                                <span style="font-style:italic">Abbreviation must be less than 20 characters</span>
+                                <input id="txtShortTitle" class="inputContent" type="text"
+                                       value="@ViewBag.groupIdea.Abrrevation" required>
+                                <span id="errortxtShortTitle"></span>
+                            </div>
+                            <div class="shortTitle--ele">
+                                <p class="titleForm">Vietnamese Title <span>*</span></p>
+                                <input id="txtVietNameseTitle" class="inputContent" type="text"
+                                       value="@ViewBag.groupIdea.ProjectVietNameseName" required>
+                                <span id="errortxtVietNameseTitle"></span>
+                            </div>
+
+                            <div class="shortTitle--ele">
+                                <p class="titleForm">Description <span>*</span></p>
+                                <textarea name="desDetail" id="desDetail" cols="50" rows="4"
+                                          required>@ViewBag.groupIdea.Description</textarea>
+                                <span id="errordesDetail"></span>
+                            </div>
+                            <div class="shortTitle--ele">
+                                <p class="titleForm">Project Tags (Up to 10)</p>
+                                <ul class="addTag">
+                                    @foreach (var tag in ViewBag.projectTagList)
+                                    {
+                                        <li>@tag <i class="fa-solid fa-xmark" id="removeTag"></i></li>
+                                    }
+                                    <input id="inputTag" type="text" spellcheck="false" placeholder="Input then press enter to add tag" required />
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="member">
+                            <p class="titleForm">Team Members</p>
+                            <div class="memInGroup">
+                                <p>Members: <span>@ViewBag.groupIdea.MaxMember</span></p>
+                                <input id="maxMember" type="number"
+                                       value="@ViewBag.groupIdea.MaxMember" hidden />
+                                <input id="numberOfMember" type="number"
+                                       value="@ViewBag.groupIdea.NumberOfMember" hidden />
+                                <div class="imageMem">
+                                    <img src="@ViewBag.leader.Avatar" alt="" />
+                                    @if (ViewBag.memberList != null)
+                                    {
+                                        @foreach (var item in ViewBag.memberList)
+                                        {
+                                            <img src="@item.Avatar" alt="">
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="addMem">
+                            <p id="abc" class="titleForm">Invite</p>
+                            <div class="addnewMem">
+                                <div class="textNotice">
+                                    <span style="font-style:italic">You can only invite those students whose specialties is allowed to work on the same thesis topic as yours in this term.</span>
+                                </div>
+                                <div class="contentInvite">
+                                    <input type="text" class="checkInput" id="txtMember" placeholder="Example@fpt.edu.vn">
+                                    <div id="btnAdd">Invite</div>
+                                </div>
+
+                            </div>
+                            <p id="noti" style="color:red"></p>
+                        </div>
+                        <div class="buttonCreate">
+                            <button class="btnDiscard" type="reset" id="btnDiscard2">Discard</button>
+                            <button type="submit" id="btnSave" class="btnCre">Save</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*confirm popup for accept join request*@
+    <div class="showAcceptForm hide-Acceptform">
+        <div class="YNpopup">
+            <p>Are you sure to ACCEPT this request?</p>
+            <p></p>
+            <div class="YNbutton">
+                <button class="noBtnAccept" type="reset">Cancel</button>
+                <button class="yesBtnAccept" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for reject join request*@
+    <div class="showRejectForm hide-Rejectform">
+        <div class="YNpopup">
+            <p>Are you sure to REJECT this request?</p>
+            <div class="YNbutton">
+                <button class="noBtnReject" type="reset">Cancel</button>
+                <button class="yesBtnReject" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for change to leader*@
+    <div class="showChangeLeadForm hide-ChangeLeadform">
+        <div class="YNpopup">
+            <p>Are you sure to transfer the group leader rights to this member?</p>
+            <div class="YNbutton">
+                <button class="noBtnChangeLead" type="reset">Cancel</button>
+                <button class="yesBtnChangeLead" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for remove member*@
+    <div class="showRemoveMemForm hide-RemoveMemform">
+        <div class="YNpopup">
+            <p>Are you sure that you want to remove this member?</p>
+            <div class="YNbutton">
+                <button class="noBtnRemoveMem" type="reset">Cancel</button>
+                <button class="yesBtnRemoveMem" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for delete group *@
+    <div class="showDeleteGroupForm hide-DeleteGroupform">
+        <div class="YNpopup">
+            <p>Are you sure that you want to delete this group ?<br>You will need to find new group, along with everyone else.</p>
+            <div class="YNbutton">
+                <button class="noBtnDeleteGroup" type="reset">Cancel</button>
+                <button class="yesBtnDeleteGroup" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*warning because do not have enough members*@
+    <div class="showWarningForm hide-Warningform">
+        <div class="YNpopup">
+            <p>WARNING !!!<br>Your group has not reached the required number of members<br>If submit, another members will be automatically added to your group</p>
+            <div class="YNbutton">
+                <button class="noBtnWarning" type="reset">Cancel</button>
+                <button class="yesBtnWarning" type="button">Next</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for cancel registration request *@
+    <div class="showCancelRegisForm hide-CancelRegisform">
+        <div class="YNpopup">
+            <p>Are you sure to cancel registration request?</p>
+            <div class="YNbutton">
+                <button class="noBtnCancelRegis" type="reset">Cancel</button>
+                <button class="yesBtnCancelRegis" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+    var specId = @ViewBag.groupIdea.Specialty.SpecialtyID;
+</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="/js/student/student_myGroup.js"></script>
+<script src="/js/student/student_formRegist.js"></script>
+<script src="/js/student/student_formUpdateIdea.js"></script>
+<!-- jQuery UI -->
+<style>
+    .ui-menu.ui-widget.ui-widget-content.ui-autocomplete.ui-front {
+        z-index: 1000;
+        position: absolute;
+        max-height: 150px;
+        overflow-y: auto;
+    }
+
+    .inputInformSupervisor {
+        position: relative;
+        display: inline-block;
+    }
+</style>

@@ -1,0 +1,64 @@
+﻿@{
+    Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    ViewData["Title"] = "Manage Supervisor Page";
+}
+<link rel="stylesheet" href="/css/supervisor/supervisor_managementor.css">
+<style>
+    .file-instruction {
+      font-size: 15px;
+      color: #666;
+      padding-bottom : 10px;
+    }
+
+    .btn-disabled{
+        background-color: #f0f0f0;
+        color: #888;
+        cursor: not-allowed;
+    }
+</style>
+<div class="homepage" id="manageMentor">
+    @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    <div class="settingGroup" style="width: 100%; flex-basis: 120%;">
+        <div class="main" style="height: 100%">
+            <div class="formSupport" style=" padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */">
+                <div class="formRequest">
+                    <p class="formTitle">Manage Supervisor</p>
+                </div>
+                    <form action="/ManageMentor/ImportSupervisorList" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input type="file" id="import" name="file" accept=".xlsx, .xls" required>
+                            <h3> *Hướng dẫn: </h3>
+                            <p class="file-instruction">Department leader, please upload the correct template file to be able to add a list of supervisors in the profession you are in charge of. In case there is no template available, please click on the 'Get Template' button to obtain the template file <br/> ( Chủ nhiệm bộ môn xin hãy upload đúng file template để có thể thêm danh sách giảng viên hướng dẫn thuộc ngành mà mình đang chủ nhiệm. Trong trường hợp chưa có template , xin vui lòng nhấn vào nút <span style="font-weight : bold; font-size : 17px;">Get Template</span> để lấy template ) </p>
+                        </div>
+                    <div class="formBtn">
+                        @if (ViewBag.devheadProfessions.Count != 0)
+                        {
+                            <button class="submitFormBtn" id="submitFormSupportBtn" type="submit">Submit</button>
+                        }
+                        else
+                        {
+                            <button class="submitFormBtn btn-disabled" id="submitFormSupportBtn" type="submit" disabled>Submit</button>
+                        }
+                    </div>
+                </form>
+                    <form action="/ManageMentor/GetTemplateSupervisorList" method="post">
+                    <div class="formBtn">
+                        @if (ViewBag.devheadProfessions.Count != 0)
+                        {
+                            <button class="submitFormBtn" id="submitFormSupportBtn" type="submit">Get Template</button>
+                        }
+                        else
+                        {
+                            <button class="submitFormBtn btn-disabled" id="submitFormSupportBtn" type="submit" disabled>Get Template</button>
+                            <p> Because the department leader has not been assigned to a profession, the action Get Template và Submit can not be performed  <br/> ( Vì chủ nhiệm bộ môn hiện tại chưa được phân ngành nên không thể thực hiện hành động Get Template và Submit (Import Supervisors) )</p>
+                        }
+                    </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+</div>

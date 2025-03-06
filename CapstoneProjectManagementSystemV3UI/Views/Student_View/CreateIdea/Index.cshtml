@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "CreateIdea Page";
+}
+@using Infrastructure.Entities
+<link rel="stylesheet" href="/css/student/student_formCreateIdea.css">
+<div class="homepage" id="createIdea">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="showForm">
+            <div class="formCreateNew">
+                <p class="formName">Create New Project</p>
+                <p id="notiWhenCreate" style="color:red"></p>
+                <div class="form">
+                    <div class="categorize">
+                        <p>How Would You Classify This Project?</p>
+                        <div class="selectedSpe">
+                            <div class="selectedSpe--left">
+                                <p>Profession <span>*</span></p>
+                                <p>@ViewBag.Student.Profession.ProfessionFullName</p>
+                                <div class="dropdownSpe">
+                                    <input type="text" class="professionDDL" id="professionDDL" value="@ViewBag.Student.Profession.ProfessionID" hidden  />
+                                    <span id="errorprofessionDDL"></span>
+                                </div>
+                            </div>
+                            <div class="selectedSpe--right">
+                                <p>Specialty <span>*</span></p>
+                                <p>@ViewBag.Student.Specialty.SpecialtyFullName</p>
+                                <div class="dropdownSpe">
+                                    <input type="text" id="specialtyDDL" value="@ViewBag.Student.Specialty.SpecialtyID" hidden />
+                                    <span id="errorspecialtyDDL"></span>
+                                </div>
+                            </div>
+                            <div class="englishTitle">
+                                <p class="titleForm">English Title <span>*</span></p>
+                                <input id="txtEnglishTitle" class="inputContent" type="text" placeholder="What's your idea?" required>
+                                <span id="errortxtEnglishTitle"></span>
+                            </div>
+
+                            <div class="shortTitle">
+                                <p>Do you know a short title can help you quickly catch attention?</p>
+                                <div class="shortTitle--ele">
+                                    <p class="titleForm">Abbreviations for Title <span>*</span></p>
+                                    <span style="font-style:italic">Abbreviation must be less than 20 characters</span>
+                                    <input id="txtShortTitle" class="inputContent" type="text"
+                                           placeholder="Enter the abbreviations for your title" required>
+                                    <span id="errortxtShortTitle"></span>
+                                </div>
+                                <div class="shortTitle--ele">
+                                    <p class="titleForm">Vietnamese Title <span>*</span></p>
+                                    <input id="txtVietNameseTitle" class="inputContent" type="text"
+                                           placeholder="What's your idea in Vietnamese?" required>
+                                    <span id="errortxtVietNameseTitle"></span>
+                                </div>
+
+                                <div class="shortTitle--ele">
+                                    <p class="titleForm">Description <span>*</span></p>
+                                    <textarea name="desDetail" id="desDetail" cols="50" rows="4"
+                                              placeholder="Describe your idea" required></textarea>
+                                    <span id="errordesDetail"></span>
+                                </div>
+                                <div class="shortTitle--ele">
+                                    <p class="titleForm">Project Tags (Up to 10)</p>
+                                    <ul class="addTag">
+                                        <input id="inputTag" type="text" spellcheck="false" placeholder="Input then press enter to add tags" required />
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="member">
+                                <p class="titleForm">Team Members</p>
+                                <p>Existed Members</p>
+                                <div class="existMem" id="existMember">
+                                    <div class="nameMem">
+                                        <p hidden id="studentId">@ViewBag.Student.StudentID</p>
+                                        <img id="avatar" src="@ViewBag.Student.User.Avatar" alt="Avatar">
+                                        <p id="fptEmail">@ViewBag.Student.User.FptEmail</p>
+                                    </div>
+                                    <p>Owner</p>
+                                </div>
+                            </div>
+                            <div class="addMem">
+                                <p id="abc" class="titleForm">Invite</p>
+                                <div class="addnewMem">
+                                    <div class="textNotice">
+                                        <span style="font-style:italic">You can only invite those students whose specialties is allowed to work on the same thesis topic as yours in this term.</span>
+                                    </div>
+                                    <div class="contentInvite">
+                                        <input type="text" class="checkInput" id="txtMember" placeholder="Example@fpt.edu.vn">
+                                        <div id="btnAdd">Invite</div>
+                                    </div>
+                                   
+                                </div>
+                                <p id="noti" style="color:red"></p>
+                            </div>
+                            <div class="buttonCreate">
+                                <button type="submit" id="btnCreate" class="btnCre">Create</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script>
+    var specId = @ViewBag.Student.Specialty.SpecialtyID;
+</script>
+<script src="/js/student/student_formCreateIdea.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>

@@ -1,0 +1,71 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "Supervisor Idea Page";
+}
+
+<link rel="stylesheet" href="/css/student/student_viewListIdeaMentor.css">
+<div class="homepage" id="viewIdeaMentor">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="requestMain" style="margin-top: 24px">
+            <div class="formSupport">
+                <p class="formTitle">The list of Supervisor's Ideas</p>
+            </div>
+            <div>
+                @if (ViewBag.listIdeaSupervisor == null || ViewBag.listIdeaSupervisor.Count==0)
+                {
+                    // Hide table header
+                }
+                else
+                {
+                    <div class="requestMain" style="margin-bottom: 0px;margin-top: 0px">
+                        <div class="titleRequest">
+
+                            <p>Project Englist Name</p>
+                            <p>Project Vietnamese Name</p>
+                            <p>Abbreviation</p>
+                            <p>Mentor</p>
+                            <p>Action</p>
+                        </div>
+                        @foreach (var u in ViewBag.listIdeaSupervisor)
+                        {
+
+                            
+                                <div class="informSupportRequest">
+
+                                <p class="limitCharacter">@u.ProjectEnglishName</p>
+                                <p class="limitCharacter">@u.ProjectVietNameseName</p>
+                                <p class="limitCharacter">@u.Abrrevation</p>
+                                <p class="limitCharacter">@u.Supervisor.SupervisorID</p>
+                                    <p>
+                                    <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;">
+                                            <a style="text-decoration: none; color: white" href="/ListIdeasSupervisor/DetailIdeaSupervisor/@u.GroupIdeaID">View</a>
+                                        </button>
+                                    </p>
+                                
+                                </div>
+                                 
+                        }
+                    </div>
+                }
+
+
+
+                <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+
+                <script src="/js/util/paging.js"></script>
+                <script>
+                    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+                </script>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>

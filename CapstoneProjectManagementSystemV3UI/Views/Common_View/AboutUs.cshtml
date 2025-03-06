@@ -1,0 +1,247 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "About Us";
+}
+
+<html lang="en">
+
+<body>
+    <link rel="stylesheet" href="/css/common/aboutUs.css">
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- font awesome cdn link  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- custom css file link  -->
+    <link rel="stylesheet" href="/css/common/sakura.css">
+
+    <!-- custom js file link  -->
+    <script src="/js/common/jquery-sakura.js" defer></script>
+
+    <!-- SAKURA -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="/js/common/jquery-sakura.js"></script>
+    <script>
+        $(window).load(function () {
+            $('body').sakura();
+        });
+    </script>
+    @* New version*@
+    <div class="container">
+        <button onclick="muFunction2()" class="btn" id="btn">
+            Version 2
+            <style>
+                .btn {
+                    display: inline-block;
+                    font-size: 18px;
+                    padding: 24px 70px;
+                    background: #dc8809db;
+                    color: #fff;
+                    border-radius: 40px;
+                    border: none;
+                    outline: none;
+                    cursor: pointer;
+                    position: relative;
+                    box-shadow: 0 2px 25px rgba(255, 128, 0, 0.774);
+                    transition: box-shadow 0.25s;
+                    z-index: 2;
+                }
+            </style>
+
+        </button>
+    </div>
+    <div class="container" id="toggle-div2">
+        <div class="products-container" style="padding-bottom: 20px;">
+            <div class="product product1" data-name="p-1">
+                <img src="/img/new_version/loan.jpg" alt="">
+                <h3>Leader</h3>
+                <div class="price">Do Phuong Loan</div>
+            </div>
+        </div>
+
+        <div class="products-container">
+
+            <div class="product" data-name="p-2">
+                <img src="/img/new_version/thai.jpg" alt="">
+                <h3>BA</h3>
+                <div class="price">Nguyen The Thai</div>
+            </div>
+
+            <div class="product" data-name="p-3">
+                <img src="/img/new_version/tan.jpg" alt="">
+                <h3>Tester</h3>
+                <div class="price">Ta Van Tan</div>
+            </div>
+            <div class="product" data-name="p-4">
+                <img src="/img/new_version/chau.jpg" alt="">
+                <h3>Front-end Dev</h3>
+                <div class="price">Nguyen Viet Bao Chau</div>
+            </div>
+
+            <div class="product" data-name="p-5">
+                <img src="/img/new_version/thanh.jpg" alt="">
+                <h3>Back-end Dev</h3>
+                <div class="price">Dinh Cong Thanh</div>
+            </div>
+        </div>
+    </div>
+    @*Old Version*@
+    <div class="">
+        <div class="container">
+            <button onclick="muFunction()" class="btn" id="btn">
+                Version 1
+                <style>
+                    .btn {
+                        display: inline-block;
+                        font-size: 18px;
+                        padding: 24px 70px;
+                        background: #dc8809db;
+                        color: #fff;
+                        border-radius: 40px;
+                        border: none;
+                        outline: none;
+                        cursor: pointer;
+                        position: relative;
+                        box-shadow: 0 2px 25px rgba(255, 128, 0, 0.774);
+                        transition: box-shadow 0.25s;
+                        z-index: 2;
+                    }
+                </style>
+
+            </button>
+        </div>
+        <div class="container" id="toggle-div">
+            <div class="container">
+                <div class="products-container1" style="margin-left: 20px;">
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/nhattm3.jpg" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Trịnh Minh Nhật</p>
+                                    <p class="industry">Software Engineering</p>
+                                    <a href="https://www.linkedin.com/in/minh-nhat-trinh-792a51258/" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/nguyennh.jpg" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Nguyễn Hoàng Nguyên</p>
+                                    <p class="industry">Software Engineering</p>
+                                    <a href="https://www.linkedin.com/in/ho%C3%A0ng-nguy%C3%AAn-nguy%E1%BB%85n-1a1b15258/" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/nguyenlh.png" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Lê Hữu Nguyên</p>
+                                    <p class="industry">Software Engineering</p>
+                                    <a href="https://www.linkedin.com/in/l%C3%AA-h%E1%BB%AFu-nguy%C3%AAn-37ba26259/" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="products-container">
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/thuylt.jpg" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Lê Thị Thúy</p>
+                                    <p class="industry">Software Engineering</p>
+                                    <a href="https://www.linkedin.com/in/thanh-thuy-565700259/" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/hieunx.jpg" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Nguyễn Xuân Hiếu</p>
+                                    <p class="industry">Software Engineering</p>
+                                    <a href="https://www.linkedin.com/in/hieu-n-5b14a7217" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/hongnt.jpeg" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Nguyễn Thị Hồng</p>
+                                    <p class="industry">Graphic Design</p>
+                                    <a href="https://www.linkedin.com/in/minh-nhat-trinh-792a51258/" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid-item">
+                        <div class="card">
+                            <div class="card__img">
+                                <img src="/img/old_version/3d-nft-art.png" alt="">
+                            </div>
+                            <div class="card__information">
+                                <div class="card__information--name">
+                                    <p class="nameMember">Phạm Thắng Lộc</p>
+                                    <p class="industry">Graphic Design</p>
+                                    <a href="https://www.linkedin.com/in/minh-nhat-trinh-792a51258/" class="profile">Linkedin</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    function muFunction() {
+        var x = document.getElementById("toggle-div");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+
+<script>
+    function muFunction2() {
+        var x = document.getElementById("toggle-div2");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+

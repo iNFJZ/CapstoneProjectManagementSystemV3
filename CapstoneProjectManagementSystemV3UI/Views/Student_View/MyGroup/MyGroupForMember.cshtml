@@ -1,0 +1,172 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "MyGroup Page";
+}
+<link rel="stylesheet" href="/css/student/student_myGroup.css">
+<div class="homepage" id="myGroup">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <p class="bigTitle">My Group</p>
+        <div class="informGroup">
+            <div class="introGroup">
+                <div class="nameProject">
+                    <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                    <div class="inforGro">
+                        <p>@ViewBag.groupIdea.ProjectEnglishName</p>
+                        <p class="createDate">Created at: @ViewBag.groupIdea.CreatedAt</p>
+                    </div>
+                </div>
+                <div class="btnAddMem">
+                    <form action="/MyGroup/LeaveGroup?projectId=@ViewBag.groupIdea.GroupIdeaID" method="post" id="formLeaveGroup"></form>
+                    @if (TempData["registerStatus"] == null)
+                    {
+                        <button class="leaveGroup">Leave</button>
+                    }
+                </div>
+                @*}*@
+            </div>
+            <div class="someInforms">
+                <div class="someInforms--top">
+                    <div class="abbreviations">
+                        <p class="title">Abbreviations</p>
+                        <p class="content">@ViewBag.groupIdea.Abrrevation</p>
+                    </div>
+                    <div class="vietnamTitle">
+                        <p class="title">Vietnamese Title</p>
+                        <p class="content">@ViewBag.groupIdea.ProjectVietNameseName</p>
+                    </div>
+                </div>
+                <div class="someInforms--bottom">
+
+                    <div class="professional">
+                        <p class="title">Profession</p>
+                        <p class="content">@TempData["profession"]</p>
+                    </div>
+                    <div class="specialty">
+                        <p class="title">Specialty</p>
+                        <p class="content">@TempData["specialty"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="desIdea">
+                <p class="title">
+                    Description
+                </p>
+                <p class="content">
+                    @ViewBag.groupIdea.Description
+                </p>
+            </div>
+            <div class="keyword">
+                <p class="title">Keywords</p>
+                <div class="keywordText">
+                    @foreach (var tag in ViewBag.projectTagList)
+                    {
+                        <p>@tag</p>
+                    }
+                </div>
+            </div>
+            <div class="showMember">
+                <p class="title">Members</p>
+                <div class="numMember">
+                    <p>Max: <span>@ViewBag.groupIdea.MaxMember members</span></p>
+                    <p>Available Slot: <span>@TempData["availableSlot"]</span></p>
+                </div>
+                <div class="members">
+                    <div class="informMember">
+                        <div class="info">
+                            <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                            <div class="memInfo">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">@ViewBag.leader.FptEmail</a>
+                                <p>@ViewBag.leader.UserName</p>
+                            </div>
+                        </div>
+                        <div class="role">
+                            <p>Owner | Leader</p>
+                        </div>
+                        <div class="menuMember">
+                            <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div class="menuMember__dropdown">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var item in ViewBag.memberList)
+                    {
+                        <div class="informMember">
+                            <div class="info">
+                                <img src="@item.Avatar" alt="Avatar">
+                                <div class="memInfo">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">@item.FptEmail</a>
+                                    <p>@item.UserName</p>
+                                </div>
+                            </div>
+                            <div class="role">
+                                <p>Member</p>
+                            </div>
+                            <div class="menuMember">
+                                <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div class="menuMember__dropdown">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div><div class="sidebar--right">
+        <p class="bigTitle">Register Group</p>
+        <div class="submitRegistration">
+            @if (TempData["registerStatus"] == null)
+            {
+                <p>Submit Registration Status</p>
+                @*<p>Your group has enough members and is eligible to register</p>*@
+                <p>Please wait for the group registration to be sent by your team captain.</p>
+            }
+            @if (TempData["registerStatus"] != null)
+            {
+                @if (TempData["registerStatus"].Equals("0"))
+                {
+                    <p>Your group has been registered </p>
+                    <p>Status: Pending</p>
+                    <button class="cancelRegistration">Cancel Request</button>
+                    <form action="/MyGroup/CancelRegistrationRequest?projectId=@ViewBag.groupIdea.GroupIdeaID" method="post" id="formCancelRegis" hidden></form>
+                }
+                @*@if (TempData["registerStatus"].Equals("1"))
+                    {
+                        <p>Your group has been accepted </p>
+                        <p>Please update the latest information at fap.fpt.edu.vn</p>
+                    }*@
+                @if (TempData["registerStatus"].Equals("2"))
+                {
+                    <p>Your group registration has been denied  </p>
+                    <p>Staff Note: @TempData["staffComment"]</p>
+                }
+            }
+        </div>
+
+    </div>
+
+
+    @*confirm popup for leave group *@
+    <div class="showLeaveGroupForm hide-LeaveGroupform">
+        <div class="YNpopup">
+            <p>Are you sure that you want to leave this group ?<br>You will need to find new group.</p>
+            <div class="YNbutton">
+                <button class="noBtnLeaveGroup" type="reset">Cancel</button>
+                <button class="yesBtnLeaveGroup" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for cancel registration request *@
+    <div class="showCancelRegisForm hide-CancelRegisform">
+        <div class="YNpopup">
+            <p>Are you sure to cancel registration request?</p>
+            <div class="YNbutton">
+                <button class="noBtnCancelRegis" type="reset">Cancel</button>
+                <button class="yesBtnCancelRegis" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/student/student_myGroup.js"></script>

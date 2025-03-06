@@ -1,0 +1,165 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "Profile Page";
+}
+<link rel="stylesheet" href="/css/student/student_profile.css">
+<div class="homepage" id="viewProfile">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+               <div class="profileUser">
+            <div class="profileUser__avatar">
+                <p class="bigTitle">Avatar</p>
+                <img src="@(Url.Content(ViewBag.studentProfile.User.Avatar))" alt="Avatar">
+                <div class="contactInfomation">
+                    <p class="bigTitle">Contact Information</p>
+                    <div class="formContactInfo__phoneNumber">
+                        <p class="smallTitle">Phone Number</p>
+                        <input type="text" value="@ViewBag.studentProfile.PhoneNumber" id="phoneContactInfo" disabled>
+                    </div>
+                    @*<div class="formContactInfo__email">
+                        <p class="smallTitle">Personal Email</p>
+                        <input type="text" value="@ViewBag.studentProfile.EmailAddress" id="emailContactInfo" disabled>
+                    </div>*@
+                    <div class="formContactInfo__facebook">
+                        <p class="smallTitle">Facebook</p>
+                        <textarea name="faceBookContactInfo" id="faceBookContactInfo" cols="30" rows="2"
+                                  disabled>@ViewBag.studentProfile.LinkFacebook</textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="profileUser__basicInfo">
+                <p class="bigTitle">Basic Information</p>
+                <div class="formBasicInfo">
+                    <div class="formBasicInfo__name">
+                        <p class="smallTitle">Name</p>
+                        <input type="text" value="@ViewBag.studentProfile.User.FullName" id="nameBasicInfo" disabled>
+                    </div>
+                    <div class="formBasicInfo__rollNumber">
+                        <p class="smallTitle">Roll Number</p>
+                        <p class="content">@ViewBag.studentProfile.RollNumber</p>
+                    </div>
+                    @*<div class="formBasicInfo__curriculum">
+                    <p class="smallTitle">Curriculum</p>
+                    <input type="text" value="@ViewBag.studentProfile.Curriculum" id="curriculumBasicInfo" disabled>
+                    </div>*@
+                    <div class="formBasicInfo__semester">
+                        <p class="smallTitle">Semester</p>
+                        <p class="content">@ViewBag.studentProfile.Semester.SemesterName</p>
+                    </div>
+                    @*@if (ViewBag.professionAndSpecialty == null)
+                    {
+                    <div class="filter">
+                    <div class="filterDropdown">
+                    <p class="smallTitle">Professional</p>
+                    <select name="" id="professionalfilter" disabled>
+                    <option value="0" selected>Profession</option>
+                    </select>
+                    </div>
+                    <div class="filterDropdown">
+                    <p class="smallTitle">Specialty</p>
+                    <select name="" id="specialtyfilter" disabled>
+                    <option value="0">Specialty</option>
+                    </select>
+                    </div>
+                    </div>
+                    }
+                    else
+                    {*@
+                    <div class="filter">
+                        <div class="filterDropdown" style="    margin-bottom: 25px;">
+                            <p class="smallTitle">Professional</p>
+                            <p>@ViewBag.professionAndSpecialty.Profession.ProfessionFullName</p>
+                        </div>
+                        <div class="filterDropdown">
+                            <p class="smallTitle">Specialty</p>
+                            <p>@ViewBag.professionAndSpecialty.Specialty.SpecialtyFullName</p>
+                        </div>
+                    </div>
+                    @*}*@
+
+                    <div class="formBasicInfo__gender">
+                        <p class="smallTitle">Gender</p>
+                        <!-- Original Gender Section (Text) -->
+                        <div class="genderTextSection">
+                            @if (ViewBag.studentProfile.User.Gender == 2)
+                            {
+                                <p>Other</p>
+                            }
+                            else if (ViewBag.studentProfile.User.Gender == 1)
+                            {
+                                <p>Male</p>
+                            }
+                            else
+                            {
+                                <p>Female</p>
+                            }
+                        </div>
+                        <!-- New Gender Button (Initially Hidden) -->
+                        <div class="genderButtonSection" style="display: none;">
+                            <div class="selectGender">
+                                <input type="radio" id="male" name="genderUser" value="1" disabled>
+                                <label for="male">Male</label><br>
+                                <input type="radio" id="female" name="genderUser" value="0" disabled="disabled">
+                                <label for="female">Female</label><br>
+                                <input type="radio" id="other" name="genderUser" value="2" disabled="disabled">
+                                <label for="other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__email">
+                        <p class="smallTitle">Email</p>
+                        <p class="content">@ViewBag.studentProfile.User.FptEmail</p>
+                    </div>
+                    <div class="formBasicInfo__expectRole">
+                        <p class="smallTitle">Expect Role</p>
+                        <input type="text" value="@ViewBag.studentProfile.ExpectedRoleInGroup" id="expectRoleBasicInfo" disabled>
+                    </div>
+                    <div class="formBasicInfo__bio">
+                        <p class="smallTitle">Bio</p>
+                        <textarea name="bioInfo" id="bioInfo" cols="50" rows="10"
+                                  disabled>@ViewBag.studentProfile.SelfDescription</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Add event listener to the "Edit my Profile" button
+        $("#editProfileBtn").on("click", function () {
+            // Toggle the display of the Gender sections
+            $(".genderTextSection").toggle();
+            $(".genderButtonSection").toggle();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Function to update the Gender button state based on the gender value
+        function updateGenderButton() {
+            // Get the gender value from the ViewBag or any other source
+            var genderValue = @ViewBag.studentProfile.User.Gender;
+
+            // Show the Gender button section and hide the Gender text section
+            $(".genderTextSection").hide();
+            $(".genderButtonSection").show();
+
+            // Check the appropriate radio button based on the gender value
+            if (genderValue == 2) {
+                $("#other").prop("checked", true);
+            } else if (genderValue == 1) {
+                $("#male").prop("checked", true);
+            } else {
+                $("#female").prop("checked", true);
+            }
+        }
+
+        // Add event listener to the "Edit my Profile" button
+        $("#editProfileBtn").on("click", function () {
+            updateGenderButton();
+        });
+    });
+</script>

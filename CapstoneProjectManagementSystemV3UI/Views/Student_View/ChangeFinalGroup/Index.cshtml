@@ -1,0 +1,121 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "ChangeMember Page";
+}
+<link rel="stylesheet" href="/css/student/student_formChangeFinalGroup.css">
+<div class="homepage" id="changeMember">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <p>Change Group</p>
+        <div class="formMemberHeader">
+            <div class="chooseTypeRequest">
+                <button class="groupExchangeFormBtn active" id="groupExchangeFormBtn">Group Exchange Form</button>
+                <button class="studentConfirmBtn" id="studentConfirmBtn">Student Confirm</button>
+                <button class="staffConfirmBtn" id="staffConfirmBtn">Staff Confirm</button>
+            </div>
+        </div>
+        <div class="formRequest">
+            <div class="fromGroupName">
+                <div class="group">
+                    <p class="smallTitle">From Group Name</p>
+                    <p class="group__name">@ViewBag.studentHaveFinalGroup.FinalGroup.GroupName</p>
+                </div>
+                <div class="fromEmail">
+                    <p class="smallTitle">From Email</p>
+                    <p class="senderEmail">@ViewBag.studentHaveFinalGroup.User.FptEmail</p>
+                </div>
+                <div class="listnewMem">
+                    <p>Input group name and email of the student that you want to exchange</p>
+                    <div class="groupName">
+                        <p class="smallTitle">To Group Name <span>*</span></p>
+                        <input type="text" placeholder="Input group name you want to exchange" id="toGroupName">
+                    </div>
+                    <p id="errorGroupName"></p>
+                    <div class="email">
+                        <p class="smallTitle">To Email <span>*</span></p>
+                        <input type="text" placeholder="Input student's email you want to exchange" id="toEmail">
+                    </div>
+                    <p id="errorEmail"></p>
+                    @*<div class="reasonChangeFinalGroup">
+                    <p class="smallTitle">Reason Change FinalGroup</p>
+                    <textarea cols="40" rows="4" type="text" id="reasonChangeFinalGroup"></textarea>
+                    </div>*@
+                </div>
+            </div>
+            <div class="submitForm">
+                <button class="submitBtn">Submit</button>
+            </div>
+        </div>
+        <div class="showStaffConfirmRequest hide-form">
+            <div class="title">
+                <p>No.</p>
+                <p>From Group</p>
+                <p>From Email</p>
+                <p>To Group</p>
+                <p>To Email</p>
+                <p>Staff's Comment</p>
+                <p>Status Staff</p>
+            </div>
+        </div>
+        <div class="showStudentConfirmRequest hide-form">
+            <div class="filterStudentConfirm">
+                <a class="myRequest activeLink">My Request</a>
+                <a class="anotherRequest">Another Request</a>
+            </div>
+            <div class="myRequestConfirm">
+                <div class="titleMyRequestConfirm">
+                    <p>No.</p>
+                    <p>From Group</p>
+                    <p>From Email</p>
+                    <p>To Group</p>
+                    <p>To Email</p>
+                    <p>Status Of Student</p>
+                </div>
+            </div>
+            <div class="anotherRequestConfirm hide-form">
+                <div class="titleAnotherRequestConfirm">
+                    <p>No.</p>
+                    <p>From Group</p>
+                    <p>From Email</p>
+                    <p>To Group</p>
+                    <p>To Email</p>
+                    <p>Status</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="showFormConfirm hide-form">
+        <div class="formRequestConfirm">
+            <p class="formNameConfirm">
+                Do you want to change group with other student?
+            </p>
+            <div class="btnSubmitConfirm">
+                <button class="acceptBtn">Accept</button>
+                <button class="cancelBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="showAcceptRequestConfirm  hide-form">
+        <div class="formRequestConfirm">
+            <p class="formNameConfirm">
+                Do you want to accept this request?
+            </p>
+            <div class="btnAcceptConfirm">
+                <button class="acceptRequestConfirmBtn">Accept</button>
+                <button class="cancelAcceptRequestConfirmBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div class="showRejectRequestConfirm hide-form">
+        <div class="formRequestConfirm">
+            <p class="formNameConfirm">
+                Do you want to reject this request?
+            </p>
+            <div class="btnRejectConfirm">
+                <button class="rejectRequestConfirmBtn">Reject</button>
+                <button class="cancelRejectRequestConfirmBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/student/student_formChangeFinalGroup.js"></script>

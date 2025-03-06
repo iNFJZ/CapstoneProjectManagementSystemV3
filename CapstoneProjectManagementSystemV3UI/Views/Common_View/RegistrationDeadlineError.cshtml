@@ -1,0 +1,22 @@
+﻿﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "Registration Deadline Error";
+}
+<link rel="stylesheet" href="/css/student/student_errorDeadline.css">
+<script src="/js/student/student_support.js"></script>
+<div class="homepage" id="createIdea">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="notFound__top">
+            <img src="/img/toadscry.png" />
+        </div>
+        <div class="notFound__bottom">
+            <p class="notFoundTitle">@ViewBag.ErrorMessage</p>
+            <p class="notFoundContent">
+                Sorry, but the registration deadline is has passed.
+                You can't create idea in this situation!
+            </p>
+        </div>
+        
+    </div>
+</div>
