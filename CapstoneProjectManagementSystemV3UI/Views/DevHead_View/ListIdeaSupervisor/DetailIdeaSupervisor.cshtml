@@ -1,0 +1,94 @@
+﻿@{
+    Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    ViewData["Title"] = "Supervisor Idea Detail Page";
+}
+
+<link rel="stylesheet" href="/css/supervisor/supervisor_viewIdeaMentorDetail.css">
+<script src="/js/student/student_groupDetails.js"></script>
+
+<div class="groupDetails">
+    @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    <div class="main">
+        <div class="informGroup">
+            <div class="formRequest">
+                <p class="formTitle">Detail Idea of Other Supervisors</p>
+            </div>
+            <div class="introGroup">
+                <div class="nameProject">
+                    @* <img src="@ViewBag.leader.Avatar" alt="Avatar">*@
+                    <div class="inforGro">
+                        <p>@ViewBag.groupIdeaDetail.ProjectEnglishName</p>
+                        @*<p>Project English Name</p>*@
+
+                        <p class="createDate">Created at: 
+                            @{
+                                var created_at = @ViewBag.groupIdeaDetail.CreatedAt == null ? "Null" : @ViewBag.groupIdeaDetail.CreatedAt.ToString("dd/MM/yyyy");
+                            }
+                            @created_at
+                    </div>
+                </div>
+            </div>
+            <div class="someInforms">
+                <div class="someInforms--top">
+                    <div class="abbreviations">
+                        <p class="title">Abbreviations</p>
+                        <p class="content">@ViewBag.groupIdeaDetail.Abrrevation</p>
+                    </div>
+                    <div class="vietnamTitle">
+                        <p class="title">Vietnamese Title</p>
+                        <p class="content">@ViewBag.groupIdeaDetail.ProjectVietNameseName</p>
+                    </div>
+                </div>
+                <div class="someInforms--bottom">
+                    <div class="professional">
+                        <p class="title">Profession</p>
+                        @foreach (var u in ViewBag.listProSpe)
+                        {
+                            <p class="content">@u.Profession.ProfessionFullName</p>
+                        }
+
+                    </div>
+                    @*<div class="specialty">
+                        <p class="title">Specialty</p>
+                        @foreach (var u in ViewBag.listProSpe)
+                        {
+                            <p class="content">@u.Specialty.SpecialtyFullName</p>
+                        }
+
+                    </div>
+                </div>*@
+            </div>
+            <div class="desIdea">
+                <p class="title">
+                    Description
+                </p>
+                <p class="content">
+                    @ViewBag.groupIdeaDetail.Description
+                </p>
+            </div>
+
+            <div class="showMember">
+                <p class="title">Mentor</p>
+
+                <div class="members">
+                    <div class="showInfomember">
+                        <div class="info">
+
+                            <div class="memInfo">
+                                <a href="/ViewSupervisorRoleSupervisor/DetailSupervisorWithRoleSupervisor/@ViewBag.groupIdeaDetail.Supervisor.SupervisorID">
+                                    @ViewBag.groupIdeaDetail.Supervisor.SupervisorID</a>
+                                                 @*<a href="/ViewSupervisorRoleSupervisor/DetailSupervisorWithRoleSupervisor/@ViewBag.groupIdeaDetail.Supervisor.SupervisorID" style="color:blue;margin-left:10px">view profile</a>*@
+                             
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>

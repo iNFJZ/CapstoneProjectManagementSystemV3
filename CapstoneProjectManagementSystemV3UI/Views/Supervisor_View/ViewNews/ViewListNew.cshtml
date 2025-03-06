@@ -1,0 +1,199 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/Mentor/_LayoutMentor.cshtml";
+    ViewData["Title"] = "List News";
+}
+<link rel="stylesheet" href="/css/supervisor/supervisor_viewNews.css">
+<div class="homepage" id="viewNews">
+    @await Html.PartialAsync("/Views/Shared/Mentor/_LayoutSidebarLeftMentor.cshtml")
+    <div class="main">
+        <div class="requestMain" style=" padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */">
+            <div class="formSupport">
+                <p class="formTitle">List News</p>
+            </div>
+            <div>
+                <div>
+                    @if (ViewBag.News.Count != 0 && ViewBag.News != null)
+                    {
+                        <div class="requestMain" style="margin-left: 8%">
+                            <div class="titleRequest">
+                                <p>No.</p>
+                                <p>Title</p>
+                                <p>Created Date</p>
+                                <p>Action</p>
+                            </div>
+                            @{
+                                var count = 0;
+                            }
+                            @foreach (var u in ViewBag.News)
+                            {
+
+                                count++;
+                                <div class="informSupportRequest">
+                                    <p>@count</p>
+                                    <p class="limitCharacter">@u.Title</p>
+                                    <p>
+                                        @{
+                                            var created_at = u.CreatedAt == null ? "Null" : u.CreatedAt.ToString("dd/MM/yyyy");
+                                        }
+                                        @created_at
+                                    </p>
+                                    @*<p>
+                            <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #f27227; color: #FFFFFF;
+                            outline: none; border: none; font-size: 14px;font-weight: 600;">
+                            <a style="text-decoration: none" href="/ViewNew/DetailNew/@u.NewID">Detail</a>
+                            </button>
+                            </p>*@
+
+                                    <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;"
+                                            onclick="@($"openPopup({u.NewID})")">
+                                        View
+                                    </button>
+
+                                    <div id="@($"popup-{u.NewID}")" class="popup">
+                                        <div class="popup-content">
+                                            <span class="close-btn" onclick="@($"closePopup({u.NewID})")"></span>
+                                            <h2 style="    text-align: center; color: brown;">
+                                                News Detail
+                                            </h2>
+                                            <br />
+                                            <h3>Title</h3>
+                                            <p style="font-weight: 400;">@u.Title</p>
+                                            <h3>File</h3>
+                                            <a id=@u.NewID href="" onclick="@($"downloadFile({u.NewID})")">@u.Filename</a>
+                                            <h3>Description</h3>
+                                            @Html.Raw(u.Content)
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            }
+                        </div>
+
+                    }
+                    else
+                    {
+                        <h4 style="color: red; text-align: center; margin-top: 20px">Nothing to display!</h4>
+                    }
+                    <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+                    <script>
+                        // JavaScript functions to open and close the popup
+                        function openPopup(newID) {
+                            document.getElementById("popup-" + newID).style.display = "block";
+                        }
+
+                        function closePopup(newID) {
+                            document.getElementById("popup-" + newID).style.display = "none";
+                        }
+
+                        function downloadFile(newId) {
+                            event.preventDefault();
+                            // gọi api
+                            AjaxCall('/DownloadFile/DownloadFile/', JSON.stringify(newId), "POST").done(function (response) {
+                                // alert(JSON.stringify(response));
+                                if (response !== undefined) {
+                                    var link = document.createElement("a");
+                                    document.body.appendChild(link);
+                                    link.setAttribute("type", "hidden");
+                                    link.href = "data:text/plain;base64," + response.fileContent;
+                                    link.download = response.fileName;
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }
+                            }).fail(function (error) {
+                                alert(error.StatusText);
+                            });
+                        }
+                        function AjaxCall(url, data, type) {
+                            return $.ajax({
+                                url: url,
+                                dataType: "json",
+                                data: data,
+                                type: "POST",
+                                contentType: "application/json; charset=utf-8",
+                            });
+                        }
+
+                    </script>
+
+                </div>
+                <script src="/js/util/paging.js"></script>
+                <script>
+                    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+                </script>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* CSS styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        position: inherit;
+        top: 49%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 80%;
+        max-height: 80%;
+        min-width: 30%;
+        overflow-y: auto;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    var popups = document.getElementsByClassName('popup');
+
+    window.addEventListener('click', function (event) {
+        for (var i = 0; i < popups.length; i++) {
+            var popup = popups[i];
+            if (event.target == popup) {
+                closePopup(popup.id);
+            }
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            for (var i = 0; i < popups.length; i++) {
+                var popup = popups[i];
+                closePopup(popup.id);
+            }
+        }
+    });
+
+    function closePopup(popupId) {
+        var popup = document.getElementById(popupId);
+        popup.style.display = 'none';
+    }
+</script>

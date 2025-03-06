@@ -1,0 +1,13 @@
+@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "MyGroup Page";
+}
+<link rel="stylesheet" href="/css/common/accessDenied.css" />
+<div class="homepage" id="myGroup">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="accessDenied">
+            <p>You're not in any groups yet.</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,350 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    ViewData["Title"] = "View Idea Page";
+}
+<link rel="stylesheet" href="/css/supervisor/supervisor_viewidea.css">
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<div class="homepage" id="viewIdea">
+    @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    <div class="main">
+        <div class="formSupport">
+            <div class="formRequest">
+                <p class="formTitle">Manage Ideas</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 7fr 1fr;">
+                <div class="searchForm" style="display: flex">
+                    <select id="filterStatus" name="filterStatus" onchange="changeStatus()" style="margin-right: 20px;">
+                        <option value="-1" @(ViewBag.filterStatus == -1 ? "selected" : "")>All</option>
+                        <option value="0" @(ViewBag.filterStatus == 0 ? "selected" : "")>Deactive</option>
+                        <option value="1" @(ViewBag.filterStatus == 1 ? "selected" : "")>Active</option>
+                    </select>
+
+                    <input id="query" style="opacity: 0.5; padding-top: 18px; padding-left: 20px; padding-bottom: 18px; opacity: 1.5;" name="query" value="@ViewBag.query" placeholder="Search by Project Enlish Name or Project VietNamese Name" />
+
+                </div>
+                <div class="buttonForm">
+                    <button id="search" onclick="changeStatus()">Search</button>
+                </div>
+            </div>
+            <div>
+                @if (ViewBag.GroupIdeas != null)
+                {
+                    <div class="row requestMain">
+                        <div class="requestHeader" style="
+    font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border: 1px solid #1C1F27; /* Viền cho tiêu đề bảng */
+    padding-top: 35px;
+ padding-bottom: 25px;">
+                            <p class="col-sm-3">English Name</p>
+                            <p class="col-sm-1" style="padding-left: 0px">Semester</p>
+                            <p class="col-sm-1" style="padding-left: 0px">Number Of Member</p>
+                            <p class="col-sm-1" style="padding-left: 0px">Max Member</p>
+                            <p class="col-sm-1" style="padding-left: 0px">Create At</p>
+                            <p class="col-sm-2" style="text-align: center">Status</p>
+                            <p class="col-sm-2" style="margin-left: 20px">Action</p>
+                        </div>
+                        @{
+                            var count = 0;
+                        }
+                        @foreach (var idea in ViewBag.GroupIdeas)
+                        {
+                            count++;
+                            var isRegistered = ViewBag.GroupIdeaRegisted.Contains(idea.GroupIdeaID);
+                            <div class="informSupportRequest">
+                                <p class="col-sm-3 limitCharacter">@idea.ProjectEnglishName</p>
+                                <p class="col-sm-1 limitCharacter" style="padding-left: 0px">@idea.Semester.SemesterName</p>
+                                <p class="col-sm-1 limitCharacter" style="padding-left: 0px">@idea.NumberOfMember</p>
+                                <p class="col-sm-1 limitCharacter" style="padding-left: 0px">@idea.MaxMember</p>
+                                <p class="col-sm-1 limitCharacter" style="padding-left: 0px">
+                                    @{
+                                        var created_at = idea.CreatedAt == null ? "Null" : idea.CreatedAt.ToString("dd/MM/yyyy");
+                                    }
+                                    @created_at
+                                </p>
+                                <p class="col-sm-2" style=" display: grid; grid-template-columns: 1fr 1fr;">
+                                    @{
+                                        var status = idea.IsActive ? "true" : "false";
+                                        string name = status + idea.GroupIdeaID;
+
+                                    }
+                                    <input type="number" value="@idea.GroupIdeaID" readonly id="@name" hidden>
+                                    <input style="margin-left: 60%;" class="isActive" type="radio" name="@name" id="active" value="true" @(
+                                   status == "true" ? "checked" : ""
+                                   )>Active
+                                    <input style="margin-left: 60%;" class="isActive" type="radio" name="@name" id="deactive" value="false" @(
+                                   status == "false" ? "checked" : ""
+                                   )>Deactive
+                                </p>
+
+                                @* @if (idea.IsActive == true)
+                        {
+                        *@
+                                @* var status = idea.IsActive == 1 ? "Active" : "Deactive";
+                        <input type="radio" id="active" name="status" value="1" checked>
+                        <label for="active">Active</label>
+
+                        <br>
+                        <input type="radio" id="deactive" name="status" value="-1">
+                        <label for="deactive">Deactive</label>
+                        }
+                        else
+                        {
+                        <input type="radio" id="active" name="status" value="1">
+                        <label for="active">Active</label>
+
+                        <br>
+                        <input type="radio" id="deactive" name="status" value="-1" checked>
+                        <label for="deactive">Deactive</label>
+                        }*@
+                                <p class="col-sm-2 action">
+                                    @if (!isRegistered)
+                                    {
+                                        <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;"
+                                                onclick="confirmDelete('@idea.GroupIdeaID')">
+                                            Delete
+                                        </button>
+
+                                    }
+                                    else
+                                    {
+                                        <button style="cursor: not-allowed; width: 5em; height: 40px; border-radius: 8px; background-color: #8f8ebe; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;"
+                                                onclick="confirmDelete('@idea.GroupIdeaID')" disabled="true">
+                                            Delete
+                                        </button>
+                                    }
+
+                                    <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;"
+                                            onclick="@($"openPopup({idea.GroupIdeaID})")">
+                                        View
+                                    </button>
+
+                                    <div id="@($"popup-{idea.GroupIdeaID}")" class="popup">
+                                        <div class="popup-content">
+                                            <div>
+                                                <span class="close-btn" onclick="@($"closePopup({idea.GroupIdeaID})")"></span>
+                                                <h2 style="    text-align: center; color: brown;">
+                                                    Idea Detail
+                                                </h2>
+                                            </div>
+                                            <div style="text-align: end">
+                                                <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600; margin-bottom: 10px">
+                                                    <a style="color:white" href="/CreateIdeaDevHead/UpdateIdeaView?GroupIdea=@idea.GroupIdeaID">Update</a>
+                                                </button>
+                                            </div>
+                                           @* <div class="ideaDetails" style="display: grid; grid-template-columns: 1fr 1fr;">
+                                                <h3>ID: </h3>
+                                                <p style="font-weight: 400;">@idea.GroupIdeaID</p>
+                                            </div>*@
+                                            <div class="row">
+                                                <p class="col-sm-5">Project English Name: </p>
+                                                <p class="col-sm-7" style="font-weight: 400;">@idea.ProjectEnglishName</p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-sm-5">Project Vietnamese Name: </p>
+                                                <p class="col-sm-7" style="font-weight: 400;">@idea.ProjectVietNameseName</p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-sm-5">Abbrevation: </p>
+                                                <p class="col-sm-7" style="font-weight: 400;">@idea.Abrrevation</p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-sm-5">Descriptions: </p>
+                                                <p class="col-sm-7" style="font-weight: 400;">@idea.Description</p>
+                                            </div>
+                                            <div class="row">
+                                                <p class="col-sm-5">Project Tags: </p>
+                                                <p class="col-sm-7" style="font-weight: 400;">@idea.ProjectTags</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </p>
+
+
+                            </div>
+                        }
+                    </div>
+
+                }
+                else
+                {
+                }
+
+                <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+                <script src="/js/util/paging.js"></script>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* CSS styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        position: absolute;
+        left: 50%;
+        top:30%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px; /* height: fit-content; */
+        width: 50%;
+        max-width: 80%;
+        max-height: 80%;
+        min-width: 30%;
+        overflow-y: auto;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('keydown', function (event) {
+            var keyCode = event.keyCode || event.which;
+            if (keyCode === 13) {
+                // Truy cập và bấm nút Submit
+                document.getElementById('search').click();
+            }
+        });
+    });
+</script>
+
+
+<script>
+    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+</script>
+
+<script>
+    // JavaScript functions to open and close the popup
+    function openPopup(supportID) {
+        document.getElementById("popup-" + supportID).style.display = "block";
+    }
+
+    function closePopup(supportID) {
+        document.getElementById("popup-" + supportID).style.display = "none";
+    }
+
+    function changeStatus() {
+        var filterStatus = $("#filterStatus").val();
+        var query = $("#query").val();
+        location.href = "/CreateIdeaDevHead/Index?filterStatus=" + filterStatus + "&query=" + query;
+    }
+
+    function confirmDelete(ideaId) {
+        Swal.fire({
+            title: 'Are you sure to delete ?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            customClass: {
+                confirmButton: 'delete-confirm-btn',
+                cancelButton: 'delete-cancel-btn'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/CreateIdeaDevHead/DeleteIdea/' + ideaId;
+            }
+        });
+    }
+
+
+
+    $(document).ready(function () {
+        // Bắt sự kiện onclick của nút "Save"
+        $(".isActive").on("click", function () {
+            var name = $(this).prop('name');
+            var status = $("input[name='" + name + "']:checked").val();
+            var ideaid = $("#" + name).val();
+            console.log(name);
+            console.log(status);
+            // Gửi yêu cầu AJAX tới Controller
+            $.ajax({
+                url: "/CreateIdeaDevHead/UpdateStatus",
+                type: "POST",
+                data: { status: status, ideaid: ideaid },
+                success: function (result) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Status updated successfully.',
+                        icon: 'success'
+                    });
+                    //window.location.reload();
+                    // success
+                },
+                error: function (xhr, status, error) {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Failed to update status.',
+                        icon: 'error'
+                    });
+                    // error
+                }
+            });
+        });
+    });
+
+</script>
+
+<script>
+    var popups = document.getElementsByClassName('popup');
+
+    window.addEventListener('click', function (event) {
+        for (var i = 0; i < popups.length; i++) {
+            var popup = popups[i];
+            if (event.target == popup) {
+                closePopup(popup.id);
+            }
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            for (var i = 0; i < popups.length; i++) {
+                var popup = popups[i];
+                closePopup(popup.id);
+            }
+        }
+    });
+
+    function closePopup(popupId) {
+        var popup = document.getElementById(popupId);
+        popup.style.display = 'none';
+    }
+</script>

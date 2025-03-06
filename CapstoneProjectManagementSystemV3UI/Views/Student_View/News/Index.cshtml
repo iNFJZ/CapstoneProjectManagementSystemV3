@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "News Page";
+}
+<link rel="stylesheet" href="/css/student/student_homepage.css">
+<div class="homepage" id="news">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="searchDisplay">
+            <p>Pin news ( new duoc ghim)</p><br />
+            <p>List news ( danh sach news)</p>
+        </div>
+    </div>
+</div>

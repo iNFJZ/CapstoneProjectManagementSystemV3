@@ -1,0 +1,452 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "Profile Page";
+}
+<meta charset="utf-8">
+<link rel="stylesheet" href="/css/student/student_profile.css">
+<div class="homepage" id="viewProfile">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="profileUser">
+            <div class="profileUser__avatar">
+                <p class="bigTitle">Avatar</p>
+                <img src="@(Url.Content(ViewBag.studentProfile.User.Avatar))" alt="Avatar">
+                <div class="contactInfomation">
+                    <p class="bigTitle">Contact Information</p>
+                    <div class="formContactInfo__phoneNumber">
+                        <p class="smallTitle">Phone Number <b>*</b></p>
+                        <div class="informInput">
+                            <input type="text" value="@ViewBag.studentProfile.PhoneNumber" id="phoneContactInfo" disabled>
+                            <span class="showErrorMessage" id="errorphoneContactInfo"></span>
+                        </div>
+                    </div>
+                    @*<div class="formContactInfo__email">
+                    <p class="smallTitle">Personal Email</p>
+                    <div class="informInput">
+                    <input type="text" value="@ViewBag.studentProfile.EmailAddress" id="emailContactInfo" disabled>
+                    <span class="showErrorMessage" id="erroremailContactInfo"></span>
+                    </div>
+                    </div>*@
+                    <div class="formContactInfo__facebook">
+                        <p class="smallTitle">Facebook</p>
+                        <div class="informInput">
+                            <textarea name="faceBookContactInfo" id="faceBookContactInfo" cols="24" rows="2"
+                                      disabled>@ViewBag.studentProfile.LinkFacebook</textarea>
+                            <span class="showErrorMessage" id="errorfaceBookContactInfo"></span>
+                        </div>
+                    </div>
+                </div>
+                @if (ViewBag.isSubmittedProfile)
+                {
+                    <div class="alternativeMail_Form">
+                        @if (ViewBag.affiliateAccount == null || ViewBag.affiliateAccount.IsVerifyEmail == false)
+                        {
+                            <div class="formBasicInfo__alternativeEmail">
+                                <p class="bigTitle">Personal Email</p>
+                                <div class="alternativeMail">
+                                    <p class="smallTitle">Alternative Email <b>*</b></p>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z"
+                                              fill="#F74055" />
+                                    </svg>
+                                    <p class="addMailNotifi">Add an alternative email</p>
+                                    <button id="btnAddAlternativeForm">Add</button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="formBasicInfo__alternativeEmail">
+                                <p class="bigTitle" hidden>Personal Email</p>
+                                <div class="alternativeMail" hidden>
+                                    <p class="smallTitle">Alternative Email <b>*</b></p>
+                                    <p id="personalEmail">@ViewBag.affiliateAccount.PersonalEmail</p>
+                                    <button id="btnChangeAlternativeForm">Change</button>
+                                </div>
+                                @if (ViewBag.affiliateAccount.PasswordHash != "")
+                                {
+                                    <div class="passalternativeMail">
+                                        <p class="smallTitle">Password</p>
+                                        <button id="btnchangePasswordAlternativeForm">Change</button>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="passalternativeMail">
+                                        <p class="smallTitle">Password</p>
+                                        <button id="btnSetPasswordAlternativeForm">Set Password</button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+
+            <div class="profileUser__basicInfo">
+                <div class="basicInformationTitle">
+                    <p class="bigTitle">Basic Information</p>
+                    <div class="profileUser__editBtn">
+                        <button class="editProfile" id="editProfileBtn">
+                            <i class="fa-solid fa-pen"></i>Edit My
+                            Profile
+                        </button>
+                    </div>
+                </div>
+                <div class="formBasicInfo">
+                    <div class="formBasicInfo__name">
+                        <p class="smallTitle">Name</p>
+                        <div class="informInput" style="margin-left: 0px">
+                            <input type="text" value="@ViewBag.studentProfile.User.FullName" id="nameBasicInfo" disabled>
+                            <span class="showErrorMessage" id="errornameBasicInfo"></span>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__rollNumber">
+                        <p class="smallTitle">Roll Number</p>
+                        <p class="content">@ViewBag.studentProfile.RollNumber</p>
+                    </div>
+
+                    <div class="formBasicInfo__semester">
+                        <p class="smallTitle">Semester</p>
+                        <p class="content">@ViewBag.studentProfile.Semester.SemesterName</p>
+                    </div>
+                    <div class="filter">
+                        <div class="filterDropdown" style="margin-bottom: 20px;">
+                            <p class="smallTitle">Profession</p>
+                            <div class="informInput">
+                                @* <select name="" id="professionalfilter" disabled hidden>
+                                @foreach (var item in ViewBag.profession)
+                                {
+                                if (Convert.ToInt32(TempData["ProfessionIdOfStudent"]) == item.ProfessionID)
+                                {
+                                <option value="@item.ProfessionID" selected>
+                                @item.ProfessionFullName</option>
+                                }
+                                else
+                                {
+                                <option value="@item.ProfessionID">@item.ProfessionFullName</option>
+                                }
+
+                                }
+                                </select>*@
+                                <p>@ViewBag.studentProfile.Profession.ProfessionFullName</p>
+                                @*<p id="selectedValue"></p>*@
+                                @*<span class="showErrorMessage" id="errorProfessional"></span>*@
+                            </div>
+                        </div>
+                        @if (ViewBag.studentProfile.Specialty.SpecialtyID == 0)
+                        {
+                            <b>(You can only edit specialty 1 time and it will become your idea's specialty)</b>
+
+                            <br />
+                        }
+                        <div class="filterDropdown" style="margin-top: 10px;">
+                            <p class="smallTitle">
+                                Specialty @if (ViewBag.studentProfile.Specialty.SpecialtyID == 0)
+                                {
+                                    <b>*</b>
+                                }
+                            </p>
+                            <div class="informInput">
+                                @if (ViewBag.studentProfile.Specialty.SpecialtyID == 0)
+                                {
+                                    <select name="" id="specialtyfilter" disabled>
+                                        <option value="0">Specialty</option>
+                                        @foreach (var item in ViewBag.specialties)
+                                        {
+                                            if (Convert.ToInt32(TempData["SpecialtyIdOfStudent"]) == item.SpecialtyID)
+                                            {
+                                                <option value="@item.SpecialtyID" selected>
+                                                    @item.SpecialtyFullName
+                                                </option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@item.SpecialtyID">@item.SpecialtyFullName</option>
+                                            }
+
+                                        }
+                                    </select>
+                                }
+                                else
+                                {
+                                    <input type="hidden" value="@ViewBag.studentProfile.Specialty.SpecialtyID" id="specIdOfStudentInput" />
+                                    <p>@ViewBag.studentProfile.Specialty.SpecialtyFullName</p>
+                                }
+                                <br />
+                                <span class="showErrorMessage" id="errorSpecialty"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__gender">
+                        <p class="smallTitle">Gender</p>
+                        <!-- Original Gender Section (Text) -->
+                        <div class="genderTextSection">
+                            @if (ViewBag.studentProfile.User.Gender == 2)
+                            {
+                                <p>Other</p>
+                            }
+                            else if (ViewBag.studentProfile.User.Gender == 1)
+                            {
+                                <p>Male</p>
+                            }
+                            else
+                            {
+                                <p>Female</p>
+                            }
+                        </div>
+                        <!-- New Gender Button (Initially Hidden) -->
+                        <div class="genderButtonSection" style="display: none;">
+                            <div class="selectGender">
+                                <input type="radio" id="male" name="genderUser" value="1" disabled="disabled"
+                                @if (@ViewBag.studentProfile.User.Gender == 1)
+                                {
+                                    <text>checked</text>
+                                }>
+                                <label for="male">Male</label><br>
+
+                                <input type="radio" id="female" name="genderUser" value="0" disabled="disabled"
+                                @if (@ViewBag.studentProfile.User.Gender == 0)
+                                {
+                                    <text>checked</text>
+                                }>
+                                <label for="female">Female</label><br>
+
+                                <input type="radio" id="other" name="genderUser" value="2" disabled="disabled"
+                                @if (@ViewBag.studentProfile.User.Gender == 2)
+                                {
+                                    <text>checked</text>
+                                } >
+                                <label for="other">Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__email">
+                        <p class="smallTitle">Email</p>
+                        <p class="content">@ViewBag.studentProfile.User.FptEmail</p>
+                    </div>
+                    <div class="formBasicInfo__expectRole">
+                        <p class="smallTitle">Expect Role</p>
+                        <div class="informInput">
+                            <input type="text" value="@ViewBag.studentProfile.ExpectedRoleInGroup" id="expectRoleBasicInfo" disabled>
+                            <span class="showErrorMessage" id="errorexpectRoleBasicInfo"></span>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__bio">
+                        <p class="smallTitle">Bio</p>
+                        <div class="informInput">
+                            <textarea name="bioInfo" id="bioInfo" cols="50" rows="5"
+                                      disabled>@ViewBag.studentProfile.SelfDescription</textarea>
+                            <span class="showErrorMessage" id="errorbioInfo"></span>
+                        </div>
+                    </div>
+                    <div class="formBasicInfo__wanttobegrouped">
+                        <p class="smallTitle nhapnhay">Be Grouped</p>
+                        <div class="selectWantToBeGrouped" style="display: contents;">
+                            <div style="margin-right: 30px;"><p>Do you want to be grouped in a random group?</p></div>
+                            <div style="display: inline-grid;">
+                                <input type="radio" id="wantobegrouped_yes" name="wantobegrouped" value="1" disabled @if (ViewBag.studentProfile.WantToBeGrouped == true)
+                                {
+                                    <text>checked</text>
+                                }
+                                >
+                                <label for="wantobegrouped_yes">Yes</label><br>
+                                <input type="radio" id="wantobegrouped_no" name="wantobegrouped" value="0" disabled @if (ViewBag.studentProfile.WantToBeGrouped == false)
+                                {
+                                    <text>checked</text>
+                                }
+                                >
+                                <label for="wantobegrouped_no">No</label><br>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button">
+                        <button class="btnCancel">Cancel</button>
+                        <button class="btnSave">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @*form add email*@
+    <div class="alternativeMail__popup hide-form">
+        <div class="inputMailpopup">
+            <p>Alternative Email</p>
+            <p>In case that your Google account has expired, you can use your alternate email address to sign in.</p>
+            <div class="alternativeEmail__popup">
+                <p>Email</p>
+                <input type="text" id="alternativeEmailInput" placeholder="Enter your email">
+            </div>
+            <span class="showErrorMessage" id="errordesAlternativeEmailInput"></span>
+            <div class="buttonPopup">
+                <button class="cancelBtn" id="cancelBtn__alternativeMail">Cancel</button>
+                <button class="continueBtn" id="continueBtn__alternativeMail" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
+    @*form verify email*@
+    <div class="verifyAlternativeMail__popup hide-form">
+        <div class="inputVerifypopup">
+            <p> Verify Your Alternative Email</p>
+            <p>Enter the verify code sent to <span id="emailPersonal"></span>. Did not get the code? <button id="btnResend1"> Resend</button></p>
+            <div class="verifyCode__popup">
+                <p>Verification Code</p>
+                <input type="text" id="verifyCodeInput" placeholder="Enter vefification code">
+            </div>
+            <span class="showErrorMessage" id="errorVerifyCodeInput"></span>
+            <div class="buttonPopup">
+                <button class="cancelBtn" id="cancelBtn__verifyCode">Cancel</button>
+                <button class="continueBtn" id="continueBtn__verifyCode" disabled>Continue</button>
+            </div>
+        </div>
+    </div>
+    @*form set passsword*@
+    <div class="setPasswordForAlternativeMail__popup hide-form">
+        <div class="inputSetPasspopup">
+            <p>Set Password (Optional)</p>
+            <p>Use this password for your next sign-in using your alternate email address</p>
+            <div class="setPass__popup">
+                <p>Password</p>
+                <div class="inputPass">
+                    <input type="password" id="passalternativeMailInput" placeholder="Enter your password">
+                    <i class="fa-solid fa-eye-slash showHidePW"></i>
+                </div>
+                <span class="showErrorMessage" id="errorpassalternativeMailInput"></span>
+            </div>
+            <div class="setPass__popup">
+                <p>Confirm Password</p>
+                <div class="inputConfirmPass">
+                    <input type="password" id="confirmpassalternativeMailInput" placeholder="Confirm your password">
+                    <i class="fa-solid fa-eye-slash showHideConfirmPW"></i>
+                </div>
+                <span class="showErrorMessage" id="errorconfirmpassalternativeMailInput"></span>
+            </div>
+            <div class="buttonPopup">
+                <button class="cancelBtn" id="cancelBtn__setPassword">Cancel</button>
+                <button class="continueBtn" id="submitBtn__setPassword" disabled>Submit</button>
+            </div>
+        </div>
+    </div>
+    @*form verify email again*@
+    @if (ViewBag.affiliateAccount != null)
+    {
+        <div class="verifyChangeAlternativeMail__popup hide-form">
+            <div class="inputVerifypopup">
+                <p> Verify Your Alternative Email</p>
+                <p>
+                    Enter the verify code sent to <span id="emailPersonal1">@ViewBag.affiliateAccount.PersonalEmail</span>. Did not get the code?<button id="btnResend2">Resend</button>
+                </p>
+                <div class="verifyCode__popup">
+                    <p>Verification Code</p>
+                    <input type="text" id="verifyOldEmail_CodeInput" placeholder="Enter vefification code">
+                </div>
+                <span class="showErrorMessage" id="errorVerifyOldEmail"></span>
+                <div class="buttonPopup">
+                    <button class="cancelBtn" id="cancelBtn__changeEmail">Cancel</button>
+                    <button class="continueBtn" id="continueBtn__changeEmail" disabled>Change Email</button>
+                </div>
+            </div>
+        </div>
+    }
+
+    @*form input old password*@
+    <div class="changePassword__popup hide-form">
+        <div class="inputOldPass">
+            <p> Old Password</p>
+            <p>Input Your Password</p>
+            <div class="setPass__popup">
+                <p>Password</p>
+                <div class="inputPass">
+                    <input type="password" id="oldPasswordAlternativeMail" placeholder="Enter your password">
+                    <i class="fa-solid fa-eye-slash showHideOldPW"></i>
+                </div>
+                <span class="showErrorMessage" id="errorOldPasswordAlternativeMail"></span>
+            </div>
+            <div class="buttonPopup">
+                <button class="cancelputNewPassBtn" id="cancelBtn_InputOldPassword">Cancel</button>
+                <button class="continueInputNewPassBtn" id="continueBtn_InputOldPassword" disabled>Countinue</button>
+            </div>
+        </div>
+    </div>
+    @*form input new password and confirm new password*@
+    <div class="setPassword__popup hide-form">
+        <div class="inputSetNewPasspopup">
+            <p>Reset Password</p>
+            <p>Input a newpassword</p>
+            <div class="setPass__popup">
+                <p>New Password</p>
+                <div class="inputPass">
+                    <input type="password" id="newpassalternativeMailInput" placeholder="Enter your password">
+                    <i class="fa-solid fa-eye-slash showHideNewPW"></i>
+                </div>
+                <span class="showErrorMessage" id="errornewpassalternativeMailInput"></span>
+            </div>
+            <div class="setPass__popup">
+                <p>Confirm New Password</p>
+                <div class="inputConfirmPass">
+                    <input type="password" id="confirmnewpassalternativeMailInput" placeholder="Confirm your password">
+                    <i class="fa-solid fa-eye-slash showHideConfirmNewPW"></i>
+                </div>
+                <span class="showErrorMessage" id="errorconfirmnewpassalternativeMailInput"></span>
+            </div>
+            <div class="buttonPopup">
+                <button class="cancelputNewPassBtn" id="cancelInputNewPassBtn">Cancel</button>
+                <button class="continueInputNewPassBtn" id="submitNewPassBtn" disabled>Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/student/student_profile.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Add event listener to the "Edit my Profile" button
+        $("#editProfileBtn").on("click", function () {
+            // Toggle the display of the Gender sections
+            $(".genderTextSection").toggle();
+            $(".genderButtonSection").toggle();
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        // Function to update the Gender button state based on the gender value
+        function updateGenderButton() {
+            // Get the gender value from the ViewBag or any other source
+            var genderValue = @ViewBag.studentProfile.User.Gender;
+
+            // Show the Gender button section and hide the Gender text section
+            $(".genderTextSection").hide();
+            $(".genderButtonSection").show();
+
+            // Check the appropriate radio button based on the gender value
+            if (genderValue == 2) {
+                $("#other").prop("checked", true);
+            } else if (genderValue == 1) {
+                $("#male").prop("checked", true);
+            } else {
+                $("#female").prop("checked", true);
+            }
+        }
+
+        // Add event listener to the "Edit my Profile" button
+        $("#editProfileBtn").on("click", function () {
+            updateGenderButton();
+        });
+    });
+</script>
+
+@*<script>
+    // Lấy tham chiếu tới các phần tử HTML
+    const selectOption = document.getElementById('professionalfilter');
+    const selectedValue = document.getElementById('selectedValue');
+
+    selectedValue.textContent = selectOption.options[selectOption.selectedIndex].textContent;
+
+
+</script>*@
+

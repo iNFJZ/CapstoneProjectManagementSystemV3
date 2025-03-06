@@ -1,0 +1,299 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;1,100;1,200;1,300;1,400;1,500&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.editSpe {
+    display: flex;
+    height: auto;
+}
+
+.formSupport {
+    display: flex;
+    background-color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    /* margin: 20px; */
+    flex-direction: column;
+}
+
+.formTitle {
+    font-size: 24px;
+    font-weight: 600;
+    color: #7470E9;
+    /* margin: 32px 0 8px 0; */
+}
+
+.sidebar--left {
+    flex-basis: 15%;
+    height: 93vh;
+    border: none;
+    left: 0;
+    overflow-x: hidden;
+    position: sticky;
+    top: 0;
+}
+
+.main {
+    FONT-WEIGHT: 200;
+    height: auto;
+    flex-basis: 120%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(116, 112, 233, 0.05);
+    box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+.titlePage {
+    margin: 1em;
+    color: #1C1F27;
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.addPro {
+    display: flex;
+    flex-direction: column;
+    margin: 24px;
+    padding: 20px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+}
+
+.createPro {
+    display: flex;
+}
+
+.create button {
+    margin-top: auto;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.editPro,
+.savePro,
+.deletePro {
+    width: 100px;
+    height: 40px;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 12px;
+    cursor: pointer;
+}
+
+    .editPro > i,
+    .savePro > i,
+    .deletePro > i {
+        margin-right: 8px;
+    }
+
+.saveAll {
+    width: 150px;
+    height: 50px;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    background-color: #7470E9;
+    color: #FFFFFF;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 20px 0;
+    cursor: pointer;
+}
+
+    .saveAll > i {
+        margin-right: 8px;
+    }
+
+.pro {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 18px;
+}
+
+.pro__left {
+    flex-basis: 30%;
+    flex-direction: column;
+}
+
+.title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.smallTitle {
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    color: #808080;
+}
+
+input {
+    outline: none;
+    height: 30px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+    input:focus {
+        border: 1px solid #327dec;
+    }
+
+    input:disabled {
+        border: none;
+        background-color: #FFFFFF;
+        padding: 0;
+    }
+
+.info--left > input {
+    width: 6em;
+}
+
+.info--right > input {
+    width: 18em;
+}
+
+.pro__left--info {
+    /* display: flex; */
+}
+
+.info--left {
+    margin-right: 20px;
+}
+
+.pro__right {
+    flex-basis: 70%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+}
+
+.pro__right--info {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.infoInput {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 8px;
+    width: 100%;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.info--abbrev, .info--maxMember, .info--fullname {
+    margin-right: 1em;
+}
+
+    .info--fullname > input {
+        width: 18em;
+    }
+
+    .info--abbrev > input, .info--maxMember > input {
+        width: 8em;
+    }
+
+.deleteSpe {
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    border: 1px solid #7470E9;
+    border-radius: 8px;
+    color: #7470E9;
+    background-color: #FFFFFF;
+    margin-top: 2%;
+}
+
+.addSpe {
+    width: 400px;
+    height: 48px;
+    border: 1px solid #7470E9;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 auto;
+}
+
+    .addSpe > i {
+        margin-right: 12px;
+    }
+
+#addPro {
+    width: 70%;
+    height: 100px;
+    border: 1px solid #7470E9;
+    background-color: #FFFFFF;
+    color: #7470E9;
+    cursor: pointer;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0 auto;
+    border-radius: 16px;
+}
+
+    #addPro > i {
+        margin-right: 12px;
+    }
+
+.hide-btn {
+    display: none;
+}
+
+@media screen and (max-width: 1440px) {
+    .titlePage {
+        margin: 16px;
+    }
+
+    .addPro {
+        margin: 24px;
+    }
+
+    .pro__left {
+        flex-basis: 10%;
+    }
+
+    .pro__right {
+        flex-basis: 90%;
+    }
+
+    .infoInput {
+        width: 100%;
+    }
+
+    input {
+        width: 180px;
+    }
+
+    .info--right > input {
+        width: 14em;
+    }
+}
+.addPro {
+    display: flex;
+    flex-direction: column;
+    margin: 24px;
+    padding: 20px;
+    background-color: #FFFFFF; /* Màu nền trắng */
+    border-radius: 16px; /* Bo góc cho phần */
+    border: 2px solid #1C1F27; /* Viền màu xung quanh */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Thêm bóng cho phần */
+}

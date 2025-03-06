@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    ViewData["Title"] = "Manage Registered Group Page";
+}
+@using Infrastructure.Entities;
+@using Infrastructure.ViewModel.SupervisorViewModel;
+<link rel="stylesheet" href="/css/devhead/devhead_registerGroup.css"> 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+<div class="homepage" id="manageRegisteredGroup">
+    @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    <div class="main">
+        @if(ViewBag.assignedList != null && ViewBag.assignedList.Count != 0)
+        {
+            <h2>Assigned Groups</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Project English Name</th>
+                        <th>Profession</th>
+                        <th>Speciality</th>
+                        <th>Supervisor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(RegisteredGroupRequest request in ViewBag.assignedList)
+                    {
+                        <tr>
+                            <td>@request.GroupIdea.ProjectEnglishName</td>
+                            <td>@request.GroupIdea.Profession.ProfessionFullName</td>
+                            <td>@request.GroupIdea.Specialty.SpecialtyFullName</td>
+                            @* <td>@request.Supervisor.User.UserName</td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        @if(ViewBag.confirmedList != null && ViewBag.confirmedList.Count != 0)
+        {
+            <h2>Confirmed Groups</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Project English Name</th>
+                        <th>Profession</th>
+                        <th>Speciality</th>
+                        <th>Supervisor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(RegisteredGroupRequest request in ViewBag.confirmedList)
+                    {
+                        <tr>
+                            <td>@request.GroupIdea.ProjectEnglishName</td>
+                            <td>@request.GroupIdea.Profession.ProfessionFullName</td>
+                            <td>@request.GroupIdea.Specialty.SpecialtyFullName</td>
+                            @* <td>@request.Supervisor.User.UserName</td> *@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        @if(ViewBag.unassignedList != null && ViewBag.unassignedList.Count != 0)
+        {
+            <h2>Unassigned Groups</h2>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Project English Name</th>
+                        <th>Profession</th>
+                        <th>Speciality</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(RegisteredGroupRequest request in ViewBag.unassignedList)
+                    {
+                        <tr>
+                            <td>@request.GroupIdea.ProjectEnglishName</td>
+                            <td>@request.GroupIdea.Profession.ProfessionFullName</td>
+                            <td>@request.GroupIdea.Specialty.SpecialtyFullName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        @if (ViewBag.errorMessages != null && ViewBag.errorMessages.Count != 0  && ViewBag.errorLineNumbers != null) 
+                        {
+                            <h2>Error lines</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Line</th>
+                                        <th>Error Message</th>
+                                    </tr>
+                                </thead>
+                            @for(int i = 0 ; i < ViewBag.errorMessages.Count ; i++)
+                            {
+                                <tr>
+                                    <td>@ViewBag.errorLineNumbers[i]</td>
+                                    <td style="color : red;">@ViewBag.errorMessages[i]</td>
+                                </tr>
+                            }
+                            </table>
+                        }
+        
+        @if( (ViewBag.assignedList == null || ViewBag.assignedList.Count == 0) && (ViewBag.confirmedList == null || ViewBag.confirmedList.Count == 0) && (ViewBag.unassignedList == null || ViewBag.unassignedList.Count == 0) ) 
+        {
+            <h2>There's no group</h2>
+        }
+        <div class="buttonForm">
+            <button onclick="back()" class="btn btn-primary">Back</button>
+        </div>
+    </div>
+</div>
+<script>
+    function back(){
+        window.location.href = "/ManageRegisterGroupRequest/Index";
+    }
+</script>

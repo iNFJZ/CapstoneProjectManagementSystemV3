@@ -1,0 +1,368 @@
+﻿﻿@{
+    if (ViewBag.isDevHead)
+    {
+        Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    }
+    else
+    {
+        Layout = "/Views/Shared/Mentor/_LayoutMentor.cshtml";
+    }
+    ViewData["Title"] = "List Change Topic Request";
+}
+@using Infrastructure.Entities;
+<link rel="stylesheet" href="/css/supervisor/supervisor_changeTopic.css">
+
+<style>
+    .status-filter-item {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 3fr 1fr;
+    }
+
+</style>
+<div class="homepage" id="changeTopic">
+    @if (ViewBag.isDevHead)
+    {
+        @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    }
+    else
+    {
+        @await Html.PartialAsync("/Views/Shared/Mentor/_LayoutSidebarLeftMentor.cshtml")
+    }
+    <div class="main">
+        <div class="formSupport" style=" padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */">
+            <div class="formRequest">
+                <p class="formTitle">Manage the topics that the group wants to change </p>
+            </div>
+            <div class="formTopicHeader">
+                <div class="chooseTypeRequest">
+                    @if (!ViewBag.isBeforeDeadline && ViewBag.isDevHead && ViewBag.status == 2 && ViewBag.IsConfirmationOfDevHeadNeeded)
+                    {
+                        <button class="formChangeTopicBtn active" id="formChangeTopicBtn" onclick="ViewListRequest(2)">Requests for Topic Changes After Deadline</button>
+                    }
+                    else if (!ViewBag.isBeforeDeadline && ViewBag.isDevHead && ViewBag.status != 2 && ViewBag.IsConfirmationOfDevHeadNeeded)
+                    {
+                        <button class="formChangeTopicBtn" id="formChangeTopicBtn" onclick="ViewListRequest(2)">Requests for Topic Changes After Deadline</button>
+                    }
+                    @if (ViewBag.status != 2)
+                    {
+                        <button class="requestChangeTopicBtn active" id="requestChangeTopicBtn" onclick="ViewListRequest(0)">Requests for Topic Changes By The Groups I Supervise</button>
+                    }
+                    else
+                    {
+                        <button class="requestChangeTopicBtn" id="requestChangeTopicBtn" onclick="ViewListRequest(0)">Requests for Topic Changes By The Groups I Supervise</button>
+                    }
+                </div>
+            </div>
+            <div class="requestChange ">
+                <div class="title" style=" font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border: 1px solid #1C1F27; /* Viền cho tiêu đề bảng */
+    margin: 16px;
+    margin-bottom: 0px;">
+                    <p> No.</p>
+                    <p>Group Name</p>
+                    <p>Old Topic</p>
+                    <p>New Topic</p>
+                    <p>Email Supervisor</p>
+                    <p style="display : flex; position : relative;">
+                        Status <i class="fa-solid fa-filter" onclick="toggle()" style="cursor : pointer; margin-left: 8px"></i>
+                        <div class="status-filter-menu" style="display : none; position : absolute;top: 39%;
+                                                            left: 79%;
+                                                            background-color: #f9f9f9;
+                                                            padding: 10px;
+                                                            border: 1px solid #ccc;
+                                                        ">
+                            <h2 style="color: #7470E9">Status Filter</h2>
+                            <ul>
+                                @if (!ViewBag.isBeforeDeadline && ViewBag.isDevHead && ViewBag.IsConfirmationOfDevHeadNeeded && ViewBag.status == 2)
+                                {
+                                    <li class="status-filter-item" style="padding-bottom: 10px;">
+                                        <p>Waiting For Staff </p>
+                                        <input type="checkbox" name="statuses" value="3" @(ViewBag.isContainStatus3 ? "checked" : "") class="mini" />
+                                    </li>
+                                    <li class="status-filter-item" style="padding-bottom: 10px;">
+                                        <p>Pending</p>
+                                        <input class="mini" type="checkbox" name="statuses" value="2" @(ViewBag.isContainStatus2 ? "checked" : "") />
+                                    </li>
+                                }
+                                else if (ViewBag.status != 2)
+                                {
+                                    <li class="status-filter-item">
+                                        <p>Pending</p>
+                                        <input type="checkbox" name="statuses" value="0" class="mini" @(ViewBag.isContainStatus0 ? "checked" : "") />
+                                    </li>
+                                    @if (ViewBag.IsConfirmationOfDevHeadNeeded && !ViewBag.isBeforeDeadline && !ViewBag.isDevHead)
+
+                                    {
+                                        <li class="status-filter-item">
+                                            <p>Waiting For Department Leader</p>
+                                            <input type="checkbox" name="statuses" value="2" class="mini" @(ViewBag.isContainStatus2 ? "checked" : "") />
+                                        </li>
+                                        <li class="status-filter-item">
+                                            <p>Department Leader Accepted</p>
+                                            <input type="checkbox" name="statuses" value="3" class="mini" @(ViewBag.isContainStatus3 ? "checked" : "") />
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li class="status-filter-item">
+                                            <p>Waiting For Staff</p>
+                                            <input type="checkbox" name="statuses" value="3" class="mini" @(ViewBag.isContainStatus3 ? "checked" : "") />
+                                        </li>
+                                    }
+                                }
+                                <li class="status-filter-item">
+                                    <p>Staff accepted</p>
+                                    <input type="checkbox" name="statuses" value="4" class="mini" @(ViewBag.isContainStatus4 ? "checked" : "") />
+                                </li>
+                            </ul>
+                            <div style="display :flex; justify-content: center;align-items: center; padding-top: 5px;">
+                                <button class="buttonSave" onclick="save()">Save</button>
+                            </div>
+                        </div>
+                    </p>
+                    <p>Comment Staff</p>
+                </div>
+                @if (ViewBag.requests != null && ViewBag.requests.Count > 0)
+                {
+                    int count = 1;
+
+                    foreach (var item in ViewBag.requests)
+                    {
+
+                        <div class="detailFormChange" id="@item.RequestID">
+                            <p>@count</p>
+                            <p class="groupName limitCharacter">@item.FinalGroup.GroupName</p>
+                            <p class="limitCharacter">@item.OldTopicNameEnglish</p>
+                            <p class="limitCharacter">@item.NewTopicNameEnglish</p>
+                            <p class="limitCharacter">@item.EmailSuperVisor</p>
+                            @if ((!ViewBag.isBeforeDeadline && ViewBag.isDevHead && item.Status == 3 && ViewBag.status == 2) || (ViewBag.status != 2 && item.Status == 3 && ViewBag.isDevHead) || (ViewBag.status != 2 && item.Status == 3 && !ViewBag.isDevHead && (!ViewBag.IsConfirmationOfDevHeadNeeded || ViewBag.isBeforeDeadline)))
+                            {
+                                <div>
+                                    <p>Waiting for Staff to approved </p>
+                                    <button class="reject-btn" onclick="CancelChangeTopicRequest(event , @item.Status,'@item.RequestID')">Cancel</button>
+                                </div>
+                            }
+                            else if ((!ViewBag.isBeforeDeadline && ViewBag.isDevHead && ViewBag.status == 2 && item.Status == 2) || (ViewBag.status != 2 && item.Status == 0))
+                            {
+                                <div>
+                                    <button class="accept-btn" onclick="UpdateChangeTopicRequest(event , true,'@item.RequestID')">Accept</button>
+                                    <button class="reject-btn" onclick="UpdateChangeTopicRequest(event , false,'@item.RequestID')">Reject</button>
+                                </div>
+                            }
+                            else if (ViewBag.status != 2 && item.Status == 2 && !ViewBag.isDevHead && ViewBag.IsConfirmationOfDevHeadNeeded && !ViewBag.isBeforeDeadline)
+                            {
+                                <div>
+                                    <p>Waiting for Department Leader to approved </p>
+                                    <button class="reject-btn" onclick="CancelChangeTopicRequest(event , @item.Status,'@item.RequestID')">Cancel</button>
+                                </div>
+                            }
+                            else if (ViewBag.status != 2 && item.Status == 2 && ViewBag.isDevHead)
+                            {
+                                <div>
+                                    <button class="accept-btn" onclick="UpdateChangeTopicRequest(event , true,'@item.RequestID')">Accept</button>
+                                    <button class="reject-btn" onclick="UpdateChangeTopicRequest(event , false,'@item.RequestID')">Reject</button>
+                                </div>
+                            }
+                            else if (ViewBag.status != 2 && item.Status == 3 && !ViewBag.isDevHead && ViewBag.IsConfirmationOfDevHeadNeeded && !ViewBag.isBeforeDeadline)
+                            {
+                                <p>Department Leader Have Accepted</p>
+                            }
+                            else if (ViewBag.status != 2 && item.Status == 4)
+                            {
+                                <p>Staff Accepted</p>
+                            }
+                        </div>
+                        count++;
+                    }
+                }
+                else
+                {
+                    <div> <h2 style="color:red;"> You don't have any request </h2> </div>
+                }
+            </div>
+            <div id="pagination" style="text-align: center; margin-bottom: 10px;margin-top : 20px;"></div>
+        </div>
+        <div class="showDetailRequest hide-form">
+            <div class="popup">
+                <p>Change Topic Form</p>
+                <div class="changeTopic">
+                    <div class="oldTopicRequest">
+                        <p>Old Topic</p>
+                        <div class="oldTopic">
+                            <p><span>English Name:</span><b>Capstone Project Management System</b></p>
+                            <p><span>VietNamese Name:</span><b>Hệ thống quản lý đồ án tốt nghiệp</b></p>
+                            <p><span>Abbreviation:</span><b>CPSM</b></p>
+                        </div>
+                    </div>
+                    <div class="newTopicRequest">
+                        <p>New Topic</p>
+                        <div class="newTopic">
+                            <p><span>English Name:</span><b>Capstone Project Management System</b></p>
+                            <p><span>VietNamese Name:</span><b>Hệ thống quản lý đồ án tốt nghiệp</b></p>
+                            <p><span>Abbreviation:</span><b>CPSM</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="emailSupervisorRequest">
+                    <p class="titleRequest">Email Supervisor: </p>
+                    <p>LamPT2@fe.edu.vn</p>
+                </div>
+                <div class="reasonChangeRequest">
+                    <p class="titleRequest">Reason Change Topic: </p>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Vitae sapiente et culpa aut, quaerat
+                        voluptatibus non, ea distinctio animi dolorum tempore quia facilis voluptate sit porro odio
+                        sequi totam voluptatem?
+                    </p>
+                </div>
+                <div class="button">
+                    <button class="closeFormDetailBtn">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="showDetailRequest hide-form">
+            @*Popup request change topic*@
+            <div class="popup">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Make sure you have included the SweetAlert library -->
+<script src="path/to/sweetalert.min.js"></script>
+
+<script>
+    var supervisorId = '@ViewBag.Supervisor.SupervisorID';
+    $(document).ready(function () {
+        var connection = new signalR.HubConnectionBuilder().withUrl("/realTimeHub").build();
+        connection.start().then(function () {
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+        connection.on("receiveMessage", function (user, message) {
+            if (supervisorId == user && message != "updateMembers") {
+                window.location.href = message;
+            }
+        });
+    });
+    var statusIndex = @ViewBag.status;
+    function ViewListRequest(status) {
+        window.location.href = "/SupervisorChangeTopicRequest/Index?status=" + status;
+    }
+
+    function toggle(documentId) {
+        var element = document.getElementsByClassName("status-filter-menu")[0];
+        if (element.style.display === "none") {
+            element.style.display = "block";
+        } else {
+            element.style.display = "none";
+        }
+    }
+
+    function UpdateChangeTopicRequest(event, isAccepted, requestId) {
+        event.stopPropagation();
+        var message = isAccepted ? 'accept' : 'reject';
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Are you sure you want to ${message} the request?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: `Yes, ${message} `
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/SupervisorChangeTopicRequest/UpdateChangeTopicRequestStatus?isAccepted=" + isAccepted + "&requestId=" + requestId + "&statusIndex=" + statusIndex;
+            }
+        });
+    }
+
+    function CancelChangeTopicRequest(event, status, requestId) {
+        event.stopPropagation();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Are you sure you want to cancel the request?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: `Yes `
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/SupervisorChangeTopicRequest/CancelChangeTopicRequestStatus?statusCancel=" + status + "&requestId=" + requestId + "&statusIndex=" + statusIndex;
+            }
+        });
+    }
+
+
+    //setURL
+    function setUrlParam(key, value) {
+        var statuses = [];
+
+        $('input[name="statuses"]:checked').each(function () {
+            statuses.push($(this).val());
+        });
+        const urlObject = new URL(window.location.href);
+        urlObject.searchParams.set(key, value);
+        urlObject.searchParams.set("rawStatuses", statuses.join(','));
+        return urlObject.toString();
+    }
+
+    function save() {
+        var statuses = [];
+
+        $('input[name="statuses"]:checked').each(function () {
+            statuses.push($(this).val());
+        });
+        const urlObject = new URL(window.location.href);
+        urlObject.searchParams.set("page", 1);
+        urlObject.searchParams.set("rawStatuses", statuses.join(','));
+        window.location.href = urlObject.toString();
+    }
+
+
+    //Paging
+    function pagination(page, totalPage, gaps) {
+        let pagingResult = "";
+        let pageIndex = page;
+
+        if (totalPage <= 1) {
+            return;
+        }
+        pagingResult += `<a href="${setUrlParam("page", 1)}"  style="margin-right: 10px; padding: 10px; color: #7470E9;background-color: rgba(116, 112, 233, 0.2);
+                                                                            border-radius: 8px;">First</a> `;
+
+        for (let i = pageIndex - gaps; i < pageIndex; i++) {
+            if (i > 0)
+                pagingResult += `<a href="${setUrlParam("page", i)}" style="margin-right: 10px; padding: 10px; color: #7470E9;background-color: rgba(116, 112, 233, 0.2);
+                                                                            border-radius: 8px;">${i}</a>`;
+        }
+
+        pagingResult += `<a style="margin-right: 10px; padding: 10px; color: #7470E9; font-weight: bold; background-color: rgba(116, 112, 233, 0.2);
+                                                                            border-radius: 8px;">${pageIndex}</a>`;
+
+        for (let i = pageIndex + 1; i <= pageIndex + gaps; i++) {
+            if (i <= totalPage)
+                pagingResult += `<a href="${setUrlParam("page", i)}" style="margin-right: 10px; padding: 10px; color: #7470E9;background-color: rgba(116, 112, 233, 0.2);
+                                                                            border-radius: 8px;">${i}</a>`;
+        }
+        pagingResult += ` <a href="${setUrlParam("page", totalPage)}" style="margin-right: 10px; padding: 10px; color: #7470E9;background-color: rgba(116, 112, 233, 0.2);
+                                                                            border-radius: 8px;">Last</a>`;
+
+        document.getElementById("pagination").innerHTML = `${pagingResult}`;
+    }
+
+    pagination(@ViewBag.currentPage, @ViewBag.totalPage, 2);
+
+</script>
+<script src="~/js/supervisor/supervisor_changeTopic.js"></script>
+

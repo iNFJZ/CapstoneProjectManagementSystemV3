@@ -1,0 +1,62 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/Mentor/_LayoutMentor.cshtml";
+    ViewData["Title"] = "List Supervisors";
+}
+<link rel="stylesheet" href="/css/student/student_supervisor.css">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+    <div class="homepage" id="viewsupervisor">
+        @await Html.PartialAsync("/Views/Shared/Mentor/_LayoutSidebarLeftMentor.cshtml")
+
+        <div class="main">
+            <p class="titlePage">Supervisor</p>
+            <div class="formSupport">
+                <div class="formContent">
+                    <div class="formContent__left" style="width: 150%;">
+                        <div class="requestMain">
+                            <div class="titleRequest">
+                                <p>No.</p>
+                                <p>Fullname</p>
+                                <p>Email</p>
+                                <p>Detail</p>
+                            </div>
+                            @{
+                                var count = 0;
+                            }
+
+                            @foreach (var sup in ViewBag.listSupervisor)
+                            {
+                                count++;
+                                <div class="informSupportRequest">
+                                    <p>@count</p>
+                                    <p>@sup.User.FullName</p>
+                                    <p>@sup.SupervisorID</p>
+                                    <p>
+                                        <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;">
+                                            <a style="text-decoration: none; color: white" href="/ViewSupervisor/Detail/@sup.SupervisorID">View</a>
+                                        </button>
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="formContent__right">
+                        <img style="margin-left: 20%; opacity: 0.9; width: 70%; margin-top: 100px;" src="/img/mentor.png" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</body>
+</html>

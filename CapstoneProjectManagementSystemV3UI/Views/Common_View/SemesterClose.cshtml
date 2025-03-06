@@ -1,0 +1,14 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "SemesterClose Page";
+}
+<link rel="stylesheet" href="/css/common/accessDenied.css" />
+<div class="homepage" id="semesterClose">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <div class="accessDenied">
+            <p>Semester Close</p>
+            <p>The new semester is not open at the moment, please wait for the staff to start the new semester.</p>
+        </div>
+    </div>
+</div>

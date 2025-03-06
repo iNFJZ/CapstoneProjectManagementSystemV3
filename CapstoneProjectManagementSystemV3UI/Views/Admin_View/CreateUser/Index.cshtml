@@ -1,0 +1,177 @@
+﻿﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@using Infrastructure.Entities
+@model Supervisor
+
+@{
+    if (ViewBag.sessionRole == 5)
+    {
+        Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
+    }
+    else if (ViewBag.sessionRole == 3)
+    {
+        Layout = "/Views/Shared/Staff/_LayoutStaff.cshtml";
+    }
+    ViewData["Title"] = "Create User Page";
+}
+<link rel="stylesheet" href="/css/admin/admin_adduserupdate.css">
+<div class="homepage" id="createuser" style="background-color:powderblue;">
+    @if (ViewBag.sessionRole == 5)
+    {
+        @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
+    }
+    else if (ViewBag.sessionRole == 3)
+    {
+        @await Html.PartialAsync("/Views/Shared/Staff/_LayoutSidebarLeftStaff.cshtml")
+    }
+    <input type="text" id="sessionRole" value="@ViewBag.sessionRole" hidden />
+    <div class="main">
+        <div class="profileUser1">
+            <div class="listSupportQuestion">
+                <p class="formTitle">Create New User with Role Staff or Department Leader</p>
+            </div>
+            <div class="profileUser">
+                @* <div class="profileUser__avatar">
+                    <div class="staffCreate">
+                        @*Staff*@
+                @*  <input type="button" value="Staff" class="submitFormBtn">
+                        <form action="CreateStaff" method="POST" style="display: grid;">
+                            <div class="emailForm">
+                                <label for="staff_mail">FPT Email <span class="required" style="color: red">*</span> :</label>
+                                <input type="email" id="staff_mail" name="staff_mail" required>
+                            </div>
+
+                            <div class="emailForm">
+                                <label for="staff_name">Full name :</label>
+                                <input type="text" id="staff_name" name="staff_name">
+                            </div>
+
+                            <div class="genderForm">
+                                <div style="flex-basis: 30%;"><p>Gender : </p></div>
+                                <div style="flex-basis: 70%;">
+                                    <div class="gender">
+                                        <label for="staff_gender_male">Male</label>
+                                        <input type="radio" id="staff_gender_male" name="staff_gender" value="1" checked>
+                                    </div>
+
+                                    <div class="gender">
+                                        <label for="staff_gender_female">Female</label>
+                                        <input type="radio" id="staff_gender_female" name="staff_gender" value="0">
+                                    </div>
+
+                                    <div class="gender">
+                                        <label for="staff_gender_other">Other</label>
+                                        <input type="radio" id="staff_gender_other" name="staff_gender" value="2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="emailForm" style="visibility:hidden; margin-bottom: 0px">
+                                <labelupervi for="ssor_mail">
+                                    FE Email <span class="required" style="color: red">*</span> :</label>
+                                    <input type="email" id="" name="supervisor_feMail" required>
+                            </div>
+
+                            <div style="text-align: center">
+                                <input type="button" value="Create" id="btn-CreateStaff" class="createButton">
+                            </div>
+
+                        </form>
+                    </div>
+        </div>*@
+
+                @*Basic Information*@
+                <div class="profileUser__basicInfo">
+                    <div class="supervisorCreate">
+                        @*Supervisor Leader*@
+@*                        <input type="button" value="Department Leader" class="submitFormBtn">
+*@                        <form style="display: grid;">
+                            <div class="emailForm">
+                                <label for="select-role">Role <span class="required" style="color: red">*</span> :</label>
+                                <select id="select-role">
+                                    <option value="departmentLeader">Department Leader</option>
+                                    <option value="staff">Staff</option>
+                                </select>
+                            </div>
+                            <div class="emailForm">
+                                <label for="fptMail">FPT Email <span class="required" style="color: red">*</span> :</label>
+                                <input type="email" id="fptMail" name="mail" required>
+                            </div>
+
+                            <div class="emailForm">
+                                <label for="feMail">FE Email :</label>
+                                <input type="email" id="feMail" name="feMail" required>
+                            </div>
+
+                            <div class="emailForm">
+                                <label for="name">Full name :</label>
+                                <input type="text" id="name" name="name">
+                            </div>
+
+                            <div class="genderForm">
+                                <div style="flex-basis: 30%;"><p>Gender : </p></div>
+                                <div style="flex-basis: 70%;">
+                                    <div class="gender">
+                                        <label for="gender">Male</label>
+                                        <input type="radio" id="gender_male" name="gender" value="1" checked>
+                                    </div>
+
+                                    <div class="gender">
+                                        <label for="gender_female">Female</label>
+                                        <input type="radio" id="gender_female" name="gender" value="0">
+                                    </div>
+
+                                    <div class="gender">
+                                        <label for="gender_other">Other</label>
+                                        <input type="radio" id="gender_other" name="gender" value="2">
+                                    </div>
+                                </div>
+                            </div>
+                            @*<div class="emailForm">
+                            <div style="flex-basis: 30%;">
+                            <p>Profession  <span class="required" style="color: red">*</span> : </p>
+                            </div>
+                            <div style="flex-basis: 70%;" id="div-profession">
+                            <select name="profession" id="profession" class="select-profession" required>
+                            @foreach (var p in ViewBag.professions)
+                            {
+                            <option value="@p.ProfessionID"> @p.ProfessionFullName (@p.ProfessionAbbreviation)</option>
+                            }
+                            </select>
+                            <input type="checkbox" class="checkbox-devhead" checked />Devhead
+                            </div>
+                            </div>
+                            <div id="more-profession"></div>
+                            <div>
+                            <input type="button" value="Add" onclick="AddProfession()">
+                            </div>*@
+                            <div style="text-align: center">
+                                <input type="button" value="Create" id="btn-CreateUser" class="createButton">
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+<script src="~/js/admin/admin_createUser.js"></script>
+@*<script>
+    function AddProfession() {
+        var str = `<select name="profession" id="profession" class="select-profession"required>
+    @foreach (var p in ViewBag.professions)
+    {
+                                                                    <option value="@p.ProfessionID"> @p.ProfessionFullName (@p.ProfessionAbbreviation)</option>
+    }
+                                                </select>
+                                                <input type="checkbox" class="checkbox-devhead" checked />Devhead`;
+        $('#more-profession').append(str);
+    }
+</script>*@

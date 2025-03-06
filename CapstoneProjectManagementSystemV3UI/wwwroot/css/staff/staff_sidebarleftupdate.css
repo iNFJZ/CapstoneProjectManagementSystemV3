@@ -1,0 +1,15 @@
+﻿.sidebar {
+    height: 100%;
+    width: 20%;
+    position: relative;
+    left: 0;
+    z-index: 100;
+    background-color: lightblue;
+    color: #1c1f27;
+    overflow-y: auto;
+    /* box-shadow: rgb(204 219 232) 3px 3px 6px 0px inset, rgb(255 255 255 / 50%) -3px -3px 6px 1px inset; */
+    /* margin-top: 20px; */
+}
+header__left{
+
+}

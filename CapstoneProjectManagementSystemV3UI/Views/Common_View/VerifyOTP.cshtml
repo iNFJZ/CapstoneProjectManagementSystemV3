@@ -1,0 +1,51 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <title>Forgot</title>
+    <link rel="icon" href="../img/FPT_logo_2010.svg.png">
+    <link rel="stylesheet" href="/css/common/forgotPassword.css">
+</head>
+<body>
+    <div class="forgotPass">
+        <div class="title">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.1214 19.036C22.4061 16.0304 27.3245 10.9298 30.148 4.55408C28.3264 2.64137 25.9583 1.27514 23.408 0.455408L22.0417 0C21.9507 0.182163 21.8596 0.455419 21.8596 0.637582C19.6736 6.83113 15.2106 11.8406 9.19925 14.6641C5.00949 16.6679 1.91271 20.3112 0.455408 24.6831L0 26.0493C0.182163 26.1404 0.455412 26.2315 0.637575 26.2315C2.36813 26.8691 4.09867 27.6888 5.73814 28.6907C8.01518 24.592 11.6584 21.1309 16.1214 19.036Z" fill="#F27227" />
+                <path d="M42.5348 19.4004C39.1648 24.501 34.5196 28.5996 28.7815 31.3321C24.1363 33.518 20.5841 37.6167 18.9447 42.5351L18.4893 44.0835C20.2198 45.6319 22.3147 46.816 24.5917 47.5446L25.9579 48C26.049 47.8179 26.1401 47.5446 26.1401 47.3625C28.3261 41.1689 32.7891 36.1594 38.8005 33.3359C42.9902 31.3321 46.1781 27.6888 47.5443 23.3169L47.9997 21.9507C46.087 21.4042 44.2653 20.4934 42.5348 19.4004Z" fill="#16B14B" />
+                <path d="M14.8467 39.3472C17.1237 33.8823 21.3135 29.4193 26.6873 26.869C31.6057 24.5009 35.7043 20.8576 38.5279 16.3946C36.433 14.3908 34.7024 12.1138 33.4273 9.38135C30.0573 15.5749 24.7746 20.5844 18.3078 23.6812C14.5734 25.4117 11.5677 28.4174 9.74609 32.0607C11.7499 33.9734 13.3894 36.3415 14.6645 38.9829C14.6645 38.9829 14.7556 39.1651 14.8467 39.3472Z" fill="#1169B0" />
+            </svg>
+            Call4Project
+        </div>
+        <div class="verification">
+            <div class="formForgot">
+
+                <div class="intro">
+                    <h1>Verification</h1>
+                    <p>Please enter the OTP sent to your email</p>
+                </div>
+                <div id="textError">@TempData["ErrorMessage"]</div>
+                <form action="/User/ResetPassword" class="codeOTP">
+                    <div class="inputOTP">
+                        <input type="text" id="inputNumOTP" name="OTP" class="inputNumOTP" maxlength="6" value=""
+                               onkeypress="return event.charCode>=48 && event.charCode<=57" autocomplete="off">
+                    </div>
+                    <input type="text" name="backupAccount_Id" hidden="hidden" value="@TempData["backupAccount_Id"]" />
+                    <div class="buttonVerifiPage">
+                        <a href="/User/ForgotPassword" id="backForgotPassPage">Back</a>
+                        <button class="button" id="verify" disabled="disabled">Verify</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/js/common/verification.js"></script>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>

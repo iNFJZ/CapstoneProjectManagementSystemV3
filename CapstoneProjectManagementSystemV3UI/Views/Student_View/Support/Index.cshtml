@@ -1,0 +1,422 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "Support";
+}
+<link rel="stylesheet" href="/css/student/student_support.css">
+<script src="/js/student/student_support.js"></script>
+<div class="homepage" id="support">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+
+        <div class="formSupport">
+            <div class="listSupportQuestion">
+                <p class="formTitle">What is your problems?</p>
+                <p class="formDes">Here are some frequently asked questions and their solutions</p>
+                <button class="customButton" style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                        outline: none; border: none; font-size: 14px;font-weight: 600;"
+                        onclick="openPopupOrShowAlert()">
+                    Open
+                </button><br />
+
+                @if (ViewBag.SupportQuestions != null && ViewBag.SupportQuestions.Count > 0)
+                {
+                    <div id="popup" class="popup">
+                        <div class="popup-content">
+                            <span class="close-btn" onclick="hidePopup()"><p style="font-size: 35px">&times;</p></span>
+                            <h2 style="text-align: center; color: brown;">
+                                List Support Question
+                            </h2>
+                            <br />
+                            <ul id="supportQuestionsList">
+                                @foreach (var question in ViewBag.SupportQuestions)
+                                {
+                                    <li>
+                                        <div class="questionHeader">
+                                            <div class="arrowIcon"></div>
+                                            <div class="questionTitle">@question.Title</div>
+                                        </div>
+                                        <div class="questionContent">
+                                            @Html.Raw(question.Content)
+                                            <div class="questionFile">
+                                                <a href="/ManageSupportQuestion/ExportFile?NewsID=@question.NewID">@question.FileName</a>
+                                                <input type="hidden" name="exsistedFileName" value="@question.FileName" />
+                                            </div>
+                                        </div>
+                                    </li>
+                                }
+                            </ul>
+                            <br />
+                        </div>
+                    </div>
+                }
+
+                <p class="formDes">If you have a problem other than the above, please create a new one</p>
+                <button class="customButton" style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                        outline: none; border: none; font-size: 14px;font-weight: 600;"
+                        id="toggleButton" onclick="toggleForm()">
+                    Create
+                </button>
+            </div>
+
+            <script>
+                    function openPopupOrShowAlert() {
+                        // Check if there is information in the popup
+                        if (@(ViewBag.SupportQuestions != null && ViewBag.SupportQuestions.Count > 0 ? "true" : "false")) {
+                            // If there is information, open the popup
+                            showPopup();
+                        } else {
+                            // If there is no information, show SweetAlert
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'No information available',
+                                text: 'There are no support questions and solutions at the moment.',
+                                confirmButtonText: 'OK',
+                            });
+                        }
+                    }
+            </script>
+
+            <div id="myForm" style="display: none;">
+                <p class="formTitle">What is your problems?</p>
+                <p class="formDes">
+                    Note: The application processing department will reply to students' applications/emails within 48 hours
+                    <br /><span>Excluding Saturday, Sunday</span>
+                </p>
+                <div class="formContent">
+                    <div class="formContent__left">
+                        <input type="text" class="studentId" hidden value="@ViewBag.student.StudentID">
+                        <input type="text" class="phoneNumber" hidden value="@ViewBag.student.PhoneNumber">
+                        <div class="formContent__left--title">
+                            <p class="titleSupport">Title<span>*</span></p>
+                            <input type="text" placeholder="Enter title" class="inputTitle" id="inputTitle">
+                        </div>
+                        <p id="errorinputTitle"></p>
+                        <div class="formContent__left--description">
+                            <p class="titleSupport">Description<span>*</span></p>
+                            <textarea name="" id="desSupportForm" cols="20" rows="5" placeholder="Describe your problem in detail" class="inputDescription"></textarea>
+                        </div>
+                        <p id="errordesSupportForm"></p>
+                    </div>
+                    <div class="formContent__right">
+                        <svg width="360" height="240" viewBox="0 0 360 324" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_1482_32756)">
+                                <path d="M255.728 240.686C276.788 240.686 293.861 259.337 293.861 282.344C293.861 288.219 292.743 293.806 290.734 298.874C298.244 300.317 303.919 306.92 303.919 314.85C303.919 319.904 299.822 324.001 294.768 324.001H255.728C234.667 324.001 217.594 305.35 217.594 282.343C217.594 259.336 234.667 240.686 255.728 240.686Z" fill="#8BDF9E" />
+                                <path d="M84.2735 240.686C63.2126 240.686 46.1397 259.337 46.1397 282.344C46.1397 288.219 47.2585 293.806 49.2672 298.874C41.7572 300.317 36.082 306.92 36.082 314.85C36.082 319.904 40.1791 324.001 45.2331 324.001H84.2735C105.334 324.001 122.407 305.35 122.407 282.343C122.407 259.336 105.334 240.686 84.2735 240.686Z" fill="#8BDF9E" />
+                                <path d="M284.017 257.871C284.017 256.683 283.987 255.499 283.944 254.316C276.969 245.942 266.912 240.686 255.731 240.686C234.671 240.686 217.598 259.337 217.598 282.344C217.598 304.112 232.884 321.97 252.368 323.831C254.727 321.823 257.064 319.666 259.379 317.353C275.267 301.464 284.017 280.341 284.017 257.871Z" fill="#73D98B" />
+                                <path d="M124.792 324C95.6538 317.094 73.9766 289.122 73.9766 257.87C73.9766 246.232 76.4799 235.173 80.9865 225.208C85.487 215.249 91.9837 206.382 99.9643 199.117C106.144 193.493 109.642 185.5 109.642 177.141V172.677C109.642 156.007 123.156 142.494 139.819 142.494C156.489 142.494 170.002 156.007 170.002 172.677C170.002 156.007 183.515 142.494 200.185 142.494C208.52 142.494 216.061 145.871 221.52 151.336C226.985 156.795 230.362 164.342 230.362 172.677V177.14C230.362 185.5 233.86 193.492 240.04 199.116C256.001 213.642 266.028 234.587 266.028 257.869C266.028 276.133 258.627 292.662 246.659 304.631C238.147 313.143 227.321 321.13 215.212 324L170.003 295.014L124.792 324Z" fill="#8BDF9E" />
+                                <path d="M158 197.391C158 196.623 158.623 196 159.391 196H181.609C182.377 196 183 196.623 183 197.391V199.5C183 206.404 177.404 212 170.5 212C163.596 212 158 206.404 158 199.5V197.391Z" fill="#423E4F" />
+                                <path d="M131.868 195.531C129.384 195.531 127.371 193.517 127.371 191.034V183.706C127.371 181.222 129.384 179.209 131.868 179.209C134.352 179.209 136.365 181.222 136.365 183.706V191.034C136.365 193.517 134.352 195.531 131.868 195.531Z" fill="#423E4F" />
+                                <path d="M208.134 195.531C205.65 195.531 203.637 193.517 203.637 191.034V183.706C203.637 181.222 205.65 179.209 208.134 179.209C210.618 179.209 212.631 181.222 212.631 183.706V191.034C212.631 193.517 210.618 195.531 208.134 195.531Z" fill="#423E4F" />
+                                <path d="M230.5 282.02C230.5 297.45 224.723 311.531 215.21 322.217C210.295 323.383 205.166 324 199.896 324H140.104C134.834 324 129.705 323.383 124.79 322.217C115.277 311.531 109.5 297.45 109.5 282.02C109.5 248.606 136.587 221.514 170 221.514C203.413 221.514 230.5 248.607 230.5 282.02Z" fill="#B9EBC2" />
+                                <path d="M218.149 290.799C231.825 290.799 242.911 301.885 242.911 315.561C242.911 320.222 239.132 324 234.472 324H201.826C197.165 324 193.387 320.222 193.387 315.561C193.387 301.885 204.473 290.799 218.149 290.799Z" fill="#73D98B" />
+                                <path d="M121.856 290.799C108.18 290.799 97.0938 301.885 97.0938 315.561C97.0938 320.222 100.872 324 105.533 324H138.179C142.84 324 146.618 320.222 146.618 315.561C146.618 301.885 135.532 290.799 121.856 290.799Z" fill="#73D98B" />
+                                <path d="M96.5646 252.818C96.5646 208.15 119.767 168.9 154.776 146.465C150.366 143.943 145.263 142.494 139.819 142.494C123.155 142.494 109.642 156.007 109.642 172.677V177.141C109.642 185.5 106.144 193.493 99.9643 199.117C91.9837 206.384 85.4864 215.25 80.9865 225.209C76.4799 235.174 73.9766 246.232 73.9766 257.87C73.9766 286.233 91.8314 311.891 116.913 321.556C104.046 301.777 96.5646 278.173 96.5646 252.818Z" fill="#73D98B" />
+                                <path d="M104.768 297.648C100.043 302.158 97.0938 308.513 97.0938 315.56C97.0938 320.221 100.872 324 105.533 324H118.544C112.969 315.852 108.328 307.017 104.768 297.648Z" fill="#55D47B" />
+                                <path d="M33.5 55L25.1916 70.1916L10 78.5L25.1916 86.8084L33.5 102L41.8084 86.8084L57 78.5L41.8084 70.1916L33.5 55Z" fill="#FDBF67" />
+                                <path d="M306 0L296.101 18.1006L278 28L296.101 37.8994L306 56L315.899 37.8994L334 28L315.899 18.1006L306 0Z" fill="#FDBF67" />
+                                <path d="M333.5 172L326.252 185.252L313 192.5L326.252 199.748L333.5 213L340.748 199.748L354 192.5L340.748 185.252L333.5 172Z" fill="#FDBF67" />
+                                <g clip-path="url(#clip1_1482_32756)">
+                                    <path d="M251.697 156.921C249.729 112.954 213.51 78.3203 169.499 78.3203C125.487 78.3203 89.2689 112.954 87.3008 156.921H102.266C104.326 121.297 133.815 93.463 169.499 93.463C205.183 93.463 234.672 121.297 236.731 156.921H251.697Z" fill="#4F4C5F" />
+                                    <path d="M139.568 268.648H124.602C106.014 268.627 90.9503 253.564 90.9297 234.976V216.269C90.9297 214.202 92.6048 212.527 94.6711 212.527C96.7374 212.527 98.4124 214.202 98.4124 216.269V234.976C98.4289 249.433 110.145 261.149 124.602 261.165H139.568C141.634 261.165 143.309 262.84 143.309 264.907C143.309 266.973 141.634 268.648 139.568 268.648Z" fill="#4F4C5F" />
+                                    <path d="M102.155 141.441H87.1898C83.0572 141.441 79.707 144.792 79.707 148.924V208.786C79.707 212.919 83.0572 216.269 87.1898 216.269H102.155C106.288 216.269 109.638 212.919 109.638 208.786V148.924C109.638 144.792 106.288 141.441 102.155 141.441Z" fill="#F6A779" />
+                                    <path d="M72.2241 152.664H79.7069V205.043H72.2241C66.0252 205.043 61 200.018 61 193.819V163.888C61 157.689 66.0252 152.664 72.2241 152.664Z" fill="#F27227" />
+                                    <path d="M236.845 216.268H251.81C255.943 216.268 259.293 212.917 259.293 208.785V148.923C259.293 144.79 255.943 141.44 251.81 141.44H236.845C232.712 141.44 229.362 144.79 229.362 148.923V208.785C229.362 212.917 232.712 216.268 236.845 216.268Z" fill="#F6A779" />
+                                    <path d="M266.776 205.045H259.293V152.666H266.776C272.975 152.666 278 157.691 278 163.89V193.821C278 200.02 272.975 205.045 266.776 205.045Z" fill="#F27227" />
+                                    <path d="M188.208 253.682H150.794C144.596 253.682 139.57 258.707 139.57 264.906C139.57 271.105 144.596 276.13 150.794 276.13H188.208C194.407 276.13 199.432 271.105 199.432 264.906C199.432 258.707 194.407 253.682 188.208 253.682Z" fill="#F27227" />
+                                    <path d="M216.186 237.247L210.168 232.385L200.336 246.167L202.608 247.767L216.186 237.247Z" fill="white" />
+                                    <path d="M221.802 254.261L220.93 259.966L209.328 257.433L208.421 254.895L221.802 254.261Z" fill="white" />
+                                    <path d="M229.88 241.929L225.554 237.262L204.964 249.858L206.929 252.082L229.88 241.929Z" fill="white" />
+                                </g>
+                                <path d="M20.5 219C15 221 9.5 229 9.5 238.5" stroke="#423E4F" stroke-width="8" stroke-linecap="round" />
+                                <path d="M328.32 260.883C328.32 254.001 326.5 249.501 321.569 244.751" stroke="#423E4F" stroke-width="8" stroke-linecap="round" />
+                                <path d="M30 229C27.5 230.026 25 234.128 25 239" stroke="#423E4F" stroke-width="8" stroke-linecap="round" />
+                                <path d="M317.599 261.948C317.599 258.501 316.499 256.001 313.829 254.071" stroke="#423E4F" stroke-width="8" stroke-linecap="round" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_1482_32756">
+                                    <rect width="360" height="324" fill="white" />
+                                </clipPath>
+                                <clipPath id="clip1_1482_32756">
+                                    <rect width="217" height="217" fill="white" transform="translate(61 61)" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+                <div class="formBtn">
+                    <button class="submitFormBtn" id="submitFormSupportBtn" type="button">Submit</button>
+                </div>
+            </div>
+            <div>
+                <p class="formDes">Your list support requests created</p>
+        @if (ViewBag.listSupport != null)
+        {
+                    <div class="requestMain">
+                        <div class="titleRequest" style="font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border: 1px solid #1C1F27; /* Viền cho tiêu đề bảng */
+    margin: 16px;
+    margin-bottom: 0px;
+    ">
+                            <p>No.</p>
+                            <p>Title</p>
+                            <p>Created Date</p>
+                            <p>Status</p>
+                            <p>Reply</p>
+                            <p>Time of Reply</p>
+                            <p>Detail</p>
+                        </div>
+                @{
+                    var count = 0;
+                }
+                @foreach (var support in ViewBag.listSupport)
+                {
+                    count++;
+                            <div class="informSupportRequest">
+                                <p>@count</p>
+                                <p class="limitCharacter">@support.Title</p>
+                                <p>
+                            @{
+                                var created_at = support.CreatedAt == null ? "Null" : support.CreatedAt.ToString("dd/MM/yyyy");
+                            }
+                            @created_at
+                                </p>
+                                <p style="border-radius: 20px; padding: revert; border: none; background: ; color: @(support.Status == 1 ? "green" : "red")">
+                            @{
+                                var status = support.Status == 1 ? "Processed" : "Pending";
+                            }
+                            @status
+                                </p>
+                                <p class="limitCharacter">
+                            @{
+                                var reply = support.Reply.Equals("") ? "No reply yet" : support.Reply;
+                            }
+                            @reply
+                                </p>
+                                <p>
+                            @{
+                                var reply_at = support.Reply_At == null ? "No reply yet" : support.Reply_At.ToString("dd/MM/yyyy");
+                            }
+                            @reply_at
+
+                                </p>
+                                <p>
+                                    <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;"
+                                            onclick="@($"openPopup({support.SupportID})")">
+                                        View
+                                    </button>
+
+                                    <div id="@($"popup-{support.SupportID}")" class="popup">
+                                        <div class="popup-content">
+                                            <span class="close-btn" onclick="@($"closePopup({support.SupportID})")"></span>
+                                            <h2 style="    text-align: center; color: brown;">
+                                                Support Detail
+                                            </h2>
+                                            <br />
+                                            <h3>Title</h3>
+                                            <p style="font-weight: 400;">@support.Title</p><br />
+                                            <h3>Description</h3>
+                                            <p style="font-weight: 400;">@support.SupportMessge</p><br />
+                                            <h3>Reply</h3>
+                                            <p style="font-weight: 400;">@support.Reply</p>
+                                        </div>
+                                    </div>
+                                </p>
+
+                            </div>
+
+                }
+                    </div>
+        }
+        else
+        {
+            @*                    <h1>No support created</h1>
+                *@                }
+                <script>
+                    // JavaScript functions to open and close the popup
+                    function openPopup(supportID) {
+                        document.getElementById("popup-" + supportID).style.display = "block";
+                    }
+
+                    function closePopup(supportID) {
+                        document.getElementById("popup-" + supportID).style.display = "none";
+                    }
+
+                    function showPopup() {
+                        document.getElementById("popup").style.display = "block";
+                    }
+
+                    function hidePopup() {
+                        document.getElementById("popup").style.display = "none";
+                    }
+
+                    const questionHeaders = document.querySelectorAll('.questionHeader');
+                    const questionContents = document.querySelectorAll('.questionContent');
+                    const questionFiles = document.querySelectorAll('.questionFile');
+
+                    questionHeaders.forEach((header, index) => {
+                        const arrowIcon = header.querySelector('.arrowIcon');
+                        const questionContent = questionContents[index];
+                        const questionFile = questionFiles[index];
+
+                        header.addEventListener('click', () => {
+                            questionContent.classList.toggle('show');
+                            questionFile.classList.toggle('show');
+
+                            if (questionContent.classList.contains('show')) {
+                                arrowIcon.classList.add('arrowIconRotate');
+                            } else {
+                                arrowIcon.classList.remove('arrowIconRotate');
+                            }
+                        });
+                    });
+
+                    function toggleForm() {
+                        var button = document.getElementById("toggleButton");
+                        var form = document.getElementById("myForm");
+
+                        if (form.style.display === "none") {
+                            form.style.display = "block";
+                            button.innerHTML = "Close";
+                        } else {
+                            form.style.display = "none";
+                            button.innerHTML = "Create";
+                        }
+                    }
+
+
+                </script>
+            </div>
+
+        </div>
+    </div>
+</div>
+<style>
+    /* CSS styles for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+    }
+
+    .popup-content {
+        position: inherit;
+        top: 49%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 80%;
+        max-height: 80%;
+        min-width: 30%;
+        overflow-y: auto;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
+
+    .arrowIcon {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-bottom: 2px solid black;
+        border-right: 2px solid black;
+        transform: rotate(-45deg);
+        transition: transform 0.3s ease;
+        margin-left: 5px;
+        vertical-align: middle;
+    }
+
+    .arrowIconRotate {
+        transform: rotate(45deg);
+    }
+
+    .questionHeader {
+        display: flex;
+        align-items: center;
+    }
+
+    .questionTitle {
+        margin-right: 10px;
+        margin-left: 30px;
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .questionContent {
+        display: none;
+    }
+
+    .show {
+        display: block;
+    }
+
+    .formDes {
+        display: inline-block;
+    }
+
+    .customButton {
+        display: inline-block;
+        width: 5em;
+        height: 40px;
+        border-radius: 8px;
+        background-color: #f27227;
+        color: #FFFFFF;
+        outline: none;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('keydown', function (event) {
+            var keyCode = event.keyCode || event.which;
+            if (keyCode === 13) {
+                document.getElementById('submitFormSupportBtn').click();
+            }
+        });
+    });
+</script>
+
+<script>
+    var popups = document.getElementsByClassName('popup');
+
+    window.addEventListener('click', function (event) {
+        for (var i = 0; i < popups.length; i++) {
+            var popup = popups[i];
+            if (event.target == popup) {
+                closePopup(popup.id);
+            }
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            for (var i = 0; i < popups.length; i++) {
+                var popup = popups[i];
+                closePopup(popup.id);
+            }
+        }
+    });
+
+    function closePopup(popupId) {
+        var popup = document.getElementById(popupId);
+        popup.style.display = 'none';
+    }
+</script>
+

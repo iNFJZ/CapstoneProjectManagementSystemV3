@@ -1,0 +1,141 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/DevHead/_LayoutDevHead.cshtml";
+    ViewData["Title"] = "List Supervisor";
+}
+
+<link rel="stylesheet" href="/css/devhead/devhead_listSupervisor.css">
+<div class="homepage" id="listuser">
+    @await Html.PartialAsync("/Views/Shared/DevHead/_LayoutSidebarLeftDevHead.cshtml")
+    <div class="main">
+        <div class="requestMain" style=" padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */">
+            <div class="formRequest" style="display: flex; flex-direction: row">
+                <p class="formTitle" style="margin-right: 20px">List Supervisor</p>
+            </div>
+            <form action="~/ViewSupervisorForDevHead/ViewSupervisorWithRoleDevHead" method="GET" class="listform" >
+               <div class="gridcolumn">
+                    <select id="filterStatus" name="status"  style="height: fit-content; margin-right: 20px;">
+                       @*  <option value="-1" @(ViewBag.status == -1 ? "selected" : "")>All</option>
+                        <option value="0" @(ViewBag.status == 0 ? "selected" : "")>Deactive</option>
+                        <option value="1" @(ViewBag.status == 1 ? "selected" : "")>Active</option> *@
+                    </select>
+                    <label for="mail">FE Email:</label>
+                    <input type="text" id="mail" name="search" value="@ViewBag.search" placeholder="FE Email Or Name">
+                </div>
+
+            
+                <div class="button"><input type="submit" value="Search" class="filterButton"></div>
+
+            </form>
+            <div>
+                <div>
+                    @if (ViewBag.supervisors.Count != 0 && ViewBag.supervisors!=null)
+                    {
+                        <div class="requestMain" style="margin-bottom: 0px; margin-top: 0px;">
+                            <div class="titleRequest" style="font-size: 16px;
+    font-weight: 600;
+    color: #1c1f27;
+    padding: 16px;
+    border: 1px solid #1C1F27; /* Viền cho tiêu đề bảng */
+    margin: 16px;
+    margin-bottom: 0px;">
+                                <p>No.</p>
+
+                                <p>FullName</p>
+                                <p>Email</p>
+                                <p>Status</p>
+                                <p>Action</p>
+                            </div>
+                            @foreach (var u in ViewBag.supervisors)
+                            {
+                                <div class="informSupportRequest" style=" 
+    font-size: 14px;
+    font-weight: 500;
+    color: #1C1F27;
+    padding: 16px;
+    margin: 0 16px 20px 16px;
+    border-bottom: 1px solid #ccc; /* Viền cho từng hàng dữ liệu */
+    margin-bottom: 0px;
+    border-left: 1px solid #ccc; /* Viền dọc bên trái */
+    border-right: 1px solid #ccc; /* Viền dọc bên phải */">
+                                    <p>@u.RowNum</p>
+
+                                    <p>@u.User.FullName</p>
+                                    <p>@u.FeEduEmail</p>
+                                    <p class="col-sm-2" style="text-align: left;display: grid;grid-template-columns: 1fr 4fr;">
+                                        @{
+                                            var status = u.IsActive ? "true" : "false";
+                                            var name =status + u.SupervisorID;
+                                        }
+                                        <input type="text" value="@u.SupervisorID" readonly id="@name" hidden>
+                                        <input class="isActive" type="radio" name="@name" id="active" value="true" @(
+                                       status == "true" ? "checked" : "")>Active
+                                        <input class="isActive" type="radio" name="@name" id="deactive" value="false" @(
+                                       status == "false" ? "checked" : "")>Deactive
+                                    </p>
+
+
+                                    <p>
+                                        <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                        outline: none; border: none; font-size: 14px;font-weight: 600;">
+                                            <a style="text-decoration: none; color: white" href="/ViewSupervisorForDevHead/DetailSupervisorWithRoleDevHead/@u.SupervisorID">View</a>
+                                        </button>
+                                    </p>
+                                </div>
+                                
+                                
+                                @*foreach (var sp in ViewBag.SupervisorProfession)
+                                {
+                                    if (sp.Profession.ProfessionID == u.SupervisorProfession.Profession.ProfessionID)
+                                    {
+                                        <div class="informSupportRequest">
+
+                                            <p>@u.User.FullName</p>
+                                            <p>@u.FeEduEmail</p>
+                                            <p>@sp.Profession.ProfessionFullName</p>
+                                            <p>
+                                                <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #f27227; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;">
+                                                    <a style="text-decoration: none" href="/ViewSupervisorForDevHead/DetailSupervisorWithRoleDevHead/@u.SupervisorID">Detail</a>
+                                                </button>
+                                            </p>
+                                        </div>
+                                    }
+                                }*@
+
+
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <h2 style="color: red; text-align: center; margin-top: 20px">Nothing to display.</h2>
+                    }
+
+                </div>
+
+                <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+
+                <script src="/js/util/paging.js"></script>
+                <script>
+                    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+                </script>
+                
+                <script src="/js/devhead/devhead_editstatus.js"></script>
+
+              
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

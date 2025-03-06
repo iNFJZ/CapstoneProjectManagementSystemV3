@@ -1,0 +1,83 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "/Views/Shared/Mentor/_LayoutMentor.cshtml";
+    ViewData["Title"] = "View Supervisor Page";
+}
+<link rel="stylesheet" href="/css/supervisor/supervisor_listSupervisor.css">
+<div class="homepage" id="listuser">
+    @await Html.PartialAsync("/Views/Shared/Mentor/_LayoutSidebarLeftMentor.cshtml")
+    <div class="main">
+        <div class="requestMain" style=" padding: 20px; /* Khoảng cách bên trong khu vực chính */
+    border: 2px solid black; /* Viền đen cho khu vực chính */
+    border-radius: 8px; /* Bo tròn góc */
+    background-color: white; /* Nền trắng cho phần nội dung */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */">
+            <div class="formRequest" style="display: flex; flex-direction: row">
+                <p class="formTitle" style="margin-right: 20px">View Supervisor</p>
+            </div>
+
+            <form action="~/ViewSupervisorRoleSupervisor/ViewSupervisorWithRoleSupervisor" method="GET" class="listform">
+                <div class="gridcolumn">
+                    <label for="mail">FE Email Or Name:</label>
+                    <input type="text" id="mail" name="search" value="@ViewBag.search" placeholder="FE Email Or Name">
+                </div>
+                <div class="button"><input type="submit" value="Search" class="filterButton"></div>
+                      
+            </form>
+            <div>
+                <div>
+                    @if (ViewBag.supervisors.Count != 0)
+                    {
+                        <div class="requestMain" style="margin-bottom: 0px;">
+                            <div class="titleRequest">
+                                <p>No.</p>
+                                <p>FullName</p>
+                                <p>Email</p>
+                                <p>Action</p>
+                            </div>
+                            @foreach (var u in ViewBag.supervisors)
+                            {
+                                
+                                    @*foreach (var sp in ViewBag.SupervisorProfession)
+                                    {
+                                        if (sp.Profession.ProfessionID == u.SupervisorProfession.Profession.ProfessionID)
+                                        {*@
+                                            <div class="informSupportRequest">
+                                                <p>@u.RowNum</p>
+                                                <p>@u.User.FullName</p>
+                                                <p>@u.FeEduEmail</p>
+                                                @*<p>@sp.Profession.ProfessionFullName</p>*@
+                                                <p>
+                                        <button style="cursor: pointer; width: 5em; height: 40px; border-radius: 8px; background-color: #7470e9; color: #FFFFFF;
+                                                    outline: none; border: none; font-size: 14px;font-weight: 600;">
+                                                        <a style="text-decoration: none; color: white" href="/ViewSupervisorRoleSupervisor/DetailSupervisorWithRoleSupervisor/@u.SupervisorID">View</a>
+                                                    </button>
+                                                </p>
+                                            </div>
+                                      @*  }
+                                    }*@
+
+
+                            }       
+                                
+                           
+                        </div>
+                    } else
+                    {
+                        <h4 style="color: red; text-align: center; margin-top: 20px">Nothing to display!</h4>
+                    }
+                   
+                </div>
+
+                <div id="pagination" style="text-align: center; margin-bottom: 10px"></div>
+
+                <script src="/js/util/paging.js"></script>
+                <script>
+                    pagination(@ViewBag.pageIndex, @ViewBag.totalPage, 2);
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

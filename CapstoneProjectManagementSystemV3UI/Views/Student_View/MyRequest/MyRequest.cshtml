@@ -1,0 +1,199 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "MyRequest Page";
+}
+<link rel="stylesheet" href="/css/student/student_myRequest.css">
+<div class="homepage" id="myRequest">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+
+    <div class="main">
+        <p class="formTitle">List Requests</p>
+        <div class="requestHeader">
+            <div class="chooseTypeRequest">
+                <button class="myRequestbtn active" id="myRequestbtn">My Request</button>
+                <button class="groupInvitedbtn" id="groupInvitedbtn">Group You're Invited</button>
+            </div>
+            <div class="searchRequest">
+            </div>
+        </div>
+        @{
+            var countRequest = 1;
+            var countInvited = 1;
+        }
+        <div class="requestMain">
+            @if ((ViewBag.acceptedList != null) || (ViewBag.rejectedList != null) || (ViewBag.pendingList != null))
+            {
+                <div class="titleRequest">
+                    <p>No.</p>
+                    <p>Group</p>
+                    <p>Your Request</p>
+                    <p>Status</p>
+                    <p>
+                        Action
+                        <svg width="14" height="10" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.99967 0.333008C3.31967 0.333008 0.333008 3.31967 0.333008 6.99967C0.333008 10.6797 3.31967 13.6663 6.99967 13.6663C10.6797 13.6663 13.6663 10.6797 13.6663 6.99967C13.6663 3.31967 10.6797 0.333008 6.99967 0.333008ZM7.66634 10.333H6.33301V6.33301H7.66634V10.333ZM7.66634 4.99967H6.33301V3.66634H7.66634V4.99967Z"
+                                  fill="#1C1F27" fill-opacity="0.3" />
+                        </svg>
+                    </p>
+                </div>
+                <div class="sumInfo">
+
+                    <div class="accp">
+                        @foreach (var item in ViewBag.acceptedList)
+                        {
+                            <div class="informGroupRequestAccepted" id="@countRequest">
+                                <p>@countRequest</p>
+                                <a href="/GroupDetails/Index?id=@item.GroupIdeaID" class="nameProjectRequest">@item.GroupIdea.ProjectEnglishName</a>
+                                <p>@item.Message</p>
+                                <p class="acceptStatus">Accepted</p>
+                                <div class="buttonAccept">
+                                    <form action="/MyRequest/Join?id=@item.GroupIdeaID" method="post" class="acceptBtnForm" id="form @item.GroupIdeaID">
+                                        <button class="acceptBtn" type="button" id="@item.GroupIdeaID">Join</button>
+                                    </form>
+                                    <form action="/MyRequest/UnsendRequest?id=@item.GroupIdeaID" method="post" class="rejectBtnForm" id="form2 @item.GroupIdeaID">
+                                        <button class="cancelBtn" type="button" id="@item.GroupIdeaID">Not Join</button>
+                                    </form>
+                                </div>
+                            </div>
+                            countRequest++;
+                        }
+                    </div>
+                    <div class="pend">
+                        @foreach (var item in ViewBag.pendingList)
+                        {
+                            <div class="informGroupRequestPending" id="@countRequest">
+                                <p>@countRequest</p>
+                                <a href="/GroupDetails/Index?id=@item.GroupIdeaID" class="nameProjectRequest">@item.GroupIdea.ProjectEnglishName</a>
+                                <p>@item.Message</p>
+                                <p class="pendingStatus">Pending</p>
+                                <div class="buttonAccept">
+                                    <form action="/MyRequest/UnsendRequest?id=@item.GroupIdeaID" method="post" class="rejectBtnForm" id="form2 @item.GroupIdeaID">
+                                        <button class="cancelBtn" type="button" id="@item.GroupIdeaID">Cancel</button>
+                                    </form>
+                                </div>
+                            </div>
+                            countRequest++;
+                        }
+                    </div>
+                    <div class="reje">
+                        @foreach (var item in ViewBag.rejectedList)
+                        {
+                            <div class="informGroupRequestRejected" id="@countRequest">
+                                <p>@countRequest</p>
+                                <a href="/GroupDetails/Index?id=@item.GroupIdeaID" class="nameProjectRequest">@item.GroupIdea.ProjectEnglishName</a>
+                                <p>@item.Message</p>
+                                <p class="rejectStatus">Rejected</p>
+                                <div class="buttonAccept">
+                                    <form action="/MyRequest/UnsendRequest?id=@item.GroupIdeaID" method="post" class="rejectBtnForm" id="form2 @item.GroupIdeaID">
+                                        <button class="rejectBtn" type="button" id="@item.GroupIdeaID">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                            countRequest++;
+                        }
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <h2 class="textNoRequest">You have not sent any requests yet</h2>
+            }
+        </div>
+        <div class="invitedMain hide--list">
+            @if (ViewBag.invitedList != null)
+            {
+                <div class="titleInvited">
+                    <p>No.</p>
+                    <p>Group</p>
+                    <p>Description</p>
+                    <p>
+                        Action
+                        <svg width="14" height="10" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6.99967 0.333008C3.31967 0.333008 0.333008 3.31967 0.333008 6.99967C0.333008 10.6797 3.31967 13.6663 6.99967 13.6663C10.6797 13.6663 13.6663 10.6797 13.6663 6.99967C13.6663 3.31967 10.6797 0.333008 6.99967 0.333008ZM7.66634 10.333H6.33301V6.33301H7.66634V10.333ZM7.66634 4.99967H6.33301V3.66634H7.66634V4.99967Z"
+                                  fill="#1C1F27" fill-opacity="0.3" />
+                        </svg>
+                    </p>
+                </div>
+                <div class="sumInfo">
+
+                    @foreach (var item in ViewBag.invitedList)
+                    {
+                        <div class="informGroupInvited" id="@countInvited">
+                            <p>@countInvited</p>
+                            <a href="/GroupDetails/Index?id=@item.GroupIdeaID" class="nameProjectInvited">@item.GroupIdea.ProjectEnglishName</a>
+                            <p>
+                                @item.GroupIdea.Description
+                            </p>
+                            <div class="buttonAccept">
+                                <form action="/MyRequest/Join?id=@item.GroupIdeaID" method="post" class="acceptBtnForm" id="form @item.GroupIdeaID">
+                                    <button class="acceptBtn" type="button" id="@item.GroupIdeaID">Accept</button>
+                                </form>
+                                <form action="/MyRequest/UnsendRequest?id=@item.GroupIdeaID" method="post" class="rejectBtnForm" id="form2 @item.GroupIdeaID">
+                                    <button class="rejectBtn" type="button" id="@item.GroupIdeaID">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        countInvited++;
+                    }
+
+                </div>
+            }
+            else
+            {
+                <h2 class="textNoRequest">You don't have any invitations</h2>
+            }
+        </div>
+    </div>
+
+    @*confirm popup for join button*@
+    <div class="showJoinForm hide-Joinform">
+        <div class="YNpopup">
+            <p>NOTICE: After accept joining this group,<br /> all others of your requests and invitations will be deleted.<br /> Still want to join?</p>
+            <div class="YNbutton">
+                <button class="noBtnJoin" type="reset">Cancel</button>
+                <button class="yesBtnJoin" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for cancel request*@
+    <div class="showCancelForm hide-Cancelform">
+        <div class="YNpopup">
+            <p>Do you really want to CANCEL this request ?</p>
+            <div class="YNbutton">
+                <button class="noBtnCancel" type="reset">Cancel</button>
+                <button class="yesBtnCancel" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*confirm popup for delete request*@
+    <div class="showDeleteForm hide-Deleteform">
+        <div class="YNpopup">
+            <p>Do you really want to DELETE this ?</p>
+            <div class="YNbutton">
+                <button class="noBtnDelete" type="reset">Cancel</button>
+                <button class="yesBtnDelete" type="button">Yes</button>
+            </div>
+        </div>
+    </div>
+    @*notify that group is full members*@
+    <div class="showNotifyForm hide-Notifyform">
+        <div class="YNpopup">
+            <p>Sorry, this group is full already.</p>
+            <div class="okButton">
+                <button class="okBtn" type="button">Ok</button>
+            </div>
+        </div>
+    </div>
+    @*notify that user already have groups *@
+    <div class="showNotify2Form hide-Notify2form">
+        <div class="YNpopup">
+            <p>Sorry, you are already in another group.</p>
+            <div class="okButton">
+                <button class="okBtn2" type="button">Ok</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="/js/student/student_myRequest.js"></script>

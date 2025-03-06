@@ -1,0 +1,169 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "MyGroup Page";
+}
+<link rel="stylesheet" href="/css/student/student_myGroup.css">
+<div class="homepage" id="myGroup">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <p class="bigTitle">Captone Project / Thesis Description</p>
+        <div class="informGroup">
+            <div class="introGroup">
+                <div class="nameProject">
+                    <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                    <div class="inforGro">
+                        <p>@ViewBag.finalGroup.ProjectEnglishName </p>
+                        <p class="createDate">Created at:
+                            @{
+                                var created_at = @ViewBag.finalGroup.CreatedAt == null ? "Null" : @ViewBag.finalGroup.CreatedAt.ToString("dd/MM/yyyy");
+                            }
+                            @created_at
+                        </p>
+                       
+                    </div>
+                </div>
+                <div class="btnAddMem">
+                    @if (ViewBag.isBeforeDeadlineChangeTopic)
+                    {
+                        <button class="updateIdea" onclick="changeTopic()">
+                            <i class="fas fa-edit"></i>
+                            <p>Change Topic</p>
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="someInforms">
+                <div class="someInforms--top">
+                    <div class="abbreviations">
+                        <p class="title">Abbreviations</p>
+                        <p class="content">@ViewBag.finalGroup.Abbreviation</p>
+                    </div>
+                    <div class="vietnamTitle">
+                        <p class="title">Vietnamese Title</p>
+                        <p class="content">@ViewBag.finalGroup.ProjectVietNameseName</p>
+                    </div>
+                </div>
+                <div class="someInforms--bottom">
+
+                    <div class="professional">
+                        <p class="title">Profession</p>
+                        <p class="content">@TempData["profession"]</p>
+                    </div>
+                    <div class="specialty">
+                        <p class="title">Specialty</p>
+                        <p class="content">@TempData["specialty"]</p>
+                    </div>
+                </div>
+            </div>
+            @if (@TempData["showGroupName"].Equals("true"))
+            {
+                <div class="groupName">
+                    <p class="title">Group Name (For all)</p>
+                    <p class="content">@ViewBag.finalGroup.GroupName</p>
+                </div>
+                <div class="groupName">
+                    <p class="title">Group Name (Personal)</p>
+                    <p class="content">@TempData["groupNamePersonal"]</p>
+                </div>
+            }
+            <div class="desIdea">
+
+                <p class="title">
+                    Description
+                </p>
+                <p class="content">
+                    @ViewBag.finalGroup.Description
+                </p>
+            </div>
+            <div class="showMember">
+                <p class="title">Members</p>
+
+                <div class="members">
+                    <div class="informMember">
+                        <div class="info">
+                            <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                            <div class="memInfo">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">@ViewBag.leader.FptEmail</a>
+                                <p>@ViewBag.leader.UserName</p>
+                            </div>
+                        </div>
+                        <div class="role">
+                            <p>Owner | Leader</p>
+                        </div>
+                        <div class="menuMember">
+                            <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div class="menuMember__dropdown">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var item in ViewBag.memberList)
+                    {
+                        <div class="informMember">
+                            <div class="info">
+                                <img src="@item.Avatar" alt="Avatar">
+                                <div class="memInfo">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">@item.FptEmail</a>
+                                    <p>@item.UserName</p>
+                                </div>
+                            </div>
+                            <div class="role">
+                                <p>Member</p>
+                            </div>
+                            <div class="menuMember">
+                                <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div class="menuMember__dropdown">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="sidebar--right">
+        <p class="bigTitle">Final Group</p>
+        <div class="content"><p>Supervisor: </p> 
+            <a style="text-decoration: none; color: red" href="/ViewSupervisor/DetailSupervisorWithRoleStudent/@ViewBag.finalGroup.Supervisor.SupervisorID">
+                <p style="margin-left: 10px; font-style: normal">@ViewBag.finalGroup.Supervisor.User.FullName</p>
+            </a>
+
+            </div>
+        @if (ViewBag.finalGroup.IsConfirmFinalReport != null)
+        {
+            <div class="content">
+            <p>Final report: </p> 
+            <p>
+                    @if (ViewBag.finalGroup.IsConfirmFinalReport == true)
+                    {
+                        <text>Confirmed</text>
+                    }
+
+                    else
+                    {
+                        <text>Rejected</text>
+                    }
+            </p>
+            </div>
+        }
+        <div class="submitRegistration">
+            <p>This is your Captone Project/Thesis group for this semester </p>
+            <p>Please update the latest information at fap.fpt.edu.vn</p>
+            @if (@TempData["showGroupName"].Equals("true"))
+            {
+                <div class="changeBtn">
+                    <button class="btnChangeTopic">Change Topic</button>
+                    <button class="btnChangeFinalGroup">Change Group</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script src="/js/student/student_myGroup.js"></script>
+<script>
+    function changeTopic() {
+        window.location.href = "/ChangeTopic/Index";
+    }
+</script>

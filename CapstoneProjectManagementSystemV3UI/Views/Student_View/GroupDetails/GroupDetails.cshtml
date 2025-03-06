@@ -1,0 +1,211 @@
+﻿@{
+    Layout = "/Views/Shared/Student/_LayoutStudent.cshtml";
+    ViewData["Title"] = "GroupDetails Page";
+}
+
+<link rel="stylesheet" href="/css/student/student_groupdetails.css">
+<script src="/js/student/student_groupDetails.js"></script>
+
+<div class="groupDetails">
+    @await Html.PartialAsync("/Views/Shared/Student/_LayoutSidebarLeftStudent.cshtml")
+    <div class="main">
+        <p class="bigTitle">Group Details</p>
+        <div class="informGroup">
+            <div class="introGroup">
+                <div class="nameProject">
+                    <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                    <div class="inforGro">
+                        <p>@ViewBag.groupIdea.ProjectEnglishName</p>
+                        <p class="createDate">Created at:
+                            @{
+                                var created_at = @ViewBag.groupIdea.CreatedAt == null ? "Null" : @ViewBag.groupIdea.CreatedAt.ToString("dd/MM/yyyy");
+                            }
+                            @created_at
+                        </p>
+                    </div>
+                </div>
+               @* <div class="btnAddMem">
+                    @if (TempData["favorite"].Equals("true"))
+                    {
+                        <button type="button" class="addToFavorites hide-btn" id="@ViewBag.groupIdea.GroupIdeaID">Bookmark <i class="fa-solid fa-star"></i></button>
+                        <button type="button" class="removeFromFavorites" id="@ViewBag.groupIdea.GroupIdeaID">Remove Bookmark</button>
+                    }
+                    @if (TempData["favorite"].Equals("false"))
+                    {
+                        <button type="button" class="addToFavorites" id="@ViewBag.groupIdea.GroupIdeaID">Bookmark <i class="fa-solid fa-star"></i></button>
+                        <button type="button" class="removeFromFavorites hide-btn" id="@ViewBag.groupIdea.GroupIdeaID">Remove Bookmark</button>
+                    }
+                </div>*@
+            </div>
+            <div class="someInforms">
+                <div class="someInforms--top">
+                    <div class="abbreviations">
+                        <p class="title">Abbreviations</p>
+                        <p class="content">@ViewBag.groupIdea.Abrrevation</p>
+                    </div>
+                    <div class="vietnamTitle">
+                        <p class="title">Vietnamese Title</p>
+                        <p class="content">@ViewBag.groupIdea.ProjectVietNameseName</p>
+                    </div>
+                </div>
+                <div class="someInforms--bottom">
+                    <div class="professional">
+                        <p class="title">Profession</p>
+                        <p class="content">@TempData["profession"]</p>
+                    </div>
+                    <div class="specialty">
+                        <p class="title">Specialty</p>
+                        <p class="content">@TempData["specialty"]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="desIdea">
+                <p class="title">
+                    Description
+                </p>
+                <p class="content">
+                    @ViewBag.groupIdea.Description
+                </p>
+            </div>
+            <div class="keyword">
+                <p class="title">Keywords</p>
+                <div class="keywordText">
+                    @foreach (var tag in ViewBag.projectTagList)
+                    {
+                        <p>@tag</p>
+                    }
+                </div>
+            </div>
+            <div class="showMember">
+                <div class="memberQuality">
+                    <p class="title">Members</p>
+                    <div class="numMember">
+                        <p>Total: <span>@ViewBag.groupIdea.MaxMember members</span></p>
+                        <p>Available Slot: <span>@TempData["availableSlot"]</span></p>
+                    </div>
+                </div>
+                <div class="members">
+                    <div class="showInfomember">
+                        <div class="info">
+                            <img src="@ViewBag.leader.Avatar" alt="Avatar">
+                            <div class="memInfo">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">@ViewBag.leader.FptEmail</a>
+                                <p>@ViewBag.leader.UserName</p>
+                            </div>
+                        </div>
+                        <div class="role">
+                            <p>Owner | Leader</p>
+                        </div>
+                        <div class="menuMember">
+                            <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div class="menuMember__dropdown">
+                                <a href="/StudentProfile/Index?studentId=@ViewBag.leader.UserID">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                    @foreach (var item in ViewBag.memberList)
+                    {
+                        <div class="showInfomember">
+                            <div class="info">
+                                <img src="@item.Avatar" alt="Avatar">
+                                <div class="memInfo">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">@item.FptEmail</a>
+                                    <p>@item.UserName</p>
+                                </div>
+                            </div>
+                            <div class="role">
+                                <p>Member</p>
+                            </div>
+                            <div class="menuMember">
+                                <button class="showMenu"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                                <div class="menuMember__dropdown">
+                                    <a href="/StudentProfile/Index?studentId=@item.UserID">View Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar--right">
+        @if (TempData["status"] is null)
+        {
+            <p class="bigTitle">Request Form</p>
+            <div class="submitRequestjoin">
+                <p>Request to join</p>
+                <p>To ask to join the group, click here.</p>
+                <button class="submitFormRequest">Request</button>
+            </div>
+        }
+        @if (TempData["status"] is not null)
+        {
+            @if (TempData["status"].Equals("requested"))
+            {
+                <p class="bigTitle">Request Form</p>
+                <div class="submitRequestjoin">
+                    <p>Already requested</p>
+                    <p>You have already requested membership in this group.</p>
+                    <div class="allRequestedBtn">
+                        <form action="/GroupDetails/UnsendRequest?id=@ViewBag.groupIdea.GroupIdeaID" method="post">
+                            <button class="unSend" type="submit">Cancel</button>
+                        </form>
+                        <form action="/MyRequest/Index" method="get">
+                            <button class="check" type="submit">View status</button>
+                        </form>
+                    </div>
+                </div>
+            }
+            @if (TempData["status"].Equals("invited"))
+            {
+                <p class="bigTitle">Request Form</p>
+                <div class="submitRequestjoin">
+                    <p>You are invited</p>
+                    <p>
+                        You received an invitation to join from the leader.
+                    </p>
+                    <form action="/MyRequest/Index" method="get">
+                        <button class="check" type="submit">View</button>
+                    </form>
+                </div>
+            }
+        }
+    </div>
+    @*send request*@
+    <div class="showForm hide-form">
+        <form action="/GroupDetails/SendRequest" method="post">
+            <div class="formRequest">
+                <p class="formName">Request</p>
+                <p class="desForm">
+                    To have a opportunity to ensure you join this group,<br>
+                    please describe your experience or add a certificate (if any).<br>
+                    NOTICE: Following the approval of your request. You still have the option of either joining or not.
+                </p>
+                <div class="form">
+                    <p class="titleForm">Why are you a good fit for this group?</p>
+                    <textarea name="message" id="desSelf" cols="40" rows="8" placeholder="Write something ..."></textarea>
+                    <input type="text" hidden="hidden" name="id" value="@ViewBag.groupIdea.GroupIdeaID" />
+                </div>
+                <div class="btnSubmit">
+                    <button class="discardBtn" type="reset">Discard</button>
+                    <button class="submitBtn" type="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    @*denied request popup*@
+    <div class="showDeniedRequestForm hide-form">
+        <div class="YNpopup">
+            <p>The request could not be sent <br /> because you are already in another group.</p>
+            <div class="YNbutton">
+                <button class="okBtnCancelDeniedRequest" type="reset">ok</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
