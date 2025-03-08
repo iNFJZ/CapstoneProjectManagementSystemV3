@@ -4,8 +4,12 @@
 
 @using Infrastructure.Entities
 @model Supervisor
-
-@{
+﻿@{
+    Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Create User Page";
+    var lstUser = ViewBag.users as List<User>;
+}
+@* @{
     if (ViewBag.sessionRole == 5)
     {
         Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
@@ -15,17 +19,18 @@
         Layout = "/Views/Shared/Staff/_LayoutStaff.cshtml";
     }
     ViewData["Title"] = "Create User Page";
-}
+} *@
 <link rel="stylesheet" href="/css/admin/admin_adduserupdate.css">
 <div class="homepage" id="createuser" style="background-color:powderblue;">
-    @if (ViewBag.sessionRole == 5)
+    @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
+   @*  @if (ViewBag.sessionRole == 5)
     {
         @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
     }
     else if (ViewBag.sessionRole == 3)
     {
         @await Html.PartialAsync("/Views/Shared/Staff/_LayoutSidebarLeftStaff.cshtml")
-    }
+    } *@
     <input type="text" id="sessionRole" value="@ViewBag.sessionRole" hidden />
     <div class="main">
         <div class="profileUser1">
