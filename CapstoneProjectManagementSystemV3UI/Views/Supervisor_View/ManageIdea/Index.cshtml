@@ -27,9 +27,9 @@
             <div class="searchForm1">
                 <div class="searchForm" style="display: flex">
                     <select id="filterStatus" name="filterStatus" onchange="changeStatus()" style="height: fit-content; margin-right: 20px;">
-                        <option value="-1" @(ViewBag.filterStatus == -1 ? "selected" : "")>All</option>
+                       @*  <option value="-1" @(ViewBag.filterStatus == -1 ? "selected" : "")>All</option>
                         <option value="0" @(ViewBag.filterStatus == 0 ? "selected" : "")>Deactive</option>
-                        <option value="1" @(ViewBag.filterStatus == 1 ? "selected" : "")>Active</option>
+                        <option value="1" @(ViewBag.filterStatus == 1 ? "selected" : "")>Active</option> *@
                     </select>
 
                     <input id="query" style="padding-top: 18px; padding-left: 20px; padding-bottom: 18px; opacity: 1.5;" name="query" value="@ViewBag.query" placeholder="Search by Project Enlish Name or Project VietNamese Name" />

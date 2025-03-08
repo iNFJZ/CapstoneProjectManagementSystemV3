@@ -2,8 +2,12 @@
 
 @using Infrastructure.Entities
 @model Supervisor
-
-@{
+﻿@{
+    Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Create User Page";
+    var lstUser = ViewBag.users as List<User>;
+}
+@* @{
     if (ViewBag.sessionRole == 5)
     {
         Layout = "/Views/Shared/Admin/_LayoutAdmin.cshtml";
@@ -13,22 +17,23 @@
         Layout = "/Views/Shared/Staff/_LayoutStaff.cshtml";
     }
     ViewData["Title"] = "User Management";
-}
+} *@
 <link rel="stylesheet" href="/css/admin/admin_usermanagerupdate1.css">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.23.5/dist/bootstrap-table.min.js"></script>
 
 <div class="homepage" id="usermanagement">
-    @if (ViewBag.sessionRole == 5)
+    @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
+  @*   @if (ViewBag.sessionRole == 5)
     {
         @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
     }
     else if (ViewBag.sessionRole == 3)
     {
         @await Html.PartialAsync("/Views/Shared/Staff/_LayoutSidebarLeftStaff.cshtml")
-    }
-    <input type="text" id="sessionRole" value="@ViewBag.sessionRole" hidden />
+    } *@
+   @*  <input type="text" id="sessionRole" value="@ViewBag.sessionRole" hidden />
     <div class="main" style="background-color:powderblue;">
 
         <div class="profileUser1">
@@ -103,7 +108,7 @@
                 </div>
          </div>
         
-    </div>
+    </div> *@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
