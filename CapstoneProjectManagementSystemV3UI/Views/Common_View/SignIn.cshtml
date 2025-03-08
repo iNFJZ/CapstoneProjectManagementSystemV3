@@ -10,7 +10,8 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="icon" href="../img/FPT_logo_2010.svg.png">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/common/signin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/css/common/signinupdate.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -30,13 +31,15 @@
         <div class="formLogin" style="height:400px">
             <div class="formLoginGG">
                 <div class="intro">
-                    <h1>Sign In</h1>
+
                     <p>
                         The first platform for finding teammates, seeking for the <br />
                         Capstone Project idea in FPT University
                     </p>
                 </div>
-                <div id="textError">@TempData["ErrorMessage"]</div>
+                <div id="textError" style=" color: red; font-weight: bold;margin-top: 10px;">
+                    @TempData["ErrorMessage"]
+                </div>
                 <div class="logIn">
                     <div class="selectCampus">
                         <label for="campus">Select Campus</label>
@@ -52,14 +55,18 @@
                     </div>
                     <div class="signIn">
                         <div class="signInGG">
+
                             @*<form action="/ExternalSignIn/OnPost?returnUrl=@ViewBag.ReturnUrl" method="post">*@
-                            <button class="signGG" id="signinGg">
-                                <img src="../img/Google__G__Logo.svg.png" alt="">
+                            <button class="signGG" id="signinGg" style="background:red;">
+                                <i class="fa-brands fa-google" style="color:white;margin-right:5px;"></i>
                                 <p id="signGG">Sign in with @@fpt.edu.vn</p>
                             </button>
-
+                            <button class="signFe" id="signinFe" style="background:#4285F4;">
+                                <i class="fas fa-envelope " style="margin-right:5px;"></i>
+                                <p id="signFe">Sign in with FeID</p>
+                            </button>
                             @*</form>*@
-                            <p>or</p>
+                            @*    <p>or</p> *@
                             <a href="/User/SignInByAffiliateAccount" id="signInForm">Sign in with Email & Password</a>
                         </div>
                     </div>
@@ -68,7 +75,7 @@
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script>startApp();</script>
 </body>
 </html>

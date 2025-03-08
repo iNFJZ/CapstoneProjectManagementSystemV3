@@ -11,7 +11,7 @@
     "CapstoneProjectManagementSystemV3UI": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchUrl": "https://localhost:7012/AdminLoginAs/Index",
+      "launchUrl": "https://localhost:7012/User/SignIn",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7012;http://localhost:5019",
       "environmentVariables": {
