@@ -18,16 +18,16 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
     {
         private readonly ISessionExtensionService _sessionExtensionService;
         private readonly IConfiguration _configuration;
+        private readonly ILogger<UserController> _logger;
+
         [TempData]
         public string ErrorMessage { get; set; }    //ErrorMessage is used to report the error and push to the client by tempdata
         public string SuccessMessaage { get; set; } //SuccessMessaage is used to report the success and push to the client by tempdata
-        public UserController(
-                                ISessionExtensionService sessionExtensionService
-            , IConfiguration configuration
-            )
+        public UserController( ISessionExtensionService sessionExtensionService , IConfiguration configuration, ILogger<UserController> logger)
         {
             _sessionExtensionService = sessionExtensionService;
             _configuration = configuration;
+            _logger = logger;
         }
 
         public IActionResult SignIn() // view page signin 
@@ -123,6 +123,16 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
             {
                 using (var client = new HttpClient())
                 {
+                    if (campus != "" && campus != null)
+                    {
+                        HttpContext.Session.SetString("campus", campus);
+                    }
+                    else
+                    {
+                        ErrorMessage = "Please select campus!";
+                        _logger.LogError(ErrorMessage);
+                        return RedirectToAction("SignInByAffiliateAccount", "User", new { message = ErrorMessage });
+                    }
                     client.BaseAddress = new Uri(_configuration["BaseAddress"]);
                     client.DefaultRequestHeaders.Add("X-Connection-String", campus);
                     string apiUrl = $"/api/User/sign-in-ByAffiliateAccount?personalEmail={personalEmail}&passwordHash={passwordHash}";
@@ -138,7 +148,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                             _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
                             _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", user);
                             //return RedirectToAction("Index", "StudentHome");
-                            return View("/Views/Staff_View/LoginAs/Index.cshtml");
+                            return View("/Views/Admin_View/ListUser/Index.cshtml");
                         }
                         else
                         {
@@ -160,6 +170,50 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                 return View("/Views/Common_View/404NotFound.cshtml");
             }
         }
+
+        public IActionResult ForgotPassword()
+        {
+            try
+            {
+                var user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
+                if (user == null)
+                {
+                    return View("/Views/Common_View/ForgotPassword.cshtml");
+                }
+                else
+                {
+                    if (user.Role.RoleId == 1)
+                    {
+                        return RedirectToAction("Index", "StudentHome");
+                    }
+                    else if (user.Role.RoleId == 3)
+                    {
+                        return RedirectToAction("Index", "SemesterManage");
+                    }
+                    else if (user.Role.RoleId == 2)
+                    {
+                        return RedirectToAction("Index", "ManageMentor");
+                    }
+                    else if (user.Role.RoleId == 5)
+                    {
+                        return RedirectToAction("Index", "ListUser");
+                    }
+                    else if (user.Role.RoleId == 4)
+                    {
+                        return RedirectToAction("Index", "SupervisorChangeTopicRequest");
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch
+            {
+                return View("/Views/Common_View/404NotFound.cshtml");
+            }
+        }
+
         public async Task<IActionResult> SignOut()
         {
             try

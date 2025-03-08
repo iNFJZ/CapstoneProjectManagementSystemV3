@@ -1,0 +1,149 @@
+﻿/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #7F00FF, #E100FF);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login Container */
+.loginAccount {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    width: 400px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: left; /* Đặt text-align là left */
+}
+
+/* Title */
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4A00E0;
+}
+
+/* Input Fields */
+.selectCampus {
+    width: 100%; /* Đảm bảo tất cả đều có cùng chiều rộng */
+    margin-bottom: 10px; /* Khoảng cách giữa các trường */
+}
+
+.input-field {
+    width: 100%; /* Đảm bảo tất cả đều có cùng chiều rộng */
+    position: relative; /* Đặt vị trí tương đối cho input field */
+    margin-bottom: 10px; /* Khoảng cách giữa các trường */
+}
+.selectCampus label, .input-field span {
+    font-weight: bold;
+    margin-bottom: 5px; /* Khoảng cách giữa label và input */
+}
+    .input-field input {
+        width: 100%;
+        padding: 10px 40px 10px 10px; /* Thêm padding bên phải cho icon */
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+/* Icon mắt */
+.showHidePW {
+    position: absolute; /* Đặt vị trí tuyệt đối cho icon */
+    right: 10px; /* Căn chỉnh sang bên phải */
+    top: 50%; /* Căn giữa theo chiều dọc */
+    transform: translateY(-50%); /* Đưa icon lên giữa */
+    cursor: pointer; /* Chỉnh con trỏ chuột thành bàn tay */
+    color: #555; /* Màu sắc cho icon */
+}
+    .selectCampus select,
+    .input-field input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+/* Button Styles */
+#signInEmail, #backToSignGG {
+    background: #4A00E0;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+    #signInEmail:hover, #backToSignGG:hover {
+        background: #3a00c0;
+    }
+
+/* Forgot Password Link */
+#forgotPass {
+    display: block;
+    margin-top: 10px;
+    color: #4A00E0;
+    text-decoration: none;
+}
+
+    #forgotPass:hover {
+        text-decoration: underline;
+    }
+
+
+.btnSignInEmail {
+    display: flex; /* Sử dụng Flexbox để căn chỉnh */
+    justify-content: space-between; /* Để có khoảng cách giữa nút */
+    margin-top: 20px; /* Thêm khoảng cách phía trên */
+}
+.showErrorMessage {
+    font-size: 16px;
+    font-weight: 600;
+    color: #F74055;
+    width: 100%;
+    text-align: start;
+    margin-top: 12px;
+}
+
+#backToSignGG {
+    display: flex; /* Sử dụng Flexbox cho nút Back */
+    align-items: center; /* Canh giữa theo chiều dọc */
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    background: #4A00E0; /* Nền trong suốt cho nút Back */
+    color: white; /* Màu chữ cho nút Back */
+    border: none; /* Bỏ viền */
+    cursor: pointer; /* Chỉnh con trỏ chuột thành bàn tay */
+    border-radius: 6px; /* Bo góc cho nút */
+    margin-right: 10px;
+    text-decoration: none; /* Bỏ dấu gạch chân */
+}
+
+    #backToSignGG:hover {
+        text-decoration: none; /* Đảm bảo không có gạch chân khi hover */
+       
+    }
+
+.input-field input,
+.selectCampus select {
+    width: 100%; /* Đảm bảo các trường nhập liệu đều có chiều rộng bằng nhau */
+    padding: 10px; /* Padding cho trường nhập liệu */
+    border: 1px solid #ddd; /* Viền cho trường nhập liệu */
+    border-radius: 5px; /* Bo góc cho trường nhập liệu */
+    box-sizing: border-box; /* Bao gồm padding và border trong chiều rộng */
+}
+
+.description {
+    color: #555555; /* Màu chữ giống như trong hình (màu xám) */
+    text-align: center; /* Căn giữa chữ */
+    font-size: 14px; /* Kích thước chữ nhỏ hơn */
+    margin-bottom: 20px; /* Khoảng cách dưới đoạn văn */
+}

@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+﻿using CapstoneProjectManagementSystem.Controllers.Common_Controller;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 using Infrastructure.Services.CommonServices.SessionExtensionService;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ISessionExtensionService, SessionExtensionService>();
+
+var loggerFactory = LoggerFactory.Create(builder =>
+{
+    builder.AddConsole();
+});
+ILogger<UserController> logger = loggerFactory.CreateLogger<UserController>();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(

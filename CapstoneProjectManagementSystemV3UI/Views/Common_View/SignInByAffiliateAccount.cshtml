@@ -10,7 +10,7 @@
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <link rel="icon" href="../img/FPT_logo_2010.svg.png">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/common/signinbyaff.css">
+    <link rel="stylesheet" href="/css/common/siginbyaffupdate.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
           integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -32,14 +32,16 @@
         <div class="formLogin">
             <div class="formLoginEmail">
                 <div class="intro">
-                    <h1>Sign In</h1>
-                    <p>
+
+                    <p class="description">
                         The first platform for finding teammates, seeking for the <br />
                         Capstone Project idea in FPT University
                     </p>
                 </div>
-                <div id="textSuccess">@TempData["SuccessMessage"]</div>
-                <div id="textError">@TempData["ErrorMessage"]</div>
+                <div id="textSuccess" style="color:green;">@TempData["SuccessMessage"]</div>
+                <div id="textError" style=" color: red; font-weight: bold; margin-top: 10px; ">
+                    @TempData["ErrorMessage"]
+                </div>
                 <form action="/User/SignInByAffiliateAccount" id="formLoginEmail" method="post">
                     <div class="selectCampus email">
                         <label for="campus">Select Campus</label>
@@ -54,7 +56,7 @@
                         </select>
                     </div>
                     <div class="email">
-                        <span>Email</span>
+                        <label>Email</label>
                         <br />
                         <div class="input-field">
                             @if (TempData["oldPersonalEmail"] != null)
@@ -69,7 +71,7 @@
                         <p class="showErrorMessage" id="errorInputEmail"></p>
                     </div>
                     <div class="inputpassword">
-                        <span>Password</span>
+                        <label>Password</label>
                         <br />
                         <div class="input-field">
                             <input id="inputPassword" type="password" class="password" placeholder="Password" name="passwordHash" maxlength="100">
@@ -115,10 +117,4 @@
         });
     });
 </script>
-
-
-
-
-
-
 

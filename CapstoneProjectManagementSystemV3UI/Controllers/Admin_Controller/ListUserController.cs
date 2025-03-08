@@ -59,8 +59,8 @@ namespace CapstoneProjectManagementSystem.Controllers.Admin_Controller
                     {
                         var jsonString = await response.Content.ReadAsStringAsync();
                         var body = JsonConvert.DeserializeObject<ListUserViewModel>(jsonString);
-                        roles = body.resultObj.roles;
-                        users = body.resultObj.users;
+                        roles = body.resultObj.roles ?? new List<CapstoneProjectManagementSystemV3UI.Models.Role>();
+                        users = body.resultObj.users ?? new List<User>();
                     }
                 }
                 ViewBag.roles = roles;

@@ -45,7 +45,7 @@
             </form>
             <div>
                 <div>
-                    @if (ViewBag.users.Count != 0)
+                    @if (ViewBag.users != null && ViewBag.users.Count > 0)
                     {
                         <div class="requestMain" style="margin-bottom: 0px; margin-top: 0px; padding-top: 0px;">
                             <div class="titleRequest">

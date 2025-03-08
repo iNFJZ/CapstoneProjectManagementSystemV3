@@ -1,0 +1,151 @@
+﻿/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(to right, #7F00FF, #E100FF);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Login Container */
+.loginAccount {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px;
+    width: 400px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title */
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #4A00E0;
+}
+
+    .title svg {
+        width: 40px;
+        height: 40px;
+    }
+
+/* Intro */
+.intro h1 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.intro p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Select Campus */
+.selectCampus {
+    text-align: left;
+    margin: 20px 0;
+}
+
+    .selectCampus label {
+        font-weight: bold;
+    }
+
+    .selectCampus select {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+/* Google Sign In */
+.signGG {
+    width: 100%;
+    height: 48px; /* Đảm bảo cùng chiều cao */
+    font-size: 16px; /* Giảm kích thước chữ để vừa khung */
+    padding: 12px 0;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    color: white;
+    justify-content: center;
+    margin-bottom: 20px;
+    white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+    overflow: hidden; /* Tránh chữ bị tràn */
+    cursor: pointer;
+}
+
+.signFe {
+    width: 100%;
+    height: 48px; /* Đảm bảo cùng chiều cao */
+    font-size: 16px; /* Giảm kích thước chữ để vừa khung */
+    padding: 12px 0;
+    text-align: center;
+    border-radius: 6px;
+    display: flex;
+    color: white;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+    overflow: hidden; /* Tránh chữ bị tràn */
+    cursor: pointer;
+}
+
+
+
+.signGG:hover {
+    background: #357ae8;
+}
+
+    .signGG img {
+        width: 20px;
+    }
+
+/* Divider Line */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+    .divider::before,
+    .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #ccc;
+    }
+
+    .divider span {
+        padding: 0 10px;
+        color: #777;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+/* Email Login */
+#signInForm {
+    display: block;
+    background: #4A00E0;
+    color: white;
+    text-decoration: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+    #signInForm:hover {
+        background: #3a00c0;
+    }
+
