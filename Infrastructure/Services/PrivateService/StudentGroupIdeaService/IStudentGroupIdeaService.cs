@@ -17,7 +17,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
         Task<ApiResult<List<string>>> GetMemberIdByGroupIdeaId(int groupIdeaId);
         Task<ApiResult<List<JoinRequest>>> GetAllJoinRequestByGroupIdeaId(int groupIdeaId);
         Task<ApiResult<string>> GetGroupIdByStudentId(string studentId);
-        Task<ApiResult<List<StudentGroupIdea>>> GetListRequestByStudentId(string studentId);
+        Task<ApiResult<List<StudentGroupIdeaDto>>> GetListRequestByStudentId(string studentId);
         Task<ApiResult<bool>> UpdateStatusToAccept(string studentId, int groupIdeaId);
         Task<ApiResult<bool>> UpdateStatusToReject(string studentId, int groupIdeaId);
         Task<ApiResult<bool>> UpdateStatusToMember(string studentId, int groupIdeaId);
@@ -30,13 +30,13 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
         Task<ApiResult<int>> FilterPermissionOfStudent(string studentId);
         Task<ApiResult<bool>> FilterStudentHaveIdea(string studentId, int semesterId);
         Task<ApiResult<GroupIdeaDto>> GetGroupIdeaOfStudent(string studentId, int status);
-        Task<ApiResult<List<Student>>> GetStudentsHadOneGroupIdea(int groupIdea);
+        Task<ApiResult<List<StudentDto>>> GetStudentsHadOneGroupIdea(int groupIdea);
         Task<ApiResult<bool>> CheckAddedStudentIsValid(string fptEmail);
-        Task<ApiResult<bool>> CreateGroupIdea(GroupIdea groupIdea, string studentId, int semesterId, int maxMember);
+        Task<ApiResult<bool>> CreateGroupIdea(GroupIdeaDto groupIdea, string studentId, int semesterId, int maxMember);
         Task<ApiResult<bool>> AddRecord(string studentId, int groupId, int status, string message);
         Task<ApiResult<bool>> DeleteGroupIdeaAndStudentInGroupIdea(int groupIdeaId);
-        Task<ApiResult<StudentGroupIdea>> GetStudentGroupIdeaByGroupIdeaIdAndFptEmail(int groupIdeaId, string fptEmail);
-        Task<ApiResult<List<StudentGroupIdea>>> GetListStudentInGroupByGroupIdeaId(int groupIdeaId);
+        Task<ApiResult<StudentGroupIdeaDto>> GetStudentGroupIdeaByGroupIdeaIdAndFptEmail(int groupIdeaId, string fptEmail);
+        Task<ApiResult<List<StudentGroupIdeaDto>>> GetListStudentInGroupByGroupIdeaId(int groupIdeaId);
         Task<ApiResult<List<StudentGroupIdeaDto>>> GetInforStudentInGroupIdeaBySemester(int groupIdeaId, int semesterId); // thuantv8 add
         Task<ApiResult<List<StudentGroupIdeaDto>>> GetInforStudentInGroupIdea(int groupIdeaId);
         Task<ApiResult<bool>> RecoveryStudentInGroupIdeaAfterRejected(string studentId, int groupIdeaId);

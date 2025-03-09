@@ -3,9 +3,6 @@ using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
-using Infrastructure.Entities.Dto.SemesterDto;
-using Infrastructure.Entities.Dto.StudentDto;
-using Infrastructure.Entities.Dto.UserDto;
 using Infrastructure.Repositories.ProfessionRepository;
 using Infrastructure.Repositories.SemesterRepository;
 using Infrastructure.Repositories.StudentGroupIdeaRepository;
@@ -78,7 +75,7 @@ namespace Infrastructure.Services.PrivateService.StudentService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public ApiResult<XLWorkbook> CreateWorkBookBasedOnStudentList(List<Student> students, string firstSheetName, int currentRow)
+        public ApiResult<XLWorkbook> CreateWorkBookBasedOnStudentList(List<StudentDto> students, string firstSheetName, int currentRow)
         {
             XLWorkbook workbook = new XLWorkbook();
             var worksheet = workbook.Worksheets.Add(firstSheetName);
@@ -113,22 +110,22 @@ namespace Infrastructure.Services.PrivateService.StudentService
             worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 12)).Style.Border.OutsideBorder = XLBorderStyleValues.Thin;
             worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 12)).Style.Border.OutsideBorderColor = XLColor.Black;
             worksheet.Range(worksheet.Cell(currentRow, 1), worksheet.Cell(currentRow, 12)).Style.Font.Bold = true;
-            foreach (Student st in students)
+            foreach (StudentDto st in students)
             {
                 currentRow++;
-                worksheet.Cell(currentRow, 1).Value = st.StudentNavigation.FptEmail;
-                worksheet.Cell(currentRow, 9).Value = st.StudentNavigation != null && st.StudentNavigation.FullName != null && st.StudentNavigation.FullName.Length != 0 ? st.StudentNavigation.FullName : "None";
+                worksheet.Cell(currentRow, 1).Value = st.User.FptEmail;
+                worksheet.Cell(currentRow, 9).Value = st.User != null && st.User.FullName != null && st.User.FullName.Length != 0 ? st.User.FullName : "None";
                 worksheet.Cell(currentRow, 3).Value = st.RollNumber;
                 worksheet.Cell(currentRow, 4).Value = st.Curriculum == null || st.Curriculum.Length == 0 ? "None" : st.Curriculum;
-                worksheet.Cell(currentRow, 5).Value = st.SelfDiscription == null || st.SelfDiscription.Length == 0 ? "None" : st.SelfDiscription;
+                worksheet.Cell(currentRow, 5).Value = st.SelfDescription == null || st.SelfDescription.Length == 0 ? "None" : st.SelfDescription;
                 worksheet.Cell(currentRow, 6).Value = st.ExpectedRoleInGroup == null || st.ExpectedRoleInGroup.Length == 0 ? "None" : st.ExpectedRoleInGroup;
                 worksheet.Cell(currentRow, 7).Value = st.PhoneNumber == null || st.PhoneNumber.Length == 0 ? "None" : st.PhoneNumber;
                 worksheet.Cell(currentRow, 7).Style.NumberFormat.Format = "0000000000";
                 worksheet.Cell(currentRow, 8).Value = st.LinkFacebook == null || st.LinkFacebook.Length == 0 ? "None" : st.LinkFacebook;
-                worksheet.Cell(currentRow, 2).Value = st.StudentNavigation != null && st.StudentNavigation.AffiliateAccount != null ? st.StudentNavigation.AffiliateAccount.PersonalEmail : "None";
+                worksheet.Cell(currentRow, 2).Value = st.User != null && st.User.AffiliateAccount != null ? st.User.AffiliateAccount.PersonalEmail : "None";
                 worksheet.Cell(currentRow, 10).Value = st.Profession == null || st.Profession.ProfessionFullName == null || st.Profession.ProfessionFullName.Length == 0 ? "None" : st.Profession.ProfessionFullName;
                 worksheet.Cell(currentRow, 11).Value = st.Specialty == null || st.Specialty.SpecialtyFullName == null || st.Specialty.SpecialtyFullName.Length == 0 ? "None" : st.Specialty.SpecialtyFullName;
-                worksheet.Cell(currentRow, 12).Value = st.WantToBeGrouped.Value;
+                worksheet.Cell(currentRow, 12).Value = st.WantToBeGrouped;
             }
             return new ApiSuccessResult<XLWorkbook>(workbook);
         }
@@ -159,14 +156,44 @@ namespace Infrastructure.Services.PrivateService.StudentService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<List<Student>>> getAllStudentOfSemester(int semesterId)
+        public async Task<ApiResult<List<StudentDto>>> getAllStudentOfSemester(int semesterId)
         {
 
             List<Expression<Func<Student, bool>>> expressions = new List<Expression<Func<Student, bool>>>();
             expressions.Add(s => s.SemesterId == semesterId);
             expressions.Add(s => s.DeletedAt == null);
             var studentList = await _studentRepository.GetByConditions(expressions);
-            return new ApiSuccessResult<List<Student>>(studentList);
+            var result = new List<StudentDto>();
+            foreach (var student in studentList)
+            {
+                result.Add(new StudentDto()
+                {
+                    User = new UserDto()
+                    {
+                        FptEmail = student.StudentNavigation.FptEmail,
+                        FullName = student.StudentNavigation.FullName,
+                        AffiliateAccount = new AffiliateAccountDto()
+                        {
+                            PersonalEmail = student.StudentNavigation.AffiliateAccount.PersonalEmail,
+                        }
+                    },
+
+                    PhoneNumber = student.PhoneNumber,
+
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionFullName = student.Profession.ProfessionFullName,
+                    },
+
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyFullName = student.Specialty.SpecialtyFullName,
+                    },
+
+                    IsEligible = student.IsEligible,
+                });
+            }
+            return new ApiSuccessResult<List<StudentDto>>(result);
         }
 
         public async Task<ApiResult<int>> GetFinalGroupIdOfStudentIsLeader(int groupIdeaId)
@@ -187,13 +214,21 @@ namespace Infrastructure.Services.PrivateService.StudentService
             return new ApiSuccessResult<int>((int)studentLead.FinalGroupId);
         }
 
-        public async Task<ApiResult<Student>> GetFullnameAndGenderOfPreviousSemester(string fptEduEmail, int currentSemesterId)
+        public async Task<ApiResult<StudentDto>> GetFullnameAndGenderOfPreviousSemester(string fptEduEmail, int currentSemesterId)
         {
-            var result = await _studentRepository.GetFullnameAndGenderOfPreviousSemester(fptEduEmail, currentSemesterId);
-            return new ApiSuccessResult<Student>(result);
+            var student = await _studentRepository.GetFullnameAndGenderOfPreviousSemester(fptEduEmail, currentSemesterId);
+            var result = new StudentDto()
+            {
+                User = new UserDto()
+                {
+                    FullName = student.StudentNavigation.FullName,
+                    Gender = student.StudentNavigation.Gender,
+                }
+            };
+            return new ApiSuccessResult<StudentDto>(result);
         }
 
-        public async Task<ApiResult<Student>> GetInforStudentHaveFinalGroup(string studentId, int semesterId)
+        public async Task<ApiResult<StudentDto>> GetInforStudentHaveFinalGroup(string studentId, int semesterId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentId == studentId);
@@ -202,18 +237,18 @@ namespace Infrastructure.Services.PrivateService.StudentService
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
             if (objFind == null)
             {
-                return new ApiErrorResult<Student>("không tìm thấy dữ liệu");
+                return new ApiErrorResult<StudentDto>("không tìm thấy dữ liệu");
             }
-            var student = new Student()
+            var student = new StudentDto()
             {
                 StudentId = objFind.StudentId,
-                EmailAddress = objFind.StudentNavigation.FptEmail,
+                FptEmail = objFind.StudentNavigation.FptEmail,
                 GroupName = objFind.FinalGroup.GroupName,
             };
-            return new ApiSuccessResult<Student>(student);
+            return new ApiSuccessResult<StudentDto>(student);
         }
 
-        public async Task<ApiResult<Student>> GetInforStudentHaveRegisteredGroup(string fptEmail, int groupIdeaId)
+        public async Task<ApiResult<StudentDto>> GetInforStudentHaveRegisteredGroup(string fptEmail, int groupIdeaId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentId == fptEmail || s.StudentNavigation.FptEmail == fptEmail);
@@ -221,100 +256,147 @@ namespace Infrastructure.Services.PrivateService.StudentService
             studentExpression.Add(s => s.DeletedAt == null);
             studentExpression.Add(s => s.StudentNavigation.DeletedAt == null);
             var student = await _studentRepository.GetByConditionId(studentExpression);
-            return new ApiSuccessResult<Student>(student);
+            var result = new StudentDto()
+            {
+                StudentId = student.StudentId,
+
+            };
+            return new ApiSuccessResult<StudentDto>(result);
         }
 
-        public async Task<ApiResult<Student>> getLeaderByFinalGroupId(int finalGroupId)
+        public async Task<ApiResult<StudentDto>> getLeaderByFinalGroupId(int finalGroupId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.FinalGroupId == finalGroupId);
             studentExpression.Add(s => s.IsLeader == true);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            var studentLeader = new Student()
+            var studentLeader = new StudentDto()
             {
                 StudentId = objFind.StudentId,
                 Curriculum = objFind.Curriculum,
                 EmailAddress = objFind.EmailAddress,
                 ExpectedRoleInGroup = objFind.ExpectedRoleInGroup,
-                SelfDiscription = objFind.SelfDiscription,
+                SelfDescription = objFind.SelfDiscription,
                 PhoneNumber = objFind.PhoneNumber,
                 LinkFacebook = objFind.LinkFacebook,
-                FinalGroup = objFind.FinalGroup,
+                FinalGroup = new FinalGroupDto()
+                {
+                    FinalGroupId = objFind.FinalGroupId.Value,
+                },
                 GroupName = objFind.FinalGroup.GroupName,
                 RollNumber = objFind.RollNumber,
                 IsLeader = objFind.IsLeader,
                 CreatedAt = objFind.CreatedAt,
-                StudentNavigation = objFind.StudentNavigation,
-                Profession = objFind.Profession,
-                Specialty = objFind.Specialty,
+                User = new UserDto()
+                {
+                    FptEmail = objFind.StudentNavigation.FptEmail,
+                    Avatar = objFind.StudentNavigation.Avatar,
+                    FullName = objFind.StudentNavigation.FullName,
+                },
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = objFind.ProfessionId.Value,
+                },
+                Specialty = new SpecialtyDto()
+                {
+                    SpecialtyID = objFind.SpecialtyId.Value,
+                },
             };
-            return new ApiSuccessResult<Student>(studentLeader);
+            return new ApiSuccessResult<StudentDto>(studentLeader);
         }
 
-        public async Task<ApiResult<List<Student>>> getListMemberByFinalGroupId(int finalGroupId)
+        public async Task<ApiResult<List<StudentDto>>> getListMemberByFinalGroupId(int finalGroupId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.FinalGroupId == finalGroupId);
             studentExpression.Add(s => s.IsLeader == false);
             var objFind = await _studentRepository.GetByConditions(studentExpression);
-            var listStudent = new List<Student>();
+            var listStudent = new List<StudentDto>();
             foreach (var item in objFind)
             {
-                var student = new Student()
+                var student = new StudentDto()
                 {
                     StudentId = item.StudentId,
                     Curriculum = item.Curriculum,
                     EmailAddress = item.EmailAddress,
                     ExpectedRoleInGroup = item.ExpectedRoleInGroup,
-                    SelfDiscription = item.SelfDiscription,
+                    SelfDescription = item.SelfDiscription,
                     PhoneNumber = item.PhoneNumber,
                     LinkFacebook = item.LinkFacebook,
-                    FinalGroup = item.FinalGroup,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = item.FinalGroupId.Value,
+                    },
                     GroupName = item.FinalGroup.GroupName,
                     RollNumber = item.RollNumber,
                     IsLeader = item.IsLeader,
                     CreatedAt = item.CreatedAt,
-                    StudentNavigation = item.StudentNavigation,
-                    Profession = item.Profession,
-                    Specialty = item.Specialty,
+                    User = new UserDto()
+                    {
+                        FptEmail = item.StudentNavigation.FptEmail,
+                        Avatar = item.StudentNavigation.Avatar,
+                        FullName = item.StudentNavigation.FullName,
+                    },
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = item.ProfessionId.Value,
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = item.SpecialtyId.Value,
+                    },
                 };
                 listStudent.Add(student);
             }
-            return new ApiSuccessResult<List<Student>>(listStudent);
+            return new ApiSuccessResult<List<StudentDto>>(listStudent);
         }
 
-        public async Task<ApiResult<List<Student>>> GetListStudentIdByFinalGroupId(int finalGroupId)
+        public async Task<ApiResult<List<StudentDto>>> GetListStudentIdByFinalGroupId(int finalGroupId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.FinalGroupId == finalGroupId);
             var objFind = await _studentRepository.GetByConditions(studentExpression);
-            var listStudent = new List<Student>();
+            var listStudent = new List<StudentDto>();
             foreach (var item in objFind)
             {
-                var student = new Student()
+                var student = new StudentDto()
                 {
                     StudentId = item.StudentId,
                     Curriculum = item.Curriculum,
                     EmailAddress = item.EmailAddress,
                     ExpectedRoleInGroup = item.ExpectedRoleInGroup,
-                    SelfDiscription = item.SelfDiscription,
+                    SelfDescription = item.SelfDiscription,
                     PhoneNumber = item.PhoneNumber,
                     LinkFacebook = item.LinkFacebook,
-                    FinalGroup = item.FinalGroup,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = item.FinalGroupId.Value,
+                    },
                     GroupName = item.FinalGroup.GroupName,
                     RollNumber = item.RollNumber,
                     IsLeader = item.IsLeader,
                     CreatedAt = item.CreatedAt,
-                    StudentNavigation = item.StudentNavigation,
-                    Profession = item.Profession,
-                    Specialty = item.Specialty,
+                    User = new UserDto()
+                    {
+                        FptEmail = item.StudentNavigation.FptEmail,
+                        Avatar = item.StudentNavigation.Avatar,
+                        FullName = item.StudentNavigation.FullName,
+                    },
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = item.ProfessionId.Value,
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = item.SpecialtyId.Value,
+                    },
                 };
                 listStudent.Add(student);
             }
-            return new ApiSuccessResult<List<Student>>(listStudent);
+            return new ApiSuccessResult<List<StudentDto>>(listStudent);
         }
 
-        public async Task<ApiResult<List<Student>>> getListStudentNotHaveGroupBySpecialtyId(int semester_Id, int specialtyId)
+        public async Task<ApiResult<List<StudentDto>>> getListStudentNotHaveGroupBySpecialtyId(int semester_Id, int specialtyId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.SemesterId == semester_Id);
@@ -323,73 +405,109 @@ namespace Infrastructure.Services.PrivateService.StudentService
             studentExpression.Add(s => s.DeletedAt == null);
             studentExpression.Add(s => s.StudentNavigation.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditions(studentExpression);
-            var listStudent = new List<Student>();
+            var listStudent = new List<StudentDto>();
             foreach (var item in objFind)
             {
-                var student = new Student()
+                var student = new StudentDto()
                 {
                     StudentId = item.StudentId,
                     Curriculum = item.Curriculum,
                     EmailAddress = item.EmailAddress,
                     ExpectedRoleInGroup = item.ExpectedRoleInGroup,
-                    SelfDiscription = item.SelfDiscription,
+                    SelfDescription = item.SelfDiscription,
                     PhoneNumber = item.PhoneNumber,
                     LinkFacebook = item.LinkFacebook,
-                    FinalGroup = item.FinalGroup,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = item.FinalGroupId.Value,
+                    },
                     GroupName = item.FinalGroup.GroupName,
                     RollNumber = item.RollNumber,
                     IsLeader = item.IsLeader,
                     CreatedAt = item.CreatedAt,
-                    StudentNavigation = item.StudentNavigation,
-                    Profession = item.Profession,
-                    Specialty = item.Specialty,
+                    User = new UserDto()
+                    {
+                        FptEmail = item.StudentNavigation.FptEmail,
+                        Avatar = item.StudentNavigation.Avatar,
+                        FullName = item.StudentNavigation.FullName,
+                    },
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = item.ProfessionId.Value,
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = item.SpecialtyId.Value,
+                    },
                 };
                 listStudent.Add(student);
             }
-            return new ApiSuccessResult<List<Student>>(listStudent);
+            return new ApiSuccessResult<List<StudentDto>>(listStudent);
         }
 
-        public async Task<ApiResult<List<Student>>> GetListUngroupedStudentsBySpecialityIdAndSemesterId(int semesterId, int[] specialityIds)
+        public async Task<ApiResult<List<StudentDto>>> GetListUngroupedStudentsBySpecialityIdAndSemesterId(int semesterId, int[] specialityIds)
         {
             var result = await _studentRepository.GetAllUngroupedStudentsBySemesterIdAndSpecialityId(specialityIds, semesterId);
-            var listStudent = new List<Student>();
+            var listStudent = new List<StudentDto>();
             foreach (var item in result)
             {
-                var student = new Student()
+                var student = new StudentDto()
                 {
                     StudentId = item.StudentId,
                     Curriculum = item.Curriculum,
                     EmailAddress = item.EmailAddress,
                     ExpectedRoleInGroup = item.ExpectedRoleInGroup,
-                    SelfDiscription = item.SelfDiscription,
+                    SelfDescription = item.SelfDiscription,
                     PhoneNumber = item.PhoneNumber,
                     LinkFacebook = item.LinkFacebook,
-                    FinalGroup = item.FinalGroup,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = item.FinalGroupId.Value,
+                    },
                     GroupName = item.FinalGroup.GroupName,
                     RollNumber = item.RollNumber,
                     IsLeader = item.IsLeader,
                     CreatedAt = item.CreatedAt,
-                    StudentNavigation = item.StudentNavigation,
-                    Profession = item.Profession,
-                    Specialty = item.Specialty,
+                    User = new UserDto()
+                    {
+                        FptEmail = item.StudentNavigation.FptEmail,
+                        Avatar = item.StudentNavigation.Avatar,
+                        FullName = item.StudentNavigation.FullName,
+                    },
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = item.ProfessionId.Value,
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = item.SpecialtyId.Value,
+                    },
                 };
                 listStudent.Add(student);
             }
-            return new ApiSuccessResult<List<Student>>(listStudent);
+            return new ApiSuccessResult<List<StudentDto>>(listStudent);
         }
 
-        public async Task<ApiResult<Student>> GetProfessionAndSpecialtyByStudentId(string studentId)
+        public async Task<ApiResult<StudentDto>> GetProfessionAndSpecialtyByStudentId(string studentId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentId == studentId);
             studentExpression.Add(s => s.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            var student = new Student()
+            var student = new StudentDto()
             {
-                Profession = objFind.Profession,
-                Specialty = objFind.Specialty,
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = objFind.ProfessionId.Value,
+                    ProfessionFullName = objFind.Profession.ProfessionFullName,
+                },
+                Specialty = new SpecialtyDto()
+                {
+                    SpecialtyID = objFind.SpecialtyId.Value,
+                    SpecialtyFullName = objFind.Specialty.SpecialtyFullName
+                }
             };
-            return new ApiSuccessResult<Student>(student);
+            return new ApiSuccessResult<StudentDto>(student);
         }
 
         public async Task<ApiResult<int>> GetProfessionIdOfStudentByUserId(string userId)
@@ -401,10 +519,44 @@ namespace Infrastructure.Services.PrivateService.StudentService
             return new ApiSuccessResult<int>(objFind.Profession.ProfessionId);
         }
 
-        public async Task<ApiResult<Student>> GetProfileOfStudentByUserId(string userId)
+        public async Task<ApiResult<StudentDto>> GetProfileOfStudentByUserId(string userId)
         {
-            var result = await _studentRepository.GetProfileOfStudentByUserId(userId);
-            return new ApiSuccessResult<Student>(result);
+            var student = await _studentRepository.GetProfileOfStudentByUserId(userId);
+            var result = new StudentDto()
+            {
+                StudentId = student.StudentId,
+                User = new UserDto()
+                {
+                    FptEmail = student.StudentNavigation.FptEmail,
+                    Avatar = student.StudentNavigation.Avatar,
+                    FullName = student.StudentNavigation.FullName,
+                    Gender = student.StudentNavigation.Gender,
+                },
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = student.ProfessionId.Value,
+                    ProfessionFullName = student.Profession.ProfessionFullName,
+                },
+                Specialty = new SpecialtyDto()
+                {
+                    SpecialtyID = student.SpecialtyId.Value,
+                    SpecialtyFullName = student.Specialty.SpecialtyFullName,
+                },
+                Semester = new SemesterDto()
+                {
+                    SemesterID = student.SemesterId.Value,
+                    SemesterName = student.Semester.SemesterName
+                },
+                RollNumber = student.RollNumber,
+                Curriculum = student.Curriculum,
+                EmailAddress = student.EmailAddress,
+                ExpectedRoleInGroup = student.ExpectedRoleInGroup,
+                SelfDescription = student.SelfDiscription,
+                PhoneNumber = student.PhoneNumber,
+                LinkFacebook = student.LinkFacebook,
+                WantToBeGrouped = student.WantToBeGrouped.Value,
+            };
+            return new ApiSuccessResult<StudentDto>(result);
         }
 
         public async Task<ApiResult<int>> GetSpecialtyIdOfStudentByUserId(string userId)
@@ -416,7 +568,7 @@ namespace Infrastructure.Services.PrivateService.StudentService
             return new ApiSuccessResult<int>(objFind.Specialty.SpecialtyId);
         }
 
-        public async Task<ApiResult<Student>> GetStudentByFptEmail(string fptEmail, int semesterId)
+        public async Task<ApiResult<StudentDto>> GetStudentByFptEmail(string fptEmail, int semesterId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentNavigation.FptEmail == fptEmail);
@@ -424,77 +576,99 @@ namespace Infrastructure.Services.PrivateService.StudentService
             studentExpression.Add(s => s.StudentNavigation.DeletedAt == null);
             studentExpression.Add(s => s.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            return new ApiSuccessResult<Student>(objFind);
+            var result = new StudentDto()
+            {
+                StudentId = objFind.StudentId,
+                RollNumber = objFind.RollNumber,
+                User = new UserDto()
+                {
+                    FptEmail = objFind.StudentNavigation.FptEmail,
+                    Avatar = objFind.StudentNavigation.Avatar,
+                    FullName = objFind.StudentNavigation.FullName,
+                },
+                FinalGroup = new FinalGroupDto()
+                {
+                    FinalGroupId = objFind.FinalGroup.FinalGroupId,
+                },
+                IsEligible = objFind.IsEligible
+            };
+            return new ApiSuccessResult<StudentDto>(result);
         }
 
-        public async Task<ApiResult<Student>> GetStudentById(string id)
+        public async Task<ApiResult<StudentDto>> GetStudentById(string id)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentId == id);
             studentExpression.Add(s => s.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            var student = new Student()
+            var student = new StudentDto()
             {
                 StudentId = objFind.StudentId,
-                ProfessionId = objFind.ProfessionId,
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = objFind.ProfessionId.Value,
+                },
             };
-            return new ApiSuccessResult<Student>(student);
+            return new ApiSuccessResult<StudentDto>(student);
         }
 
-        public async Task<ApiResult<Student>> GetStudentById2(string StudentId)
+        public async Task<ApiResult<StudentDto>> GetStudentById2(string StudentId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentId == StudentId);
             studentExpression.Add(s => s.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            var student = new Student()
+            var student = new StudentDto()
             {
                 StudentId = objFind.StudentId,
-                ProfessionId = objFind.ProfessionId,
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = objFind.ProfessionId.Value,
+                },
             };
-            return new ApiSuccessResult<Student>(student);
+            return new ApiSuccessResult<StudentDto>(student);
         }
 
-        public async Task<ApiResult<Student>> GetStudentByStudentId(string studentId)
+        public async Task<ApiResult<StudentDto>> GetStudentByStudentId(string studentId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentId == studentId);
             studentExpression.Add(s => s.StudentNavigation.DeletedAt == null);
             studentExpression.Add(s => s.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            var student = new Student()
+            var student = new StudentDto()
             {
                 StudentId = objFind.StudentId,
-                StudentNavigation = new User()
+                User = new UserDto()
                 {
                     FptEmail = objFind.StudentNavigation.FptEmail,
                     Avatar = objFind.StudentNavigation.Avatar,
                     FullName = objFind.StudentNavigation.FullName,
                 },
-                FinalGroup = new FinalGroup()
+                FinalGroup = new FinalGroupDto()
                 {
                     FinalGroupId = objFind.FinalGroup.FinalGroupId,
                 },
                 GroupName = objFind.GroupName,
                 IsLeader = objFind.IsLeader,
-                Profession = new Profession()
+                Profession = new ProfessionDto()
                 {
-                    ProfessionId = objFind.Profession.ProfessionId,
+                    ProfessionID = objFind.Profession.ProfessionId,
                     ProfessionFullName = objFind.Profession.ProfessionFullName,
                 },
-                Specialty = new Specialty()
+                Specialty = new SpecialtyDto()
                 {
-                    SpecialtyId = objFind.Specialty.SpecialtyId,
+                    SpecialtyID = objFind.Specialty.SpecialtyId,
                     SpecialtyFullName = objFind.Specialty.SpecialtyFullName,
                 },
                 PhoneNumber = objFind.PhoneNumber,
                 IsEligible = objFind.IsEligible,
-                Semester = new Semester()
+                Semester = new SemesterDto()
                 {
-                    SemesterId = objFind.Semester.SemesterId,
+                    SemesterID = objFind.Semester.SemesterId,
                 }
             };
-            return new ApiSuccessResult<Student>(student);
+            return new ApiSuccessResult<StudentDto>(student);
         }
 
         public async Task<ApiResult<string>> GetStudentIDByFptEmailAndGroupName(string fptEmail, string groupName, int semesterId)
@@ -508,7 +682,7 @@ namespace Infrastructure.Services.PrivateService.StudentService
             return new ApiSuccessResult<string>(objFind.StudentId);
         }
 
-        public async Task<ApiResult<Student>> GetStudentNotHaveGroupFinalByFptEmail(string fptEmail, int semesterId)
+        public async Task<ApiResult<StudentDto>> GetStudentNotHaveGroupFinalByFptEmail(string fptEmail, int semesterId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.StudentNavigation.FptEmail == fptEmail);
@@ -516,31 +690,127 @@ namespace Infrastructure.Services.PrivateService.StudentService
             studentExpression.Add(s => s.FinalGroup.FinalGroupId == null);
             studentExpression.Add(s => s.DeletedAt == null);
             var objFind = await _studentRepository.GetByConditionId(studentExpression);
-            return new ApiSuccessResult<Student>(objFind);
+            var result = new StudentDto()
+            {
+                StudentId = objFind.StudentId,
+                User = new UserDto()
+                {
+                    FptEmail = objFind.StudentNavigation.FptEmail,
+                    Avatar = objFind.StudentNavigation.Avatar
+                }
+            };
+            return new ApiSuccessResult<StudentDto>(result);
         }
 
-        public async Task<ApiResult<List<Student>>> getStudentsBySpecialityId(int specialityId)
+        public async Task<ApiResult<List<StudentDto>>> getStudentsBySpecialityId(int specialityId)
         {
             List<Expression<Func<Student, bool>>> studentExpression = new List<Expression<Func<Student, bool>>>();
             studentExpression.Add(s => s.Specialty.SpecialtyId == specialityId);
             studentExpression.Add(s => s.StudentNavigation.DeletedAt == null);
             studentExpression.Add(s => s.DeletedAt == null);
-            var objFind = await _studentRepository.GetByConditions(studentExpression);
-            return new ApiSuccessResult<List<Student>>(objFind);
+            var students = await _studentRepository.GetByConditions(studentExpression);
+            var result = new List<StudentDto>();
+            foreach (var student in students)
+            {
+                result.Add(new StudentDto()
+                {
+                    StudentId = student.StudentId,
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = student.ProfessionId.Value
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = student.SpecialtyId.Value
+                    },
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = student.SemesterId.Value
+                    },
+                    User = new UserDto()
+                    {
+                        FptEmail = student.StudentNavigation.FptEmail
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<StudentDto>>(result);
         }
 
-        public async Task<ApiResult<List<Student>>> GetStudentSearchList(int semester_Id, int profession_Id, int specialty_Id, int offsetNumber, int fetchNumber)
+        public async Task<ApiResult<List<StudentDto>>> GetStudentSearchList(int semester_Id, int profession_Id, int specialty_Id, int offsetNumber, int fetchNumber)
         {
-            var result = await _studentRepository.GetStudentSearchList(semester_Id, profession_Id, specialty_Id, offsetNumber, fetchNumber);
-            return new ApiSuccessResult<List<Student>>(result);
+            var students = await _studentRepository.GetStudentSearchList(semester_Id, profession_Id, specialty_Id, offsetNumber, fetchNumber);
+            var result = new List<StudentDto>();
+            foreach (var student in students)
+            {
+                result.Add(new StudentDto()
+                {
+                    StudentId = student.StudentId,
+                    User = new UserDto()
+                    {
+                        FptEmail = student.StudentNavigation.FptEmail,
+                        Avatar = student.StudentNavigation.Avatar,
+                        FullName = student.StudentNavigation.FullName
+                    },
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = student.ProfessionId.Value,
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = student.SpecialtyId.Value,
+                    },
+                    CreatedAt = student.CreatedAt,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = student.SemesterId.Value,
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<StudentDto>>(result);
         }
 
-        public async Task<ApiResult<List<Student>>> GetUnGroupedStudentsBySemesterId(int semesterId)
+        public async Task<ApiResult<List<StudentDto>>> GetUnGroupedStudentsBySemesterId(int semesterId)
         {
             var profession = await _professionRepository.GetAll(semesterId);
             int[] allProfessionIds = profession.Select(profession => profession.ProfessionId).ToArray();
             List<Student> students = await _studentRepository.getAllUngroupedStudentsBySemesterIdAndProfessionId(allProfessionIds, semesterId, true);
-            return new ApiSuccessResult<List<Student>>(students);
+            var result = new List<StudentDto>();
+            foreach (var student in students)
+            {
+                result.Add(new StudentDto()
+                {
+                    StudentId = student.StudentId,
+                    Curriculum = student.Curriculum,
+                    EmailAddress = student.EmailAddress,
+                    ExpectedRoleInGroup = student.ExpectedRoleInGroup,
+                    SelfDescription = student.SelfDiscription,
+                    PhoneNumber = student.PhoneNumber,
+                    LinkFacebook = student.LinkFacebook,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = student.FinalGroupId.Value,
+                    },
+                    GroupName = student.FinalGroup.GroupName,
+                    RollNumber = student.RollNumber,
+                    IsLeader = student.IsLeader,
+                    CreatedAt = student.CreatedAt,
+                    User = new UserDto()
+                    {
+                        FptEmail = student.StudentNavigation.FptEmail,
+                        Avatar = student.StudentNavigation.Avatar,
+                        FullName = student.StudentNavigation.FullName,
+                    },
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = student.ProfessionId.Value,
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = student.SpecialtyId.Value,
+                    },
+                });
+            }
+            return new ApiSuccessResult<List<StudentDto>>(result);
         }
 
         public async Task<ApiResult<bool>> IsFirstSemesterDoCapstoneProject(string fptEduEmail, int semesterId)
@@ -673,7 +943,7 @@ namespace Infrastructure.Services.PrivateService.StudentService
                 await _studentRepository.UpdateAsync(student);
                 return new ApiSuccessResult<bool>(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ApiSuccessResult<bool>(true);
             }

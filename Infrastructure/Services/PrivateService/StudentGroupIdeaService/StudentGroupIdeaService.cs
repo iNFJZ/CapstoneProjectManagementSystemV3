@@ -2,7 +2,9 @@
 using Infrastructure.Entities.Common;
 using Infrastructure.Entities.Common.ApiResult;
 using Infrastructure.Entities.Dto.SemesterDto;
+using Infrastructure.Entities.Dto.SpecialtyDto;
 using Infrastructure.Entities.Dto.StudentDto;
+using Infrastructure.Entities.Dto.UserDto;
 using Infrastructure.Repositories.GroupIdeaRepository;
 using Infrastructure.Repositories.RegisteredRepository;
 using Infrastructure.Repositories.SemesterRepository;
@@ -14,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -27,8 +30,8 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
         private readonly ISemesterRepository _semesterRepository;
         private readonly IStudentRepository _studentRepository;
         private readonly IGroupIdeaRepository _groupIdeaRepository;
-        public StudentGroupIdeaService(IStudentGroupIdeaRepository studentGroupIdeaRepository, 
-            INotificationService notificationService, 
+        public StudentGroupIdeaService(IStudentGroupIdeaRepository studentGroupIdeaRepository,
+            INotificationService notificationService,
             IRegisteredRepository registeredRepository,
             ISemesterRepository semesterRepository,
             IStudentRepository studentRepository,
@@ -63,7 +66,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                     expressions.Add(x => x.DeletedAt == null);
                     var leader = await _studentGroupIdeaRepository.GetByConditionId(studentExpressions);
                     string leaderId = leader.StudentId;
-                    if(leaderId == null)
+                    if (leaderId == null)
                     {
                         var newStudentGroup = new StudentGroupIdea()
                         {
@@ -88,9 +91,9 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
 
                 }
                 string[] fptEmails = registeredGroup.StudentsRegistraiton.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach(string fptEmail in fptEmails)
+                foreach (string fptEmail in fptEmails)
                 {
-                    var student = await _studentRepository.GetStudentByFptEmail(fptEmail,currentSemester.SemesterID);
+                    var student = await _studentRepository.GetStudentByFptEmail(fptEmail, currentSemester.SemesterID);
                     string studentId = student.StudentId;
                     _notificationService.InsertDataNotification(studentId, "You group have a new member", "/MyGroup/Index");
                 }
@@ -105,7 +108,8 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                 groupIdea.NumberOfMember = numberOfMember;
                 await _groupIdeaRepository.UpdateAsync(groupIdea);
                 return new ApiSuccessResult<bool>(true);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiSuccessResult<bool>(false);
             }
@@ -138,7 +142,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                 return new ApiSuccessResult<bool>(false);
         }
 
-        public async Task<ApiResult<bool>> CreateGroupIdea(GroupIdea groupIdea, string studentId, int semesterId, int maxMember)
+        public async Task<ApiResult<bool>> CreateGroupIdea(GroupIdeaDto groupIdea, string studentId, int semesterId, int maxMember)
         {
             try
             {
@@ -148,7 +152,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                     SpecialtyId = groupIdea.SpecialtyId,
                     ProjectEnglishName = groupIdea.ProjectEnglishName,
                     ProjectVietNameseName = groupIdea.ProjectVietNameseName,
-                    Abbreviation = groupIdea.Abbreviation,
+                    Abbreviation = groupIdea.Abrrevation,
                     Description = groupIdea.Description,
                     ProjectTags = groupIdea.ProjectTags,
                     SemesterId = semesterId,
@@ -160,13 +164,14 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                 var newStudentGroupIdea = new StudentGroupIdea()
                 {
                     StudentId = studentId,
-                    GroupIdeaId = groupIdea.GroupIdeaId,
+                    GroupIdeaId = groupIdea.GroupIdeaID,
                     Status = 1,
                     CreatedAt = DateTime.Now
                 };
                 await _studentGroupIdeaRepository.CreateAsync(newStudentGroupIdea);
                 return new ApiSuccessResult<bool>(true);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiErrorResult<bool>(ex.ToString());
             }
@@ -318,12 +323,12 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
             expressions.Add(sg => sg.StudentId == studentId);
             expressions.Add(sg => sg.Status == 1 || sg.Status == 2);
-            expressions.Add(sg => sg.GroupIdea.SemesterId ==  semesterId);
+            expressions.Add(sg => sg.GroupIdea.SemesterId == semesterId);
             expressions.Add(sg => sg.DeletedAt == null);
             expressions.Add(sg => sg.Student.DeletedAt == null);
             expressions.Add(sg => sg.GroupIdea.DeletedAt == null);
             var result = await _studentGroupIdeaRepository.GetByConditionId(expressions);
-            if(result != null)
+            if (result != null)
             {
                 return new ApiSuccessResult<bool>(false);
             }
@@ -333,14 +338,14 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
         public async Task<ApiResult<List<JoinRequest>>> GetAllJoinRequestByGroupIdeaId(int groupIdeaId)
         {
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
-            expressions.Add(sg => sg.Status == 3 );
+            expressions.Add(sg => sg.Status == 3);
             expressions.Add(sg => sg.GroupIdeaId == groupIdeaId);
             expressions.Add(sg => sg.Message != null);
             expressions.Add(sg => sg.Student.DeletedAt == null);
             expressions.Add(sg => sg.DeletedAt == null);
             var results = await _studentGroupIdeaRepository.GetByConditions(expressions);
             var listJoinRequest = new List<JoinRequest>();
-            foreach(var result in results)
+            foreach (var result in results)
             {
                 var joinRequest = new JoinRequest()
                 {
@@ -352,7 +357,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                 };
                 listJoinRequest.Add(joinRequest);
             }
-            
+
             return new ApiSuccessResult<List<JoinRequest>>(listJoinRequest);
         }
 
@@ -390,7 +395,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
                 ProjectTags = result.GroupIdea.ProjectTags
             };
             return new ApiSuccessResult<GroupIdeaDto>(groupIdea);
-           
+
         }
 
         public async Task<ApiResult<List<StudentGroupIdeaDto>>> GetInforStudentInGroupIdea(int groupIdeaId)
@@ -402,7 +407,7 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
             var result = await _studentGroupIdeaRepository.GetByConditions(expressions);
             result.OrderBy(sg => sg.Status);
             var listStudentGroup = new List<StudentGroupIdeaDto>();
-            foreach( var item in result)
+            foreach (var item in result)
             {
                 var studentGroup = new StudentGroupIdeaDto()
                 {
@@ -457,39 +462,67 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
         {
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
             expressions.Add(sg => sg.GroupIdeaId == groupIdeaId);
-            expressions.Add(sg => sg.Status == 1 );
+            expressions.Add(sg => sg.Status == 1);
             expressions.Add(sg => sg.DeletedAt == null);
             var result = await _studentGroupIdeaRepository.GetByConditionId(expressions);
             return new ApiSuccessResult<string>(result.StudentId);
         }
 
-        public async Task<ApiResult<List<StudentGroupIdea>>> GetListRequestByStudentId(string studentId)
+        public async Task<ApiResult<List<StudentGroupIdeaDto>>> GetListRequestByStudentId(string studentId)
         {
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
             expressions.Add(sg => sg.StudentId == studentId);
             expressions.Add(sg => sg.Status == 3 || sg.Status == 4 || sg.Status == 5);
             expressions.Add(sg => sg.DeletedAt == null);
-            var result = await _studentGroupIdeaRepository.GetByConditions(expressions);
-            return new ApiSuccessResult<List<StudentGroupIdea>>(result);
+            var requests = await _studentGroupIdeaRepository.GetByConditions(expressions);
+            var result = new List<StudentGroupIdeaDto>();
+            foreach (var request in requests)
+            {
+                result.Add(new StudentGroupIdeaDto()
+                {
+                    StudentId = request.StudentId,
+                    GroupIdeaId = request.GroupIdeaId,
+                    Status = request.Status.Value,
+                    Message = request.Message,
+                    GroupIdea = new GroupIdeaDto()
+                    {
+                        GroupIdeaID = request.GroupIdeaId
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<StudentGroupIdeaDto>>(result);
         }
 
-        public async Task<ApiResult<List<StudentGroupIdea>>> GetListStudentInGroupByGroupIdeaId(int groupIdeaId)
+        public async Task<ApiResult<List<StudentGroupIdeaDto>>> GetListStudentInGroupByGroupIdeaId(int groupIdeaId)
         {
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
             expressions.Add(sg => sg.GroupIdeaId == groupIdeaId);
             expressions.Add(sg => sg.Status == 1 || sg.Status == 2);
             expressions.Add(sg => sg.DeletedAt == null);
-            var result = await _studentGroupIdeaRepository.GetByConditions(expressions);
-            result.Select( sg => new StudentGroupIdeaDto()
+            var ideas = await _studentGroupIdeaRepository.GetByConditions(expressions);
+            ideas.Select(sg => new StudentGroupIdeaDto()
             {
-                StudentId =  sg.StudentId,
+                StudentId = sg.StudentId,
                 Status = sg.Status.Value,
-                GroupIdea = new GroupIdea()
-                {
-                    ProjectEnglishName = sg.GroupIdea.ProjectEnglishName
-                }
+                //GroupIdea = new GroupIdea()
+                //{
+                //    //ProjectEnglishName = sg.GroupIdea.ProjectEnglishName
+                //}
             });
-            return new ApiSuccessResult<List<StudentGroupIdea>>(result);
+            var result = new List<StudentGroupIdeaDto>();
+            foreach (var idea in ideas)
+            {
+                result.Add(new StudentGroupIdeaDto()
+                {
+                    StudentId = idea.StudentId,
+                    Status = idea.Status.Value,
+                    GroupIdea = new GroupIdeaDto()
+                    {
+                        ProjectEnglishName = idea.GroupIdea.ProjectEnglishName
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<StudentGroupIdeaDto>>(result);
         }
 
         public async Task<ApiResult<List<string>>> GetMemberIdByGroupIdeaId(int groupIdeaId)
@@ -500,14 +533,14 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
             expressions.Add(sg => sg.DeletedAt == null);
             var result = await _studentGroupIdeaRepository.GetByConditions(expressions);
             var studentIds = new List<string>();
-            foreach(var student in result)
+            foreach (var student in result)
             {
                 studentIds.Add(student.StudentId);
             }
             return new ApiSuccessResult<List<string>>(studentIds);
         }
 
-        public async Task<ApiResult<StudentGroupIdea>> GetStudentGroupIdeaByGroupIdeaIdAndFptEmail(int groupIdeaId, string fptEmail)
+        public async Task<ApiResult<StudentGroupIdeaDto>> GetStudentGroupIdeaByGroupIdeaIdAndFptEmail(int groupIdeaId, string fptEmail)
         {
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
             expressions.Add(sg => sg.GroupIdeaId == groupIdeaId);
@@ -515,11 +548,23 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
             expressions.Add(sg => sg.Student.DeletedAt == null);
             expressions.Add(sg => sg.Student.StudentNavigation.DeletedAt == null);
             expressions.Add(sg => sg.DeletedAt == null);
-            var result = await _studentGroupIdeaRepository.GetByConditionId(expressions);
-            return new ApiSuccessResult<StudentGroupIdea>(result);
+            var idea = await _studentGroupIdeaRepository.GetByConditionId(expressions);
+            var result = new StudentGroupIdeaDto()
+            {
+                StudentId = idea.StudentId,
+                Status = idea.Status.Value,
+                Student = new StudentDto()
+                {
+                    Specialty = new SpecialtyDto()
+                    {
+                        CodeOfGroupName = idea.Student.Specialty.CodeOfGroupName
+                    }
+                }
+            };
+            return new ApiSuccessResult<StudentGroupIdeaDto>(result);
         }
 
-        public async Task<ApiResult<List<Student>>> GetStudentsHadOneGroupIdea(int groupIdea)
+        public async Task<ApiResult<List<StudentDto>>> GetStudentsHadOneGroupIdea(int groupIdea)
         {
             List<Expression<Func<StudentGroupIdea, bool>>> expressions = new List<Expression<Func<StudentGroupIdea, bool>>>();
             expressions.Add(sg => sg.GroupIdeaId == groupIdea);
@@ -527,23 +572,22 @@ namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
             expressions.Add(sg => sg.DeletedAt == null);
             expressions.Add(sg => sg.Student.DeletedAt == null);
             expressions.Add(sg => sg.Student.StudentNavigation.DeletedAt == null);
-            var result = await _studentGroupIdeaRepository.GetByConditions(expressions);
-            result.OrderBy(result => result.Status);
-            var listStudent = new List<Student>();
-            foreach(var sg in result)
+            var students = await _studentGroupIdeaRepository.GetByConditions(expressions);
+            students.OrderBy(result => result.Status);
+            var result = new List<StudentDto>();
+            foreach (var student in students)
             {
-                var student = new Student()
+                result.Add(new StudentDto()
                 {
-                    StudentId = sg.StudentId,
-                    StudentNavigation = new User()
+                    StudentId = student.StudentId,
+                    User = new UserDto()
                     {
-                        FptEmail = sg.Student.StudentNavigation.FptEmail,
-                        Avatar = sg.Student.StudentNavigation.Avatar
+                        FptEmail = student.Student.StudentNavigation.FptEmail,
+                        Avatar = student.Student.StudentNavigation.Avatar
                     }
-                };
-                listStudent.Add(student);
+                });
             }
-            return new ApiSuccessResult<List<Student>>(listStudent);
+            return new ApiSuccessResult<List<StudentDto>>(result);
         }
 
         public async Task<ApiResult<bool>> RecoveryStudentInGroupIdeaAfterRejected(string studentId, int groupIdeaId)

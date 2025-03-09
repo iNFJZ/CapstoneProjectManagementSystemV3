@@ -26,7 +26,7 @@ namespace Infrastructure.Services.PrivateService.SupervisorProfessionService
             _professionRepository = professionRepository;
         }
 
-        public async Task<ApiResult<List<Profession>>> GetProfessionsBySupervisorID(string supervisorId, int semesterId)
+        public async Task<ApiResult<List<ProfessionDto>>> GetProfessionsBySupervisorID(string supervisorId, int semesterId)
         {
             // 🔹 Lọc danh sách Supervisor_Profession theo Supervisor_ID
             var supervisors = await _supervisorRepository.GetByCondition(s => s.SupervisorId == supervisorId);
@@ -34,7 +34,7 @@ namespace Infrastructure.Services.PrivateService.SupervisorProfessionService
 
             if (supervisors == null || !supervisors.Any())
             {
-                return new ApiErrorResult<List<Profession>>( "Không tìm thấy Supervisor hoặc không có Profession nào liên kết");
+                return new ApiErrorResult<List<ProfessionDto>>("Không tìm thấy Supervisor hoặc không có Profession nào liên kết");
             }
 
             // 🔹 Lọc danh sách Profession theo danh sách Profession_ID đã lấy được
@@ -48,10 +48,19 @@ namespace Infrastructure.Services.PrivateService.SupervisorProfessionService
 
             if (professions == null || !professions.Any())
             {
-                return new ApiErrorResult<List<Profession>>("Không có bản ghi nào");
+                return new ApiErrorResult<List<ProfessionDto>>("Không có bản ghi nào");
             }
-
-            return new ApiSuccessResult<List<Profession>>(professions);
+            var result = new List<ProfessionDto>();
+            foreach (var profession in professions)
+            {
+                result.Add(new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionFullName = profession.ProfessionFullName,
+                    ProfessionAbbreviation = profession.ProfessionAbbreviation
+                });
+            }
+            return new ApiSuccessResult<List<ProfessionDto>>(result);
         }
 
     }
