@@ -1,10 +1,10 @@
 ﻿using ClosedXML.Excel;
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
+using Infrastructure.Entities.Dto.ViewModel.StudentViewModel;
+using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 using Infrastructure.Repositories.RegisteredGroupSupervisorRepository;
 using Infrastructure.Repositories.RegisteredRepository;
-using Infrastructure.ViewModel.StudentViewModel;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,22 +25,22 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
             _registeredGroupSupervisorRepository = registeredGroupSupervisorRepository;
         }
 
-        public async Task<ApiResult<bool>> AddRegisteredGroup(RegisteredGroup registeredGroup, List<RegisteredGroupSupervisorForSubmitRegistration> supervisorSubmitRegist)
+        public async Task<ApiResult<bool>> AddRegisteredGroup(RegisteredGroupDto registeredGroup, List<RegisteredGroupSupervisorForSubmitRegistration> supervisorSubmitRegist)
         {
             try
             {
                 var registeredGroups = new RegisteredGroup()
                 {
-                    GroupIdeaId = registeredGroup.GroupIdeaId,
-                    StudentComment = registeredGroup.StudentComment,
-                    StudentsRegistraiton = registeredGroup.StudentsRegistraiton
+                    GroupIdeaId = registeredGroup.GroupIdea.GroupIdeaId,
+                    StudentComment = registeredGroup.RegisteredGroup.StudentComment,
+                    StudentsRegistraiton = registeredGroup.RegisteredGroup.StudentsRegistraiton
                 };
                 await _registeredRepository.CreateAsync(registeredGroups);
                 foreach (RegisteredGroupSupervisorForSubmitRegistration rg in supervisorSubmitRegist)
                 {
                     if (rg.supervisor_ID != null)
                     {
-                        var groupIdeaId = (await _registeredRepository.GetById(rg => rg.GroupIdeaId == registeredGroup.GroupIdeaId && rg.DeletedAt == null)).RegisteredGroupId;
+                        var groupIdeaId = (await _registeredRepository.GetById(rg => rg.GroupIdeaId == registeredGroup.GroupIdea.GroupIdeaId && rg.DeletedAt == null)).RegisteredGroupId;
                         var reisterGroupSupervisor = new RegisterdGroupSupervisor()
                         {
                             RegisteredGroupId = groupIdeaId,
@@ -73,7 +73,7 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public (List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<string>, List<int>) AssignMentorsBasedOnRegisterGroupWorkSheet(IXLWorksheet worksheet, int startRow, List<Profession> professions)
+        public (List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<string>, List<int>) AssignMentorsBasedOnRegisterGroupWorkSheet(IXLWorksheet worksheet, int startRow, List<ProfessionDto> professions)
         {
             throw new NotImplementedException();
         }
@@ -81,7 +81,7 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
         public async Task<ApiResult<bool>> CheckRegisteredGroupAccept()
         {
             var resul = await _registeredRepository.GetByCondition(rg => rg.Status == 1 && rg.DeletedAt == null);
-            if(resul.Count() == 0)
+            if (resul.Count() == 0)
             {
                 return new ApiSuccessResult<bool>(false);
             }
@@ -133,12 +133,12 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<RegisteredGroup>> GetDetailRegistrationOfStudentByGroupIdeaId(int registeredGroupId)
+        public Task<ApiResult<RegisteredGroupDto>> GetDetailRegistrationOfStudentByGroupIdeaId(int registeredGroupId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<RegisteredGroup>> GetGroupIDByRegisteredGroupId(int registeredGroupId)
+        public Task<ApiResult<RegisteredGroupDto>> GetGroupIDByRegisteredGroupId(int registeredGroupId)
         {
             throw new NotImplementedException();
         }
@@ -148,12 +148,12 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
             throw new NotImplementedException();
         }
 
-        public (int, int, List<RegisteredGroup>) GetListRegisteredGroupsForSupervisor(int semester_ID, string supervisor_ID, string search, int pageNumber, int[] statuses)
+        public (int, int, List<RegisteredGroupDto>) GetListRegisteredGroupsForSupervisor(int semester_ID, string supervisor_ID, string search, int pageNumber, int[] statuses)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<RegisteredGroup>> GetRegisteredGroupByGroupIdeaId(int groupIdeaId)
+        public Task<ApiResult<RegisteredGroupDto>> GetRegisteredGroupByGroupIdeaId(int groupIdeaId)
         {
             throw new NotImplementedException();
         }
@@ -163,7 +163,7 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<List<Student>>> GetRegisteredGroupMember(string studentId, bool isLeader)
+        public Task<ApiResult<List<StudentDto>>> GetRegisteredGroupMember(string studentId, bool isLeader)
         {
             throw new NotImplementedException();
         }
@@ -178,7 +178,7 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<RegisteredGroup>> GetRegisteredGroupsBySearch(int semesterId, int status, string searchText, int offsetNumber, int fetchNumber)
+        public Task<ApiResult<RegisteredGroupDto>> GetRegisteredGroupsBySearch(int semesterId, int status, string searchText, int offsetNumber, int fetchNumber)
         {
             throw new NotImplementedException();
         }

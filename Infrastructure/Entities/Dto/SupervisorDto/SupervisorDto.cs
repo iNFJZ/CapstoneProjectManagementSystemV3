@@ -1,6 +1,4 @@
 ﻿using Infrastructure.Custom;
-using Infrastructure.Entities.Dto.RegisteredDto;
-using Infrastructure.Entities.Dto.UserDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Entities
 {
-    public class SupervisorDto
+    public class SupervisorDto : CommonProperty
     {
         public bool IsActive { get; set; }
         public string FieldSetting { get; set; }
@@ -23,9 +21,10 @@ namespace Infrastructure.Entities
 
         public List<SupervisorProfessionDto> SupervisorProfessions { get; set; }
         public UserDto User { get; set; }
+        public UserDto SupervisorNavigation { get; set; }
         public IList<ChangeTopicRequestDto> ChangeTopicRequests { get; set; }
         public IList<FinalGroupDto> FinalGroups { get; set; }
-        public IList<RegisterdGroupSupervisorDto> RegisterdGroupSupervisors { get; set; }
-        public IList<ReportMaterial> ReportMaterials { get; set; }
+        public IList<RegisterdGroupSupervisorDto> RegisteredGroupSupervisors { get; set; }
+        public IList<ReportMaterialDto> ReportMaterials { get; set; }
     }
 }

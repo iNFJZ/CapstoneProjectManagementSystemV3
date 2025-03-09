@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities.Dto.StudentDto
+namespace Infrastructure.Entities
 {
     public class StudentGroupIdeaDto : CommonProperty
     {
         public string StudentId { get; set; }
         public int GroupIdeaId { get; set; }
-        public string Avatar {  get; set; }
+        public string Avatar { get; set; }
         public string FptEmail { get; set; }
         public string RollNumber { get; set; }
         public string FullName { get; set; }
         public string ProfessionFullName { get; set; }
-        public string SpecialtyFullName {  get; set; }
-        public string CodeOfGroupName {  get; set; }
+        public string SpecialtyFullName { get; set; }
+        public string CodeOfGroupName { get; set; }
 
 
         //Status:   1 -> Leader
@@ -26,8 +26,8 @@ namespace Infrastructure.Entities.Dto.StudentDto
         //          5 -> Request denied
         //          6 -> leaved group
         public int Status { get; set; }
-        public Student Student { get; set; }
-        public GroupIdea GroupIdea { get; set; }
+        public StudentDto Student { get; set; }
+        public GroupIdeaDto GroupIdea { get; set; }
         public string Message { get; set; }
     }
 }

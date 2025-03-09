@@ -6,6 +6,7 @@ using Infrastructure.Repositories.SpecialtyRepository;
 using Infrastructure.Repositories.Supervisor_GroupIdeaReporitory;
 using Infrastructure.Repositories.SupervisorProfessionRepository;
 using Infrastructure.Repositories.SupervisorRepository;
+using Infrastructure.Entities.Dto.ViewModel.StaffViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,8 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
                 };
                 await _professionRepository.CreateAsync(newProfession);
                 return new ApiSuccessResult<int>(newProfession.ProfessionId);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiErrorResult<int>(ex.ToString());
             }
@@ -64,16 +66,30 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<List<Profession>>> getAllProfession(int semesterId)
+        public async Task<ApiResult<List<ProfessionDto>>> getAllProfession(int semesterId)
         {
             List<Expression<Func<Profession, bool>>> expression = new List<Expression<Func<Profession, bool>>>();
             expression.Add(e => e.SemesterId == semesterId);
             expression.Add(e => e.DeletedAt == null);
-            var result = await _professionRepository.GetByConditions(expression);
-            return new ApiSuccessResult<List<Profession>>(result);
+            var professionList = await _professionRepository.GetByConditions(expression);
+            var result = new List<ProfessionDto>();
+            foreach (var profession in professionList)
+            {
+                result.Add(new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionAbbreviation = profession.ProfessionAbbreviation,
+                    ProfessionFullName = profession.ProfessionFullName,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = profession.SemesterId.Value
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<ProfessionDto>>(result);
         }
 
-        public async Task<ApiResult<List<Profession>>> GetAllProfessionWithSpecialty(int semesterId)
+        public async Task<ApiResult<List<ProfessionDto>>> GetAllProfessionWithSpecialty(int semesterId)
         {
             List<Expression<Func<Profession, bool>>> expression = new List<Expression<Func<Profession, bool>>>();
             expression.Add(e => e.SemesterId == semesterId);
@@ -87,45 +103,84 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
             {
                 profession.Specialties = specialty.Where(s => s.ProfessionId == profession.ProfessionId).ToList();
             }
-            return new ApiSuccessResult<List<Profession>>(professions);
+            var result = new List<ProfessionDto>();
+            foreach (var profession in professions)
+            {
+                result.Add(new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionAbbreviation = profession.ProfessionAbbreviation,
+                    ProfessionFullName = profession.ProfessionFullName,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = profession.SemesterId.Value,
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<ProfessionDto>>(result);
         }
 
-        public async Task<ApiResult<Profession>> getProfessionById(int professionId)
+        public async Task<ApiResult<ProfessionDto>> getProfessionById(int professionId)
         {
             List<Expression<Func<Profession, bool>>> expression = new List<Expression<Func<Profession, bool>>>();
             expression.Add(e => e.ProfessionId == professionId);
             expression.Add(e => e.DeletedAt == null);
             var profession = await _professionRepository.GetByConditionId(expression);
-            if(profession == null)
+            if (profession == null)
             {
-                return new ApiErrorResult<Profession>("Không tìm thấy dữ liệu");
+                return new ApiErrorResult<ProfessionDto>("Không tìm thấy dữ liệu");
             }
-            return new ApiSuccessResult<Profession>(profession);
+            else
+            {
+                var result = new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionAbbreviation = profession.ProfessionAbbreviation,
+                    ProfessionFullName = profession.ProfessionFullName,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = profession.SemesterId.Value,
+                    }
+                };
+                return new ApiSuccessResult<ProfessionDto>(result);
+            }
         }
 
-        public async Task<ApiResult<Profession>> GetProfessionByName(string professionFullname, int semesterId)
+        public async Task<ApiResult<ProfessionDto>> GetProfessionByName(string professionFullname, int semesterId)
         {
             string normalizedFullName = professionFullname.ToUpper().Replace(" ", "");
             List<Expression<Func<Profession, bool>>> expression = new List<Expression<Func<Profession, bool>>>();
             expression.Add(e => e.SemesterId == semesterId);
-            expression.Add(e => EF.Functions.Like(e.ProfessionFullName.Replace(" ","").ToUpper(), normalizedFullName));
+            expression.Add(e => EF.Functions.Like(e.ProfessionFullName.Replace(" ", "").ToUpper(), normalizedFullName));
             expression.Add(e => e.DeletedAt == null);
             var profession = await _professionRepository.GetByConditionId(expression);
             if (profession == null)
             {
-                return new ApiErrorResult<Profession>("Không tìm thấy dữ liệu");
+                return new ApiErrorResult<ProfessionDto>("Không tìm thấy dữ liệu");
             }
-            return new ApiSuccessResult<Profession>(profession);
+            else
+            {
+                var result = new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionFullName = profession.ProfessionFullName,
+                };
+                return new ApiSuccessResult<ProfessionDto>(result);
+            }
         }
 
-        public async Task<ApiResult<Profession>> GetProfessionBySpecialty(int specialtyId)
+        public async Task<ApiResult<ProfessionDto>> GetProfessionBySpecialty(int specialtyId)
         {
             Expression<Func<Profession, bool>> professionExpression = s => s.Specialties.FirstOrDefault().SpecialtyId == specialtyId;
             var profession = await _professionRepository.GetById(professionExpression);
-            return new ApiSuccessResult<Profession>(profession);
+            var result = new ProfessionDto()
+            {
+                ProfessionID = profession.ProfessionId
+            };
+            return new ApiSuccessResult<ProfessionDto>(result);
         }
 
-        public async Task<ApiResult<List<Profession>>> GetProfessionsBySupervisorIdAndIsDevHead(string supervisorId, bool isDevHead)
+        public async Task<ApiResult<List<ProfessionDto>>> GetProfessionsBySupervisorIdAndIsDevHead(string supervisorId, bool isDevHead)
         {
             var currentSemester = await _semesterRepository.GetCurrentSemester();
             List<Expression<Func<SupervisorProfession, bool>>> expression = new List<Expression<Func<SupervisorProfession, bool>>>();
@@ -138,7 +193,21 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
             professionExpression.Add(p => p.SemesterId == currentSemester.SemesterID);
             professionExpression.Add(p => p.DeletedAt == null);
             var professions = await _professionRepository.GetByConditions(professionExpression);
-            return new ApiSuccessResult<List<Profession>>(professions);
+            var result = new List<ProfessionDto>();
+            foreach (var profession in professions)
+            {
+                result.Add(new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionAbbreviation = profession.ProfessionAbbreviation,
+                    ProfessionFullName = profession.ProfessionFullName,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = profession.SemesterId.Value,
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<ProfessionDto>>(result);
         }
 
         public async Task<ApiResult<bool>> RemoveProfession(int id)
@@ -168,7 +237,7 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
 
         public async Task<ApiResult<int>> UpdateProfessionV2(Profession profession)
         {
-            var professionResult = await _professionRepository.UpsertProfessionAsyncV2(profession.ProfessionId, profession.ProfessionAbbreviation, profession.ProfessionFullName, profession.Semester.SemesterId); 
+            var professionResult = await _professionRepository.UpsertProfessionAsyncV2(profession.ProfessionId, profession.ProfessionAbbreviation, profession.ProfessionFullName, profession.Semester.SemesterId);
             return new ApiSuccessResult<int>(professionResult);
         }
     }

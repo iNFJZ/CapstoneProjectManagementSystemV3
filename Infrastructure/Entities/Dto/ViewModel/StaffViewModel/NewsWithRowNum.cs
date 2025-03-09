@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.ViewModel.StaffViewModel
+namespace Infrastructure.Entities.Dto.ViewModel.StaffViewModel
 {
     public class NewsWithRowNum
     {

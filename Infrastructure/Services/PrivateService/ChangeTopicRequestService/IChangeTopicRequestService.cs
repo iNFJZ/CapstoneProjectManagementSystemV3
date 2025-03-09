@@ -12,15 +12,15 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
     public interface IChangeTopicRequestService
     {
         Task<ApiResult<bool>> AddChangeTopicRequest(ChangeTopicRequest changeTopicRequest);
-        Task<ApiResult<List<ChangeTopicRequest>>> GetChangeTopicRequestsByStudentId(string studentId, int semesterId);
-        Task<ApiResult<ChangeTopicRequest>> GetDetailChangeTopicRequestsByRequestId(int requestId);
-        Task<ApiResult<List<ChangeTopicRequest>>> GetChangeTopicRequestsBySearchText(string searchText, int status, int semesterId, int offsetNumber, int fetchNumber);
+        Task<ApiResult<List<ChangeTopicRequestDto>>> GetChangeTopicRequestsByStudentId(string studentId, int semesterId);
+        Task<ApiResult<ChangeTopicRequestDto>> GetDetailChangeTopicRequestsByRequestId(int requestId);
+        Task<ApiResult<List<ChangeTopicRequestDto>>> GetChangeTopicRequestsBySearchText(string searchText, int status, int semesterId, int offsetNumber, int fetchNumber);
         Task<ApiResult<bool>> UpdateStatusOfChangeTopicRequest(int changeTopicRequestId, int status, string staffComment);
-        Task<ApiResult<ChangeTopicRequest>> GetNewTopicByChangeTopicRequestId(int changeTopicRequestId);
-        Task<ApiResult<bool>> DeleteChangeTopicRequestsByFinalGroup(int finalGropId);
+        Task<ApiResult<ChangeTopicRequestDto>> GetNewTopicByChangeTopicRequestId(int changeTopicRequestId);
+        Task<ApiResult<bool>> DeleteChangeTopicRequestsByFinalGroup(int finalGroupId);
         Task<ApiResult<int>> CountRecordChangeTopicRequestsBySearchText(string searchText, int status, int semesterId);
 
-        Task<ApiResult<(int, int, List<ChangeTopicRequest>)>>GetChangeTopicRequestsBySupervisorEmail(string supervisorEmail, string searchText, int status, int semesterId, int offsetNumber, int fetchNumber, bool isDevHead, int[] professions, bool isConfirmationOfDevHeadNeeded, int[] statuses, string supervisorEmails);
+        Task<ApiResult<(int, int, List<ChangeTopicRequestDto>)>> GetChangeTopicRequestsBySupervisorEmail(string supervisorEmail, string searchText, int status, int semesterId, int offsetNumber, int fetchNumber, bool isDevHead, int[] professions, bool isConfirmationOfDevHeadNeeded, int[] statuses, string supervisorEmails);
 
         Task<ApiResult<bool>> UpdateChangeTopicRequestBySupervisor(bool isDevHead, bool isBeforeDeadline, bool isAccepted, int requestId, bool isConfirmationOfDevHeadNeeded, string userId, HttpRequest httpRequest);
 

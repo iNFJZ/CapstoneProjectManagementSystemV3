@@ -1,5 +1,4 @@
-﻿using Infrastructure.Entities.Dto.UserDto;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +14,6 @@ namespace Infrastructure.Entities
         public bool? IsVerifyEmail { get; set; }
         public string OneTimePassword { get; set; }
         public DateTime OtpRequestTime { get; set; }
-        public User User { get; set; }
+        public UserDto User { get; set; }
     }
 }

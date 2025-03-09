@@ -11,7 +11,6 @@ using Infrastructure.Repositories.SpecialtyRepository;
 using Infrastructure.Repositories.Supervisor_GroupIdeaReporitory;
 using Infrastructure.Repositories.SupervisorRepository;
 using Infrastructure.Services.PrivateService.SupervisorGroupIdeaService;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

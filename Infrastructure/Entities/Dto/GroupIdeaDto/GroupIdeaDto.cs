@@ -1,8 +1,4 @@
 ﻿using Infrastructure.Custom;
-using Infrastructure.Entities.Dto.RegisteredDto;
-using Infrastructure.Entities.Dto.SemesterDto;
-using Infrastructure.Entities.Dto.SpecialtyDto;
-using Infrastructure.Entities.Dto.StudentDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +17,7 @@ namespace Infrastructure.Entities
         public string ProjectTags { get; set; }
         public int NumberOfMember { get; set; }
         public int MaxMember { get; set; }
-        public int ProfessionId {  get; set; }
+        public int ProfessionId { get; set; }
         public int SpecialtyId { get; set; }
         public ProfessionDto Profession { get; set; }
         public SpecialtyDto Specialty { get; set; }

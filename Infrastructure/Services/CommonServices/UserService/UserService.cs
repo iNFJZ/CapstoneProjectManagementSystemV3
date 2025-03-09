@@ -1,11 +1,10 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
-using Infrastructure.Entities.Dto.UserDto;
+using Infrastructure.Entities.Dto.ViewModel.AdminViewModel;
 using Infrastructure.Repositories.StaffRepository;
 using Infrastructure.Repositories.SupervisorRepository;
 using Infrastructure.Repositories.UserRepository;
-using Infrastructure.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +19,8 @@ namespace Infrastructure.Services.CommonServices.UserService
         private readonly IUserRepository _userRepository;
         private readonly IStaffRepository _staffRepository;
         private readonly ISupervisorRepository _supervisorRepository;
-        public UserService(IUserRepository userRepository, 
-            IStaffRepository staffRepository, 
+        public UserService(IUserRepository userRepository,
+            IStaffRepository staffRepository,
             ISupervisorRepository supervisorRepository)
         {
             _userRepository = userRepository;
@@ -31,8 +30,8 @@ namespace Infrastructure.Services.CommonServices.UserService
 
         public async Task<ApiResult<bool>> AddUser(User user, int roleId, int professionId, int specId)
         {
-            var result =await _userRepository.AddUser(user,roleId,professionId,specId);
-            if(result == true)
+            var result = await _userRepository.AddUser(user, roleId, professionId, specId);
+            if (result == true)
             {
                 return new ApiSuccessResult<bool>(true);
             }
@@ -42,7 +41,7 @@ namespace Infrastructure.Services.CommonServices.UserService
         {
             Expression<Func<User, bool>> expression = x => x.UserId == userID;
             var findUser = await _userRepository.GetById(expression);
-            if(findUser == null)
+            if (findUser == null)
             {
                 return new ApiSuccessResult<bool>(false);
             }
@@ -59,8 +58,9 @@ namespace Infrastructure.Services.CommonServices.UserService
             return new ApiSuccessResult<bool>(false);
         }
 
-        public async Task<ApiResult<bool>> CheckReferenceDUserData(User user)
+        public async Task<ApiResult<bool>> CheckReferenceDUserData(UserDto user)
         {
+
             var result = await _userRepository.CheckReferenceDUserData(user);
             if (result == true)
             {
@@ -80,23 +80,23 @@ namespace Infrastructure.Services.CommonServices.UserService
             return new ApiSuccessResult<bool>(false);
         }
 
-        public async Task<ApiResult<bool>> CreateStaffForAdmin(User user)
+        public async Task<ApiResult<bool>> CreateStaffForAdmin(UserDto user)
         {
             try
             {
                 var newUser = new User
                 {
-                    UserId = user.UserId,
+                    UserId = user.UserID,
                     UserName = user.UserName,
                     FptEmail = user.FptEmail,
                     FullName = user.FullName,
                     Gender = user.Gender,
-                    RoleId = user.RoleId
+                    RoleId = user.RoleID
                 };
                 await _userRepository.CreateAsync(newUser);
                 var newStaff = new Staff
                 {
-                    StaffId = user.UserId
+                    StaffId = user.UserID
                 };
                 await _staffRepository.CreateAsync(newStaff);
                 return new ApiSuccessResult<bool>(true);
@@ -107,13 +107,13 @@ namespace Infrastructure.Services.CommonServices.UserService
             }
         }
 
-        public async Task<ApiResult<bool>> CreateSupervisorLeaderForAdmin(Supervisor supervisorleader)
+        public async Task<ApiResult<bool>> CreateSupervisorLeaderForAdmin(SupervisorDto supervisorleader)
         {
             try
             {
                 var newUser = new User
                 {
-                    UserId = supervisorleader.SupervisorId,
+                    UserId = supervisorleader.SupervisorID,
                     UserName = supervisorleader.SupervisorNavigation.UserName,
                     FptEmail = supervisorleader.SupervisorNavigation.FptEmail.Trim().ToLower(),
                     FullName = supervisorleader.SupervisorNavigation.FullName.Trim(),
@@ -123,38 +123,40 @@ namespace Infrastructure.Services.CommonServices.UserService
                 await _userRepository.CreateAsync(newUser);
                 var newSupervisor = new Supervisor
                 {
-                    SupervisorId = supervisorleader.SupervisorId,
+                    SupervisorId = supervisorleader.SupervisorID,
                     IsActive = supervisorleader.IsActive,
                     FieldSetting = supervisorleader.FieldSetting,
                     FeEduEmail = supervisorleader.FeEduEmail
                 };
                 await _supervisorRepository.CreateAsync(newSupervisor);
                 return new ApiSuccessResult<bool>(true);
-            }catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiErrorResult<bool>(ex.ToString());
             }
         }
 
-        public async Task<ApiResult<bool>> DeleteUser(User user) // chức năng chỉ dành cho staff và supervisor
+        public async Task<ApiResult<bool>> DeleteUser(UserDto user) // chức năng chỉ dành cho staff và supervisor
         {
-            try{
-                Expression<Func<User, bool>> expression = x => x.UserId == user.UserId;
+            try
+            {
+                Expression<Func<User, bool>> expression = x => x.UserId == user.UserID;
                 var findUser = await _userRepository.GetById(expression);
                 if (findUser != null)
                 {
                     findUser.DeletedAt = DateTime.Now;
                     await _userRepository.UpdateAsync(findUser);
-                    if (user.RoleId == 3)
+                    if (user.RoleID == 3)
                     {
-                        Expression<Func<Staff, bool>> expressionStaff = x => x.StaffId == user.UserId;
+                        Expression<Func<Staff, bool>> expressionStaff = x => x.StaffId == user.UserID;
                         var findStaff = await _staffRepository.GetById(expressionStaff);
                         findStaff.DeletedAt = DateTime.Now;
                         await _staffRepository.UpdateAsync(findStaff);
                     }
                     else
                     {
-                        Expression<Func<Supervisor, bool>> expressionSupervisor = x => x.SupervisorId == user.UserId;
+                        Expression<Func<Supervisor, bool>> expressionSupervisor = x => x.SupervisorId == user.UserID;
                         var findSupervisor = await _supervisorRepository.GetById(expressionSupervisor);
                         findSupervisor.DeletedAt = DateTime.Now;
                         await _supervisorRepository.UpdateAsync(findSupervisor);
@@ -162,7 +164,8 @@ namespace Infrastructure.Services.CommonServices.UserService
                     return new ApiSuccessResult<bool>(true);
                 }
                 return new ApiSuccessResult<bool>(false);
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return new ApiErrorResult<bool>(ex.ToString());
             }
@@ -207,7 +210,7 @@ namespace Infrastructure.Services.CommonServices.UserService
                         FptEmail = u.FptEmail,
                         FullName = u.FullName ?? "",
                         Created_At = u.CreatedAt,
-                        Role = new Role ()
+                        Role = new Role()
                         {
                             RoleId = u.RoleId.Value,
                             RoleName = u.Role.RoleName == "DevHead" ? "Department Leader" : u.Role.RoleName
@@ -251,43 +254,88 @@ namespace Infrastructure.Services.CommonServices.UserService
             return new ApiSuccessResult<string>(result);
         }
 
-        public async Task<ApiResult<User>> GetUserByFptEmail(string fptEmail, int roleLoginAs)
+        public async Task<ApiResult<UserDto>> GetUserByFptEmail(string fptEmail, int roleLoginAs)
         {
-            var result = await _userRepository.GetUserByFptEmailAsync(fptEmail,roleLoginAs);
-            return new ApiSuccessResult<User>(result);
+            var user = await _userRepository.GetUserByFptEmailAsync(fptEmail, roleLoginAs);
+            var result = new UserDto()
+            {
+                UserID = user.UserId,
+                UserName = user.UserName,
+                FptEmail = user.FptEmail,
+                Avatar = user.Avatar,
+                FullName = user.FullName,
+                Role = new RoleDto()
+                {
+                    Role_ID = user.RoleId.Value
+                }
+            };
+            return new ApiSuccessResult<UserDto>(result);
         }
 
-        public async Task<ApiResult<User>> GetUserByID(string userId)
+        public async Task<ApiResult<UserDto>> GetUserByID(string userId)
         {
             List<Expression<Func<User, bool>>> expressions = new List<Expression<Func<User, bool>>>();
             expressions.Add(e => e.UserId == userId);
             expressions.Add(e => e.DeletedAt == null);
             var findUser = await _userRepository.GetByConditionId(expressions);
-           
             if (findUser == null)
             {
-                return new ApiErrorResult<User>("Không tìm thấy đối tượng");
+                return new ApiErrorResult<UserDto>("Không tìm thấy đối tượng");
             }
-            return new ApiSuccessResult<User>(findUser);
+            else
+            {
+                var result = new UserDto()
+                {
+                    UserID = findUser.UserId,
+                    UserName = findUser.UserName,
+                    FptEmail = findUser.FptEmail,
+                    Avatar = findUser.Avatar,
+                    FullName = findUser.FullName,
+                    Role = new RoleDto()
+                    {
+                        Role_ID = findUser.RoleId.Value
+                    }
+                };
+                return new ApiSuccessResult<UserDto>(result);
+            }
         }
 
-        public async Task<ApiResult<List<User>>> GetUserByRoleID(int roleId)
+        public async Task<ApiResult<List<UserDto>>> GetUserByRoleID(int roleId)
         {
             List<Expression<Func<User, bool>>> expressions = new List<Expression<Func<User, bool>>>();
             expressions.Add(e => e.RoleId == roleId);
             expressions.Add(e => e.DeletedAt == null);
             var findUser = await _userRepository.GetByConditions(expressions);
-           
             if (findUser == null)
             {
-                return new ApiErrorResult<List<User>>("Không tìm thấy đối tượng");
+                return new ApiErrorResult<List<UserDto>>("Không tìm thấy đối tượng");
             }
-            return new ApiSuccessResult<List<User>>(findUser);
+            else
+            {
+                var result = new List<UserDto>();
+                foreach (var item in findUser)
+                {
+                    result.Add(new UserDto()
+                    {
+                        UserID = item.UserId,
+                        UserName = item.UserName,
+                        FptEmail = item.FptEmail,
+                        Avatar = item.Avatar,
+                        FullName = item.FullName,
+                        Role = new RoleDto()
+                        {
+                            Role_ID = item.RoleId.Value
+                        }
+                    });
+                }
+                return new ApiSuccessResult<List<UserDto>>(result);
+            }
         }
 
         public async Task<ApiResult<bool>> UpdateAvatar(string avatar, string userId)
         {
-            try{
+            try
+            {
                 Expression<Func<User, bool>> expression = x => x.UserId == userId;
                 var findUser = await _userRepository.GetById(expression);
                 if (findUser == null)
@@ -302,7 +350,7 @@ namespace Infrastructure.Services.CommonServices.UserService
             {
                 return new ApiSuccessResult<bool>(false);
             }
-            
+
         }
     }
 }

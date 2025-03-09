@@ -160,37 +160,84 @@ namespace Infrastructure.Services.CommonServices.SemesterService
             throw new NotImplementedException();
         }
 
-        public async Task<ApiResult<List<Semester>>> GetAllSemester()
+        public async Task<ApiResult<List<SemesterDto>>> GetAllSemester()
         {
-            var result = await _semesterRepository.GetByCondition(s => true);
-            result.OrderBy(s => s.SemesterId).ToList();
-            return new ApiSuccessResult<List<Semester>>(result);
+            var semesterList = await _semesterRepository.GetByCondition(s => true);
+            semesterList.OrderBy(s => s.SemesterId).ToList();
+            var result = new List<SemesterDto>();
+            foreach (var semester in semesterList)
+            {
+                result.Add(new SemesterDto()
+                {
+                    SemesterID = semester.SemesterId,
+                    SemesterName = semester.SemesterName,
+                    SemesterCode = semester.SemesterCode,
+                    StartTime = semester.StartTime,
+                    EndTime = semester.EndTime
+                });
+            }
+            return new ApiSuccessResult<List<SemesterDto>>(result);
         }
 
-        public async Task<ApiResult<Semester>> GetCurrentSemester()
+        public async Task<ApiResult<SemesterDto>> GetCurrentSemester()
         {
-            var result = await _semesterRepository.GetById(s => s.StatusCloseBit == true && s.DeletedAt == null);
-            return new ApiSuccessResult<Semester>(result);
+            var semester = await _semesterRepository.GetById(s => s.StatusCloseBit == true && s.DeletedAt == null);
+            var result = new SemesterDto()
+            {
+                SemesterID = semester.SemesterId,
+                SemesterName = semester.SemesterName,
+                SemesterCode = semester.SemesterCode,
+                StartTime = semester.StartTime,
+                EndTime = semester.EndTime,
+                ShowGroupName = semester.ShowGroupName,
+                DeadlineChangeIdea = semester.DeadlineChangeIdea,
+                DeadlineRegisterGroup = semester.DeadlineRegisterGroup,
+                IsConfirmationOfDevHeadNeeded = semester.IsConfirmationOfDevHeadNeeded,
+                SubjectMailTemplate = semester.SubjectMailTemplate,
+                BodyMailTemplate = semester.BodyMailTemplate
+            };
+            return new ApiSuccessResult<SemesterDto>(result);
         }
 
-        public async Task<ApiResult<Semester>> GetLastSemester()
+        public async Task<ApiResult<SemesterDto>> GetLastSemester()
         {
-            var result = await _semesterRepository.GetByCondition(s => s.StatusCloseBit == true && s.DeletedAt == null);
-            var lastSemester = result.OrderBy(s => s.SemesterId).FirstOrDefault();
-            return new ApiSuccessResult<Semester>(lastSemester);
+            var semesterList = await _semesterRepository.GetByCondition(s => s.StatusCloseBit == true && s.DeletedAt == null);
+            var lastSemester = semesterList.OrderBy(s => s.SemesterId).FirstOrDefault();
+            var result = new SemesterDto()
+            {
+                SemesterID = lastSemester.SemesterId,
+                SemesterName = lastSemester.SemesterName,
+                SemesterCode = lastSemester.SemesterCode,
+                StartTime = lastSemester.StartTime,
+                EndTime = lastSemester.EndTime
+            };
+            return new ApiSuccessResult<SemesterDto>(result);
         }
 
-        public async Task<ApiResult<Semester>> GetLastSemesterDeleteAt()
+        public async Task<ApiResult<SemesterDto>> GetLastSemesterDeleteAt()
         {
-            var result = await _semesterRepository.GetByCondition(s => s.DeletedAt != null);
-            var lastSemester = result.OrderBy(s => s.SemesterId).FirstOrDefault();
-            return new ApiSuccessResult<Semester>(lastSemester);
+            var semesterDeleteList = await _semesterRepository.GetByCondition(s => s.DeletedAt != null);
+            var lastSemester = semesterDeleteList.OrderBy(s => s.SemesterId).FirstOrDefault();
+            var result = new SemesterDto()
+            {
+                SubjectMailTemplate = lastSemester.SubjectMailTemplate,
+                BodyMailTemplate = lastSemester.BodyMailTemplate
+            };
+            return new ApiSuccessResult<SemesterDto>(result);
         }
 
-        public async Task<ApiResult<Semester>> GetSemesterById(int semesterId)
+        public async Task<ApiResult<SemesterDto>> GetSemesterById(int semesterId)
         {
-            var result = await _semesterRepository.GetById(s => s.SemesterId == semesterId);
-            return new ApiSuccessResult<Semester>(result);
+            var semester = await _semesterRepository.GetById(s => s.SemesterId == semesterId);
+            var result = new SemesterDto()
+            {
+                SemesterID = semester.SemesterId,
+                SemesterName = semester.SemesterName,
+                SemesterCode = semester.SemesterCode,
+                StartTime = semester.StartTime,
+                EndTime = semester.EndTime
+            };
+            return new ApiSuccessResult<SemesterDto>(result);
         }
 
         public async Task<ApiResult<bool>> UpdateCurrentSemester(Semester semester)

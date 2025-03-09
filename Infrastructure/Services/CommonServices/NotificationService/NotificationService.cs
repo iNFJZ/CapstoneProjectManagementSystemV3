@@ -45,32 +45,56 @@ namespace Infrastructure.Services.CommonServices.NotificationService
         {
             Expression<Func<Notification, bool>> expression = x => x.NotificationId == notificationId;
             var result = await _notificationRepository.GetById(expression);
-            if(result == null)
+            if (result == null)
             {
                 return new ApiErrorResult<string>("Không tìm thấy liên kết");
             }
             return new ApiSuccessResult<string>(result.AttachedLink);
         }
 
-        public async Task<ApiResult<List<Notification>>> GetListAllNotificationByUserId(int numberOfRecord, string userId)
+        public async Task<ApiResult<List<NotificationDto>>> GetListAllNotificationByUserId(int numberOfRecord, string userId)
         {
             List<Expression<Func<Notification, bool>>> expressions = new List<Expression<Func<Notification, bool>>>();
             expressions.Add(x => x.UserId == userId);
             expressions.Add(x => x.DeletedAt == null);
-            var result = await _notificationRepository.GetByConditions(expressions);
-            return new ApiSuccessResult<List<Notification>>(result);
+            var notificationList = await _notificationRepository.GetByConditions(expressions);
+            var result = new List<NotificationDto>();
+            foreach (var notification in notificationList)
+            {
+                result.Add(new NotificationDto
+                {
+                    NotificationID = notification.NotificationId,
+                    Readed = notification.Readed,
+                    NotificationContent = notification.NotificationContent,
+                    AttachedLink = notification.AttachedLink,
+                    CreatedAt = notification.CreatedAt
+                });
+            }
+            return new ApiSuccessResult<List<NotificationDto>>(result);
         }
 
-        public async Task<ApiResult<List<Notification>>> GetListNotificationNotReadByReceiverID(int numberOfRecord, string userId)
+        public async Task<ApiResult<List<NotificationDto>>> GetListNotificationNotReadByReceiverID(int numberOfRecord, string userId)
         {
             List<Expression<Func<Notification, bool>>> expressions = new List<Expression<Func<Notification, bool>>>();
             expressions.Add(x => x.UserId == userId);
             expressions.Add(x => x.DeletedAt == null);
             expressions.Add(x => x.Readed == false);
-            var result = await _notificationRepository.GetByConditions(expressions);
-            result.Take(numberOfRecord);
-            result.OrderBy(x => x.CreatedAt);
-            return new ApiSuccessResult<List<Notification>>(result);
+            var unReadNotificationList = await _notificationRepository.GetByConditions(expressions);
+            unReadNotificationList.Take(numberOfRecord);
+            unReadNotificationList.OrderBy(x => x.CreatedAt);
+            var result = new List<NotificationDto>();
+            foreach (var notification in unReadNotificationList)
+            {
+                result.Add(new NotificationDto()
+                {
+                    NotificationID = notification.NotificationId,
+                    Readed = notification.Readed,
+                    NotificationContent = notification.NotificationContent,
+                    AttachedLink = notification.AttachedLink,
+                    CreatedAt = notification.CreatedAt
+                });
+            }
+            return new ApiSuccessResult<List<NotificationDto>>(result);
         }
 
         public async Task<ApiResult<bool>> InsertDataNotification(string userId, string notificationContent, string attachedLink)
@@ -97,7 +121,7 @@ namespace Infrastructure.Services.CommonServices.NotificationService
             result.Readed = true;
             await _notificationRepository.UpdateAsync(result);
             return new ApiSuccessResult<bool>(true);
-            
+
         }
     }
 }

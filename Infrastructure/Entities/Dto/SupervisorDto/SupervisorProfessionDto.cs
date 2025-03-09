@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities.Dto.SupervisorDto
+namespace Infrastructure.Entities
 {
-    public class SupervisorProfessionDto
+    public class SupervisorProfessionDto : CommonProperty
     {
-        public Supervisor Supervisor { get; set; }
+        public SupervisorDto Supervisor { get; set; }
 
-        public Profession Profession { get; set; }
+        public ProfessionDto Profession { get; set; }
 
         public bool IsDevHead { get; set; }
 

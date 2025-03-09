@@ -1,8 +1,7 @@
 ﻿using DocumentFormat.OpenXml.InkML;
 using Infrastructure.Entities;
 using Infrastructure.Entities.DBContext;
-using Infrastructure.Entities.Dto.RoleDto;
-using Infrastructure.ViewModel;
+using Infrastructure.Entities.Dto.ViewModel.AdminViewModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -102,32 +101,32 @@ namespace Infrastructure.Repositories.UserRepository
                             x.s.DeletedAt == null)
                 .AnyAsync(); // Trả về `true` nếu có bản ghi phù hợp, `false` nếu không có
         }
-        public async Task<bool> CheckReferenceDUserData(User user)
+        public async Task<bool> CheckReferenceDUserData(UserDto user)
         {
-            if (user.Role.RoleId == 3)
+            if (user.Role.Role_ID == 3)
             {
                 // Kiểm tra số lượng bản ghi trong bảng News với Staff_ID
                 return await _dbContext.News
-                    .Where(n => n.StaffId == user.UserId)
+                    .Where(n => n.StaffId == user.UserID)
                     .AnyAsync();
             }
             else
             {
                 // Kiểm tra số lượng bản ghi trong nhiều bảng với Supervisor_ID
                 var hasFinalGroups = await _dbContext.FinalGroups
-                    .Where(fg => fg.SupervisorId == user.UserId)
+                    .Where(fg => fg.SupervisorId == user.UserID)
                 .AnyAsync();
 
                 var hasSupervisorProfessions = await _dbContext.SupervisorProfessions
-                    .Where(sp => sp.SupervisorId == user.UserId)
+                    .Where(sp => sp.SupervisorId == user.UserID)
                 .AnyAsync();
 
                 var hasRegisteredGroups = await _dbContext.RegisterdGroupSupervisors
-                    .Where(rg => rg.SupervisorId == user.UserId)
+                    .Where(rg => rg.SupervisorId == user.UserID)
                 .AnyAsync();
 
                 var hasGroupIdeas = await _dbContext.GroupIdeasOfSupervisors
-                    .Where(gi => gi.SupervisorId == user.UserId)
+                    .Where(gi => gi.SupervisorId == user.UserID)
                     .AnyAsync();
 
                 // Trả về true nếu bất kỳ bảng nào có dữ liệu

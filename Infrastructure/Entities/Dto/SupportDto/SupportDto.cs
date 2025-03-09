@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities.Dto.SupportDto
+namespace Infrastructure.Entities
 {
     public class SupportDto : CommonProperty
     {
@@ -20,6 +20,6 @@ namespace Infrastructure.Entities.Dto.SupportDto
                                          //1: processed
         public string Reply { get; set; }
         public DateTime? Reply_At { get; set; }
-        public Student Student { get; set; }
+        public StudentDto Student { get; set; }
     }
 }

@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities.Dto.StaffDto
+namespace Infrastructure.Entities
 {
     public class StaffDto : CommonProperty
     {
         public string StaffID { get; set; }
-        public User User { get; set; }
-        public IList<UserGuide> UserGuides { get; set; }
-        public IList<News> News { get; set; }
-        public IList<Support> Supports { get; set; }
-        public IList<ChangeTopicRequest> ChangeTopicRequests { get; set; }
+        public UserDto User { get; set; }
+        public IList<UserGuideDto> UserGuides { get; set; }
+        public IList<NewsDto> News { get; set; }
+        public IList<SupportDto> Supports { get; set; }
+        public IList<ChangeTopicRequestDto> ChangeTopicRequests { get; set; }
     }
 }

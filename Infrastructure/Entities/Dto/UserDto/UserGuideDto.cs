@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities.Dto.UserDto
+namespace Infrastructure.Entities
 {
     public class UserGuideDto : CommonProperty
     {
         public int UserGuideID { get; set; }
         public string UserGuideLink { get; set; }
-        public Staff Staff { get; set; }
+        public StaffDto Staff { get; set; }
     }
 }

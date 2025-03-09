@@ -2,8 +2,8 @@
 using Infrastructure.Custom;
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
+using Infrastructure.Entities.Dto.ViewModel.StaffViewModel;
 using Infrastructure.Repositories.NewsRepository;
-using Infrastructure.ViewModel.StaffViewModel;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -37,13 +37,13 @@ namespace Infrastructure.Services.PrivateService.NewsService
                 AttachedFile = news.AttachedFile,
                 FileName = news.FileName,
             };
-             await _newsRepository.CreateAsync(newNews);
+            await _newsRepository.CreateAsync(newNews);
             return new ApiSuccessResult<int>(newNews.NewsId);
         }
 
         public async Task<ApiResult<bool>> DeleteNews(int id)
         {
-            List<Expression<Func<News , bool>>> expressions = new List<Expression<Func<News , bool>>>();
+            List<Expression<Func<News, bool>>> expressions = new List<Expression<Func<News, bool>>>();
             expressions.Add(n => n.NewsId == id);
             expressions.Add(n => n.DeletedAt == null);
             var result = await _newsRepository.GetByConditionId(expressions);
@@ -98,43 +98,92 @@ namespace Infrastructure.Services.PrivateService.NewsService
             return new ApiSuccessResult<(int, int, List<NewsWithRowNum>)>((totalPages, totalRecords, listnews));
         }
 
-        public async Task<ApiResult<List<News>>> getNews(int semesterID)
+        public async Task<ApiResult<List<NewsDto>>> getNews(int semesterID)
         {
             List<Expression<Func<News, bool>>> expressions = new List<Expression<Func<News, bool>>>();
             expressions.Add(n => n.SemesterId == semesterID);
             expressions.Add(n => n.DeletedAt == null);
-            var result = await _newsRepository.GetByConditions(expressions);
-            return new ApiSuccessResult<List<News>>(result);
+            var newsList = await _newsRepository.GetByConditions(expressions);
+            var result = new List<NewsDto>();
+            foreach (var news in newsList)
+            {
+                result.Add(new NewsDto()
+                {
+                    NewID = news.NewsId,
+                    Title = news.Title,
+                    Content = news.Content,
+                    Pin = news.Pin.Value,
+                    TypeSupport = news.TypeSupport.Value,
+                    CreatedAt = news.CreatedAt,
+                    Staff = new StaffDto() { StaffID = news.StaffId }
+                });
+            }
+            return new ApiSuccessResult<List<NewsDto>>(result);
         }
 
-        public async Task<ApiResult<News>> getNewsById(int id)
+        public async Task<ApiResult<NewsDto>> getNewsById(int id)
         {
             List<Expression<Func<News, bool>>> expressions = new List<Expression<Func<News, bool>>>();
             expressions.Add(n => n.NewsId == id);
             expressions.Add(n => n.DeletedAt == null);
-            var result = await _newsRepository.GetByConditionId(expressions);
-            return new ApiSuccessResult<News>(result);
+            var news = await _newsRepository.GetByConditionId(expressions);
+            var result = new NewsDto()
+            {
+                NewID = news.NewsId,
+                Title = news.Title,
+                Content = news.Content,
+                CreatedAt = news.CreatedAt,
+                //AttachedFile = news.AttachedFile,
+                FileName = news.FileName
+            };
+            return new ApiSuccessResult<NewsDto>(result);
         }
 
-        public async Task<ApiResult<News>> getNewsPin(int semesterID)
+        public async Task<ApiResult<NewsDto>> getNewsPin(int semesterID)
         {
             List<Expression<Func<News, bool>>> expressions = new List<Expression<Func<News, bool>>>();
             expressions.Add(n => n.SemesterId == semesterID);
             expressions.Add(n => n.TypeSupport == false);
             expressions.Add(n => n.Pin == true);
             expressions.Add(n => n.DeletedAt == null);
-            var result = await _newsRepository.GetByConditionId(expressions);
-            return new ApiSuccessResult<News>(result);
+            var news = await _newsRepository.GetByConditionId(expressions);
+            var result = new NewsDto()
+            {
+                NewID = news.NewsId,
+                Title = news.Title,
+                Content = news.Content,
+                CreatedAt = news.CreatedAt
+            };
+            return new ApiSuccessResult<NewsDto>(result);
         }
 
-        public async Task<ApiResult<List<News>>> getNewsWithTypeSupport(int semesterID)
+        public async Task<ApiResult<List<NewsDto>>> getNewsWithTypeSupport(int semesterID)
         {
             List<Expression<Func<News, bool>>> expressions = new List<Expression<Func<News, bool>>>();
             expressions.Add(n => n.SemesterId == semesterID);
             expressions.Add(n => n.TypeSupport == false);
             expressions.Add(n => n.DeletedAt == null);
-            var result = await _newsRepository.GetByConditions(expressions);
-            return new ApiSuccessResult<List<News>>(result);
+            var newsList = await _newsRepository.GetByConditions(expressions);
+            var result = new List<NewsDto>();
+            foreach (var news in newsList)
+            {
+                result.Add(new NewsDto()
+                {
+                    NewID = news.NewsId,
+                    Title = news.Title,
+                    Content = news.Content,
+                    Pin = news.Pin.Value,
+                    TypeSupport = news.TypeSupport.Value,
+                    CreatedAt = news.CreatedAt,
+                    Staff = new StaffDto()
+                    {
+                        StaffID = news.StaffId,
+                    },
+                    //AttachedFile = news.AttachedFile,
+                    FileName = news.FileName,
+                });
+            };
+            return new ApiSuccessResult<List<NewsDto>>(result);
         }
 
         public async Task<ApiResult<bool>> UpdateNews(int id, string Title, string Content, IFormFile file, string exsistedFileName)
@@ -143,7 +192,7 @@ namespace Infrastructure.Services.PrivateService.NewsService
             expressions.Add(n => n.NewsId == id);
             expressions.Add(n => n.DeletedAt == null);
             News result = await _newsRepository.GetByConditionId(expressions);
-            
+
             result.Title = Title;
             result.Content = Content;
             result.UpdatedAt = DateTime.Now;

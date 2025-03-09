@@ -1,6 +1,4 @@
-﻿using Infrastructure.Entities.Dto.RegisteredDto;
-using Infrastructure.Entities.Dto.SemesterDto;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +20,8 @@ namespace Infrastructure.Entities
         public bool? IsActive { get; set; }
 
         public SupervisorDto Supervisor { get; set; }
+        public ProfessionDto Profession { get; set; }
+        public SpecialtyDto Specialty { get; set; }
 
         public IList<GroupIdeaOfSupervisorProfessionDto> GroupIdeaOfSupervisorProfessions { get; set; }
 

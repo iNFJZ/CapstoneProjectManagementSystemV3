@@ -5,6 +5,12 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Entities\Dto\ViewModel\**" />
+	  <EmbeddedResource Remove="Entities\Dto\ViewModel\**" />
+	  <None Remove="Entities\Dto\ViewModel\**" />
+	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="AutoMapper" Version="13.0.1" />
 		<PackageReference Include="ClosedXML" Version="0.104.2" />

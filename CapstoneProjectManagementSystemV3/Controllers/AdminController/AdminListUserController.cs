@@ -1,9 +1,9 @@
 ﻿using Infrastructure.Entities.Common.ApiResult;
+using Infrastructure.Entities.Dto.ViewModel.AdminViewModel;
 using Infrastructure.Services.CommonServices.DataRetrievalService;
 using Infrastructure.Services.CommonServices.UserService;
 using Infrastructure.Services.PrivateService.RoleService;
 using Infrastructure.Services.PrivateService.SupervisorService;
-using Infrastructure.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
