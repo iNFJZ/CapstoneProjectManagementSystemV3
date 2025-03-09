@@ -48,7 +48,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             _logger = logger;
         }
 
-        [HttpGet("ViewListIdeasSupervisor")]
+        [HttpGet("/ViewListIdeasSupervisor")]
         public async Task<IActionResult> ViewListIdeasSupervisor(int page)
         {
             try
@@ -86,7 +86,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 return StatusCode(500, new { message = "An error occurred while processing your request.", error = ex.Message });
             }
         }
-        [HttpGet("detailIdeaSupervisor/{id}")]
+        [HttpGet("/detailIdeaSupervisor/{id}")]
         public async Task<ActionResult> GetDetailIdeaSupervisor(int id)
         {
             try
@@ -102,7 +102,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 }
 
                 // Lấy chi tiết nhóm ý tưởng supervisor
-                GroupIdeasOfSupervisor groupIdeaDetail = (await _supervisorGroupIdeaService.GetGroupIdeaOfSupervisorByGroupIdeaId(id)).ResultObj;
+                GroupIdeaOfSupervisorDto groupIdeaDetail = (await _supervisorGroupIdeaService.GetGroupIdeaOfSupervisorByGroupIdeaId(id)).ResultObj;
                 if (groupIdeaDetail == null)
                 {
                     _logger.LogWarning($"Group Idea with ID {id} not found.");
@@ -110,7 +110,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 }
 
                 // Lấy danh sách chuyên ngành của nhóm ý tưởng
-                List<GroupIdeaOfSupervisorProfession> listProSpe =(await _supervisorGroupIdeaService.getAllProfessionSpecialyByGroupIdeaID(id)).ResultObj;
+                List<GroupIdeaOfSupervisorProfessionDto> listProSpe = (await _supervisorGroupIdeaService.getAllProfessionSpecialyByGroupIdeaID(id)).ResultObj;
 
                 var result = new
                 {

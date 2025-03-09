@@ -1,4 +1,4 @@
-﻿using Infrastructure.Entities.Dto.RegisteredDto;
+﻿
 using Infrastructure.Services.CommonServices.FinalGroupService;
 using Infrastructure.Services.CommonServices.GroupIdeaService;
 using Infrastructure.Services.CommonServices.NotificationService;
@@ -50,22 +50,22 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
         private readonly IProfessionService _professionService;
         private readonly ILogger<DevHeadManageRegisterGroupRequestController> _logger;
         private readonly ISupervisorGroupIdeaService _supervisorGroupIdeaService;
-        public DevHeadManageRegisterGroupRequestController(IRegisteredService registeredGroupService, 
-            ISemesterService semesterService, 
-            IGroupIdeaService groupIdeaService, 
-            IUserService userService, 
-            IStudentService studentService, 
-            ISupervisorService supervisorService, 
-            IStudentGroupIdeaService studentGroupIdeaService, 
-            ISpecialtyService specialtyService, 
-            IFinalGroupService finalGroupService, 
-            IStudentFavoriteGroupIdeaService studentFavoriteGroupIdeaService, 
-            IMailService mailService, INotificationService notificationService, 
-            RealTimeHub realTimeHub, IStaffService staffService, 
-            IDataRetrievalService dataRetrievalService, 
-            IConfigurationService configurationService, 
-            IProfessionService professionService, 
-            ILogger<DevHeadManageRegisterGroupRequestController> logger, 
+        public DevHeadManageRegisterGroupRequestController(IRegisteredService registeredGroupService,
+            ISemesterService semesterService,
+            IGroupIdeaService groupIdeaService,
+            IUserService userService,
+            IStudentService studentService,
+            ISupervisorService supervisorService,
+            IStudentGroupIdeaService studentGroupIdeaService,
+            ISpecialtyService specialtyService,
+            IFinalGroupService finalGroupService,
+            IStudentFavoriteGroupIdeaService studentFavoriteGroupIdeaService,
+            IMailService mailService, INotificationService notificationService,
+            RealTimeHub realTimeHub, IStaffService staffService,
+            IDataRetrievalService dataRetrievalService,
+            IConfigurationService configurationService,
+            IProfessionService professionService,
+            ILogger<DevHeadManageRegisterGroupRequestController> logger,
             ISupervisorGroupIdeaService supervisorGroupIdeaService)
         {
             _registeredGroupService = registeredGroupService;
@@ -89,25 +89,25 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             _supervisorGroupIdeaService = supervisorGroupIdeaService;
         }
         [HttpGet("Index")]
-        public async Task<IActionResult> Index(string supervisorEmails = "", int page = 1, int fetchRow = 5,string professions = "", int filterIsAssigned = -1)
+        public async Task<IActionResult> Index(string supervisorEmails = "", int page = 1, int fetchRow = 5, string professions = "", int filterIsAssigned = -1)
         {
             try
             {
                 _logger.LogInformation("View manage register group request page");
 
-                Semester currentSemester =(await _semesterService.GetCurrentSemester()).ResultObj;
+                SemesterDto currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj;
                 bool isBeforeDeadline = DateTime.Now.Date <= currentSemester.DeadlineRegisterGroup;
-                User user = _dataRetrievalService.GetData<User>("sessionAccount");
+                UserDto user = _dataRetrievalService.GetData<UserDto>("sessionAccount");
 
                 List<RegisteredGroupRequest> registeredGroupRequests;
                 int totalPage = 0;
                 int currentPage = 0;
                 int[] professionsIds;
 
-                List<Profession> devheadProfessions =(await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj;
+                List<ProfessionDto> devheadProfessions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserID, true)).ResultObj;
                 if (string.IsNullOrEmpty(professions))
                 {
-                    professionsIds = devheadProfessions.Select(p => p.ProfessionId).ToArray();
+                    professionsIds = devheadProfessions.Select(p => p.ProfessionID).ToArray();
                 }
                 else
                 {
@@ -127,7 +127,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                     TotalPage = totalPage,
                     CurrentPage = currentPage + 1,
                     RegisteredGroupRequests = registeredGroupRequests,
-                    UserID = user.UserId,
+                    UserID = user.UserID,
                     ProfessionIds = professionsIds,
                     DevheadProfessions = devheadProfessions,
                     FilterIsAssigned = filterIsAssigned
@@ -142,19 +142,19 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             }
         }
         [HttpGet("GetRegisterGroupRequests")]
-        public async Task<IActionResult> GetRegisterGroupRequests(string supervisorEmails = "",int page = 1,int fetchRow = 5,string professions = "",int filterIsAssigned = -1)
+        public async Task<IActionResult> GetRegisterGroupRequests(string supervisorEmails = "", int page = 1, int fetchRow = 5, string professions = "", int filterIsAssigned = -1)
         {
             try
             {
                 _logger.LogInformation("Get register group request");
 
-                Semester currentSemester =(await _semesterService.GetCurrentSemester()).ResultObj;
+                SemesterDto currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj;
                 User user = _dataRetrievalService.GetData<User>("sessionAccount");
 
                 int[] professionsIds;
                 if (string.IsNullOrEmpty(professions))
                 {
-                    professionsIds = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj.Select(p => p.ProfessionId).ToArray();
+                    professionsIds = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj.Select(p => p.ProfessionID).ToArray();
                 }
                 else
                 {
@@ -201,7 +201,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 _logger.LogInformation("Get assigned group");
 
                 User user = _dataRetrievalService.GetData<User>("sessionAccount");
-                List<Profession> devheadProfessions =(await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj;
+                List<ProfessionDto> devheadProfessions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj;
 
                 if (devheadProfessions.Count == 0)
                 {
@@ -209,7 +209,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 }
 
                 var result = _registeredGroupService.GetAssignedGroup(
-                    supervisorEmails, devheadProfessions.Select(p => p.ProfessionId).ToArray());
+                    supervisorEmails, devheadProfessions.Select(p => p.ProfessionID).ToArray());
 
                 return Ok(result);
             }
@@ -219,75 +219,83 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 return StatusCode(500, new { error = "Internal Server Error", message = "An unexpected error occurred." });
             }
         }
-        [HttpGet("GetDetailRequestRegisterGroup")]
-        public async Task<IActionResult> GetDetailRequestRegisterGroup([FromQuery] int registeredGroupId)
-        {
-            try
-            {
-                _logger.LogInformation("Get detail of request register group");
+        //Sửa lại dto 
+        //[HttpGet("GetDetailRequestRegisterGroup")]
+        //public async Task<IActionResult> GetDetailRequestRegisterGroup([FromQuery] int registeredGroupId)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Get detail of request register group");
 
-                RegisteredGroup registeredGroup = (await _registeredGroupService.GetGroupIDByRegisteredGroupId(registeredGroupId)).ResultObj;
-                var result =(await _registeredGroupService.GetRegisteredGroupRequest(registeredGroupId)).ResultObj;
-                GroupIdea groupIdea = (await _groupIdeaService.GetGroupIdeaById(Convert.ToInt32(registeredGroup.GroupIdea.GroupIdeaId))).ResultObj;
-                List<Student> ungroupedStudents = new List<Student>();
-                int semesterId =(await _semesterService.GetCurrentSemester()).ResultObj.SemesterId;
+        //        RegisteredGroupDto registeredGroup = (await _registeredGroupService.GetGroupIDByRegisteredGroupId(registeredGroupId)).ResultObj;
+        //        var result =(await _registeredGroupService.GetRegisteredGroupRequest(registeredGroupId)).ResultObj;
+        //        GroupIdeaDto groupIdea = (await _groupIdeaService.GetGroupIdeaById(Convert.ToInt32(registeredGroup.GroupIdea.GroupIdeaId))).ResultObj;
+        //        List<StudentDto> ungroupedStudents = new List<StudentDto>();
+        //        int semesterId =(await _semesterService.GetCurrentSemester()).ResultObj.SemesterID;
 
-                if (groupIdea != null && groupIdea.Semester.SemesterId == semesterId)
-                {
-                    List<With> withSpecs =(await _configurationService.GetWithsBySpecialtyID(groupIdea.Specialty.SpecialtyId)).ResultObj;
-                    int[] specialtyIds = (int[])withSpecs.Select(w => w.Specialty.SpecialtyId);
-                    ungroupedStudents =(await _studentService.GetListUngroupedStudentsBySpecialityIdAndSemesterId(semesterId, specialtyIds)).ResultObj;
+        //        if (groupIdea != null && groupIdea.Semester.SemesterID == semesterId)
+        //        {
+        //            List<WithDto> withSpecs =(await _configurationService.GetWithsBySpecialtyID(groupIdea.Specialty.SpecialtyID)).ResultObj;
+        //            int[] specialtyIds = (int[])withSpecs.Select(w => w.Specialty.SpecialtyID);
+        //            ungroupedStudents = (await _studentService.GetListUngroupedStudentsBySpecialityIdAndSemesterId(semesterId, specialtyIds)).ResultObj;
 
-                    // Send group details
-                    User leader =(await _userService.GetUserByID((await _studentGroupIdeaService.GetLeaderIdByGroupIdeaId(groupIdea.GroupIdeaId)).ResultObj)).ResultObj;
-                    result.Leader = leader;
-                    List<User> memberList = new List<User>();
-                    List<string> memberIdList =(await _studentGroupIdeaService.GetMemberIdByGroupIdeaId(groupIdea.GroupIdeaId)).ResultObj;
-                    if (memberIdList != null)
-                    {
-                        foreach (string mId in memberIdList)
-                        {
-                            memberList.Add((await _userService.GetUserByID(mId)).ResultObj);
-                        }
-                    }
-                    result.Members = memberList;
-                    int numberOfMember = leader != null ? 1 : 0;
-                    numberOfMember += memberList.Count;
-                    result.NumberOfMember = numberOfMember;
-                }
+        //            // Send group details
+        //            UserDto leader =(await _userService.GetUserByID((await _studentGroupIdeaService.GetLeaderIdByGroupIdeaId(groupIdea.GroupIdeaID)).ResultObj)).ResultObj;
+        //            result.Leader = leader;
+        //            List<UserDto> memberList = new List<UserDto>();
+        //            List<string> memberIdList =(await _studentGroupIdeaService.GetMemberIdByGroupIdeaId(groupIdea.GroupIdeaID)).ResultObj;
+        //            if (memberIdList != null)
+        //            {
+        //                foreach (string mId in memberIdList)
+        //                {
+        //                    memberList.Add((await _userService.GetUserByID(mId)).ResultObj);
+        //                }
+        //            }
+        //            result.Members = memberList;
+        //            int numberOfMember = leader != null ? 1 : 0;
+        //            numberOfMember += memberList.Count;
+        //            result.NumberOfMember = numberOfMember;
+        //        }
 
-                return Ok(new { request = result, students = ungroupedStudents });
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, "Get detail of request register group error");
-                return StatusCode(500, new { error = "Internal Server Error", message = exception.Message });
-            }
-        }
-
+        //        return Ok(new { request = result, students = ungroupedStudents });
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        _logger.LogError(exception, "Get detail of request register group error");
+        //        return StatusCode(500, new { error = "Internal Server Error", message = exception.Message });
+        //    }
+        //}
+        //Chưa sửa xong 
         // POST: api/DevHeadManageRegisterGroupRequest/GetSupervisorsForAssigning
-        [HttpPost("GetSupervisorsForAssigning")]
-        public async Task<IActionResult> GetSupervisorsForAssigning([FromBody] int registeredGroupId)
-        {
-            try
-            {
-                _logger.LogInformation("Get supervisors for assigning");
+        //[HttpPost("GetSupervisorsForAssigning")]
+        //public async Task<IActionResult> GetSupervisorsForAssigning([FromBody] int registeredGroupId)
+        //{
+        //    try
+        //    {
+        //        _logger.LogInformation("Get supervisors for assigning");
 
-                RegisteredGroupRequest request =(await _registeredGroupService.GetRegisteredGroupRequest(registeredGroupId)).ResultObj;
-                User user = _dataRetrievalService.GetData<User>("sessionAccount");
-                var result = _registeredGroupService.GetRegisteredGroupRequest(registeredGroupId);
-                List<Profession> devheadProfessions =(await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj;
-                GroupIdea groupIdea =(await _groupIdeaService.GetGroupIdeaById(Convert.ToInt32(request.GroupIdea.GroupIdeaId))).ResultObj;
-                List<SupervisorForAssigning> supervisors = devheadProfessions.Count == 0 || groupIdea == null ? new List<SupervisorForAssigning>() : (await _supervisorService.GetSupervisorsForAssigning(devheadProfessions.Select(p => p.ProfessionId).ToArray(), groupIdea.Profession.ProfessionId, registeredGroupId)).ResultObj;
+        //        RegisteredGroupRequest request =(await _registeredGroupService.GetRegisteredGroupRequest(registeredGroupId)).ResultObj;
+        //        User user = _dataRetrievalService.GetData<User>("sessionAccount");
+        //        var result = _registeredGroupService.GetRegisteredGroupRequest(registeredGroupId);
+        //        List<Profession> devheadProfessions =(await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(user.UserId, true)).ResultObj;
+        //        GroupIdea groupIdea =(await _groupIdeaService.GetGroupIdeaById(Convert.ToInt32(request.GroupIdea.GroupIdeaId))).ResultObj;
+        //        List<SupervisorForAssigning> supervisors = devheadProfessions.Count == 0 || groupIdea == null ? new List<SupervisorForAssigning>() : (await _supervisorService.GetSupervisorsForAssigning(devheadProfessions.Select(p => p.ProfessionId).ToArray(), groupIdea.Profession.ProfessionId, registeredGroupId)).ResultObj;
 
-                return Ok(new { supervisors, group = result });
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, "Get supervisors for assigning error");
-                return StatusCode(500, new { error = "Internal Server Error", message = exception.Message });
-            }
-        }
+        //        return Ok(new { supervisors, group = result });
+        //    }
+        //    catch (Exception exception)
+        //    {
+        //        _logger.LogError(exception, "Get supervisors for assigning error");
+        //        return StatusCode(500, new { error = "Internal Server Error", message = exception.Message });
+        //    }
+        //}
+
+
+
+
+
+
+
 
         // POST: api/DevHeadManageRegisterGroupRequest/ConfirmAsFinalGroups
         //[HttpPost("ConfirmAsFinalGroups")]

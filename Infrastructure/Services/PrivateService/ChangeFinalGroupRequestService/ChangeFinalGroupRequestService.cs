@@ -292,7 +292,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             return new ApiSuccessResult<List<ChangeFinalGroupRequestDto>>(result);
         }
 
-        public async Task<ApiResult<bool>> UpdateGroupForStudentByChangeFinalGroupRequest(ChangeFinalGroupRequest changeFinalGroupRequest)
+        public async Task<ApiResult<bool>> UpdateGroupForStudentByChangeFinalGroupRequest(ChangeFinalGroupRequestDto changeFinalGroupRequest)
         {
             Expression<Func<ChangeFinalGroupRequest, bool>> cfgExpression = x => x.ChangeFinalGroupRequestId == changeFinalGroupRequest.ChangeFinalGroupRequestId;
             var changeFinalGroup = await _changeFinalGroupRepository.GetById(cfgExpression);
@@ -302,7 +302,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             }
             changeFinalGroup.StatusOfStaff = 1;
             await _changeFinalGroupRepository.UpdateAsync(changeFinalGroup);
-            Expression<Func<Student, bool>> studentExpression = x => x.StudentId == changeFinalGroupRequest.FromStudentId;
+            Expression<Func<Student, bool>> studentExpression = x => x.StudentId == changeFinalGroupRequest.FromStudent.StudentId;
             var student = await _studentRepository.GetById(studentExpression);
             if (student == null)
             {
@@ -311,7 +311,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             student.FinalGroupId = changeFinalGroup.FromStudent.FinalGroupId;
             student.IsLeader = changeFinalGroup.FromStudent.IsLeader;
             await _studentRepository.UpdateAsync(student);
-            Expression<Func<Student, bool>> toStudentExpression = x => x.StudentId == changeFinalGroupRequest.FromStudentId;
+            Expression<Func<Student, bool>> toStudentExpression = x => x.StudentId == changeFinalGroupRequest.FromStudent.StudentId;
             var toStudent = await _studentRepository.GetById(studentExpression);
             if (toStudent == null)
             {

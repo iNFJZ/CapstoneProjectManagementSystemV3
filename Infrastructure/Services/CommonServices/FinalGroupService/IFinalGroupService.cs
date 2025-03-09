@@ -29,7 +29,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
         Task<ApiResult<FinalGroupDto>> GetOldTopicByGroupName(int finalGroupId);
         Task<ApiResult<List<StudentDto>>> GetListCurrentMemberHaveFinalGroupByGroupName(string groupName, int semesterId);
         Task<ApiResult<int>> GetMaxMemberOfFinalGroupByGroupName(string groupName, int semesterId);
-        Task<ApiResult<bool>> UpdateNewTopicForFinalGroup(ChangeTopicRequest changeTopicRequest);
+        Task<ApiResult<bool>> UpdateNewTopicForFinalGroup(ChangeTopicRequestDto changeTopicRequest);
         Task<ApiResult<string>> GetLatestGroupName(string codeOfGroupName);
         Task<ApiResult<List<FinalGroupDto>>> GetListFinalGroupBySupervisorID(string supervisorId, int semesterId);
         Task<ApiResult<bool>> ConfirmFinalReport(FinalGroupDto finalGroup);

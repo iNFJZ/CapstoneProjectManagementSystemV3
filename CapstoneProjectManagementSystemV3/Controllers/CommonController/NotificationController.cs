@@ -20,7 +20,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
         [HttpGet("count-unread-notifications")]
         public async Task<IActionResult> CountNotificationNotReadOfUser()
         {
-            var user =  _dataRetrievalService.GetData<User>("sessionAccount");
+            var user = _dataRetrievalService.GetData<User>("sessionAccount");
             var count = (await _notificationService.CountNotificationNotRead(user.UserId)).ResultObj;
             return Ok(new ApiSuccessResult<int>(count));
         }
@@ -28,7 +28,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
         [HttpGet("count-all-notifications")]
         public async Task<IActionResult> CountAllNotification()
         {
-            var user =  _dataRetrievalService.GetData<User>("sessionAccount");
+            var user = _dataRetrievalService.GetData<User>("sessionAccount");
             var count = (await _notificationService.CountNotificationNotRead(user.UserId)).ResultObj;
             return Ok(new ApiSuccessResult<int>(count));
         }
@@ -36,17 +36,17 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
         [HttpGet("unread-notifications/{numberOfRecord}")]
         public async Task<IActionResult> GetListNotificationNotReadByReceiverID(int numberOfRecord)
         {
-            var user =  _dataRetrievalService.GetData<User>("sessionAccount");
-            var notifications =( await _notificationService.GetListNotificationNotReadByReceiverID(numberOfRecord, user.UserId)).ResultObj;
-            return Ok(new ApiSuccessResult<IEnumerable<Notification>>(notifications));
+            var user = _dataRetrievalService.GetData<User>("sessionAccount");
+            var notifications = (await _notificationService.GetListNotificationNotReadByReceiverID(numberOfRecord, user.UserId)).ResultObj;
+            return Ok(new ApiSuccessResult<IEnumerable<NotificationDto>>(notifications));
         }
 
         [HttpGet("all-notifications/{numberOfRecord}")]
         public async Task<IActionResult> GetListAllNotificationByUserId(int numberOfRecord)
         {
-            var user =  _dataRetrievalService.GetData<User>("sessionAccount");
+            var user = _dataRetrievalService.GetData<User>("sessionAccount");
             var notifications = (await _notificationService.GetListAllNotificationByUserId(numberOfRecord, user.UserId)).ResultObj;
-            return Ok(new ApiSuccessResult<IEnumerable<Notification>>(notifications));
+            return Ok(new ApiSuccessResult<IEnumerable<NotificationDto>>(notifications));
         }
 
         [HttpPut("mark-as-read/{notificationId}")]

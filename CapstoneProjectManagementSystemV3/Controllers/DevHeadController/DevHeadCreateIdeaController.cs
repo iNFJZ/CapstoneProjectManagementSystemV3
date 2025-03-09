@@ -11,7 +11,6 @@ using Infrastructure.Services.PrivateService.SupervisorGroupIdeaService;
 using Infrastructure.Services.PrivateService.SupervisorProfessionService;
 using Infrastructure.Services.PrivateService.SupervisorService;
 using Infrastructure.Services.PrivateService.SupportService;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
@@ -34,17 +33,17 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
         private readonly ISupervisorProfessionService _supervisorProfessionService;
         private readonly ILogger<DevHeadCreateIdeaController> _logger;
 
-        public DevHeadCreateIdeaController(IGroupIdeaService groupIdeaService, 
-            ISessionExtensionService sessionExtensionService, 
-            IUserService userService, 
-            NotificationService notificationService, 
-            ISupportService supportService, 
-            IProfessionService professionService, 
-            ISemesterService semesterService, 
-            ISpecialtyService specialService, 
-            ISupervisorService supervisorService, 
-            ISupervisorGroupIdeaService supervisorGroupIdeaService, 
-            ISupervisorProfessionService supervisorProfessionService, 
+        public DevHeadCreateIdeaController(IGroupIdeaService groupIdeaService,
+            ISessionExtensionService sessionExtensionService,
+            IUserService userService,
+            INotificationService notificationService,
+            ISupportService supportService,
+            IProfessionService professionService,
+            ISemesterService semesterService,
+            ISpecialtyService specialService,
+            ISupervisorService supervisorService,
+            ISupervisorGroupIdeaService supervisorGroupIdeaService,
+            ISupervisorProfessionService supervisorProfessionService,
             ILogger<DevHeadCreateIdeaController> logger)
         {
             _groupIdeaService = groupIdeaService;
@@ -68,16 +67,16 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 _logger.LogInformation("Fetching ideas created by supervisor");
                 int totalPage = 0;
                 User user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
-                Supervisor supervisor = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
+                SupervisorDto supervisor = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
                 if (query == null)
                 {
                     query = "";
                 }
 
-                (totalPage, page, var ideas) = (await _supervisorGroupIdeaService.GetListIdeaOfSupervisorForPaging(page, supervisor.SupervisorId, filterStatus, query.Trim())).ResultObj;
+                (totalPage, page, var ideas) = (await _supervisorGroupIdeaService.GetListIdeaOfSupervisorForPaging(page, supervisor.SupervisorID, filterStatus, query.Trim())).ResultObj;
 
-                List<GroupIdeasOfSupervisor> groupIdeaRegisted = (await _supervisorGroupIdeaService.GetGroupIdeaRegistedOfSupervisor(supervisor.SupervisorId)).ResultObj.ToList();
-                List<int> registeredIdeaIds = groupIdeaRegisted.Select(g => g.GroupIdeaId).ToList();
+                List<GroupIdeaOfSupervisorDto> groupIdeaRegisted = (await _supervisorGroupIdeaService.GetGroupIdeaRegistedOfSupervisor(supervisor.SupervisorID)).ResultObj.ToList();
+                List<int> registeredIdeaIds = groupIdeaRegisted.Select(g => g.GroupIdeaID).ToList();
 
                 return Ok(new
                 {
@@ -103,12 +102,12 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             {
                 _logger.LogInformation("Fetching data for idea creation");
                 User user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
-                Supervisor supervisor = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
-                Semester semester = (await _semesterService.GetCurrentSemester()).ResultObj ?? new Semester { SemesterId = 0 };
+                SupervisorDto supervisor = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
+                SemesterDto semester = (await _semesterService.GetCurrentSemester()).ResultObj ?? new SemesterDto { SemesterID = 0 };
 
-                List<Profession> supervisorProfessions = semester.SemesterId == 0
-                    ? new List<Profession>()
-                    : (await _supervisorProfessionService.GetProfessionsBySupervisorID(supervisor.SupervisorId, semester.SemesterId)).ResultObj;
+                List<ProfessionDto> supervisorProfessions = semester.SemesterID == 0
+                    ? new List<ProfessionDto>()
+                    : (await _supervisorProfessionService.GetProfessionsBySupervisorID(supervisor.SupervisorID, semester.SemesterID)).ResultObj;
 
                 return Ok(new
                 {
@@ -132,10 +131,10 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 _logger.LogInformation("Creating a new idea");
 
                 Regex regex = new Regex(@"\s+");
-                List<GroupIdeaOfSupervisorProfession> groupIdeaProfessions = Profession
-                    .Select(professionId => new GroupIdeaOfSupervisorProfession
+                List<GroupIdeaOfSupervisorProfessionDto> groupIdeaProfessions = Profession
+                    .Select(professionId => new GroupIdeaOfSupervisorProfessionDto
                     {
-                        Profession = new Profession { ProfessionId = professionId }
+                        Profession = new ProfessionDto { ProfessionID = professionId }
                     }).ToList();
 
                 bool result = (await _supervisorGroupIdeaService.CreateNewGroupIdeaOfMentor(
@@ -150,7 +149,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                     NumberOfMember,
                     MaxMember)).IsSuccessed;
 
-                return Ok(new { success = true});
+                return Ok(new { success = true });
             }
             catch (Exception ex)
             {
@@ -166,17 +165,17 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 _logger.LogInformation("Fetching data for updating idea");
 
                 User user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
-                Supervisor supervisor =(await _supervisorService.GetSupervisorById(user.UserId)).ResultObj;
-                Semester currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj ?? new Semester { SemesterId = 0 };
+                SupervisorDto supervisor = (await _supervisorService.GetSupervisorById(user.UserId)).ResultObj;
+                SemesterDto currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj ?? new SemesterDto { SemesterID = 0 };
 
-                List<Profession> supervisorProfessions = currentSemester.SemesterId == 0
-                    ? new List<Profession>()
-                    : (await _supervisorProfessionService.GetProfessionsBySupervisorID(supervisor.SupervisorId, currentSemester.SemesterId)).ResultObj;
+                List<ProfessionDto> supervisorProfessions = currentSemester.SemesterID == 0
+                    ? new List<ProfessionDto>()
+                    : (await _supervisorProfessionService.GetProfessionsBySupervisorID(supervisor.SupervisorID, currentSemester.SemesterID)).ResultObj;
 
                 supervisorProfessions.ForEach(async p =>
-                    p.Specialties = (await _specialService.getSpecialtiesByProfessionId(p.ProfessionId, currentSemester.SemesterId)).ResultObj);
+                    p.Specialties = (await _specialService.getSpecialtiesByProfessionId(p.ProfessionID, currentSemester.SemesterID)).ResultObj);
 
-                GroupIdeasOfSupervisor groupIdea =  (await _supervisorGroupIdeaService.GetAllGroupIdeaById(groupIdeaId)).ResultObj;
+                GroupIdeaOfSupervisorDto groupIdea = (await _supervisorGroupIdeaService.GetAllGroupIdeaById(groupIdeaId)).ResultObj;
 
                 return Ok(new
                 {
@@ -199,23 +198,23 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
                 _logger.LogInformation("Updating an idea");
 
                 Regex regex = new Regex(@"\s+");
-                List<GroupIdeaOfSupervisorProfession> groupIdeaProfessions = Profession
-                    .Select(professionId => new GroupIdeaOfSupervisorProfession
+                List<GroupIdeaOfSupervisorProfessionDto> groupIdeaProfessions = Profession
+                    .Select(professionId => new GroupIdeaOfSupervisorProfessionDto
                     {
-                        Profession = new Profession { ProfessionId = professionId }
+                        Profession = new ProfessionDto { ProfessionID = professionId }
                     }).ToList();
 
-                GroupIdeasOfSupervisor groupIdea = new GroupIdeasOfSupervisor
+                GroupIdeaOfSupervisorDto groupIdea = new GroupIdeaOfSupervisorDto
                 {
-                    GroupIdeaId = GroupIdeaID,
-                    Supervisor = new Supervisor { SupervisorId = Supervisor.Trim().ToLower() },
+                    GroupIdeaID = GroupIdeaID,
+                    Supervisor = new SupervisorDto { SupervisorID = Supervisor.Trim().ToLower() },
                     GroupIdeaOfSupervisorProfessions = groupIdeaProfessions,
                     ProjectEnglishName = regex.Replace(ProjectEnglishName.Trim(), " "),
                     ProjectVietNameseName = regex.Replace(ProjetVietnameseName.Trim(), " "),
-                    Abbreviation = regex.Replace(Abbreviation.Trim(), " "),
+                    Abrrevation = regex.Replace(Abbreviation.Trim(), " "),
                     Description = regex.Replace(Description.Trim(), " "),
                     ProjectTags = regex.Replace(ProjectTags.Trim(), " "),
-                    Semester = new Semester { SemesterId = Semester },
+                    Semester = new SemesterDto { SemesterID = Semester },
                     NumberOfMember = NumberOfMember,
                     MaxMember = MaxMember,
                     IsActive = status == 1
@@ -270,8 +269,8 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
         {
             try
             {
-                Semester currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj;
-                var specialties = _specialService.getSpecialtiesByProfessionId(professionId, currentSemester.SemesterId);
+                SemesterDto currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj;
+                var specialties = _specialService.getSpecialtiesByProfessionId(professionId, currentSemester.SemesterID);
 
                 return Ok(specialties);
             }

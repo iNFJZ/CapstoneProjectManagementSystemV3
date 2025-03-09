@@ -20,10 +20,10 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
         private readonly IDataRetrievalService _dataRetrievalService;
         private readonly IProfessionService _professionService;
         private readonly ILogger<DevHeadManageMentorController> _logger;
-        public DevHeadManageMentorController(ISupervisorService supervisorService, 
-            ISemesterService semesterService, 
-            IDataRetrievalService dataRetrievalService, 
-            IProfessionService professionService, 
+        public DevHeadManageMentorController(ISupervisorService supervisorService,
+            ISemesterService semesterService,
+            IDataRetrievalService dataRetrievalService,
+            IProfessionService professionService,
             ILogger<DevHeadManageMentorController> logger)
         {
             _supervisorService = supervisorService;
@@ -39,8 +39,8 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             {
                 _logger.LogInformation("View manage mentor page");
                 User user = _dataRetrievalService.GetData<User>("sessionAccount");
-                Supervisor supervisor =(await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
-                List<Profession> professions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(supervisor.SupervisorId, true)).ResultObj;
+                SupervisorDto supervisor = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
+                List<ProfessionDto> professions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(supervisor.SupervisorID, true)).ResultObj;
 
                 var response = new
                 {
@@ -71,21 +71,21 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             {
                 XLWorkbook workbook = new XLWorkbook(file.OpenReadStream());
                 User user = _dataRetrievalService.GetData<User>("sessionAccount");
-                Supervisor devhead = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
+                SupervisorDto devhead = (await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
                 var sheet = workbook.Worksheets.Worksheet(1);
-                List<Supervisor> supervisors;
-                List<Profession> professions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(devhead.SupervisorId, true)).ResultObj;
+                List<SupervisorDto> supervisors;
+                List<ProfessionDto> professions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(devhead.SupervisorID, true)).ResultObj;
                 List<string> errorMessages;
                 List<int> errorLineNumbers;
 
-               (supervisors,errorMessages,errorLineNumbers) = (await _supervisorService.CreateSupervisorListBasedOnWorkSheet(sheet, 10, professions)).ResultObj;
+                (supervisors, errorMessages, errorLineNumbers) = (await _supervisorService.CreateSupervisorListBasedOnWorkSheet(sheet, 10, professions)).ResultObj;
 
                 if (errorMessages != null && errorMessages.Count > 0)
                 {
                     return BadRequest(new { message = "There were errors in the imported data.", errors = errorMessages });
                 }
 
-                var importResult = (await _supervisorService.ImportSupervisorList(supervisors, devhead.SupervisorId)).ResultObj;
+                var importResult = (await _supervisorService.ImportSupervisorList(supervisors, devhead.SupervisorID)).ResultObj;
                 return Ok(new
                 {
                     AddedSupervisors = importResult.GetValueOrDefault("addedSupervisors"),
@@ -106,28 +106,28 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
             try
             {
                 _logger.LogInformation("Get template of supervisor list");
-                Semester currentSemester =(await _semesterService.GetCurrentSemester()).ResultObj;
-                User user = _dataRetrievalService.GetData<User>("sessionAccount");
-                Supervisor supervisor =(await _supervisorService.GetSupervisorByUserId(user.UserId)).ResultObj;
-                List<Profession> professions =(await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(supervisor.SupervisorId, true)).ResultObj;
-                Profession profession = professions.Count != 0 ? professions[0] : null;
-                List<Supervisor> supervisors = new List<Supervisor>
+                SemesterDto currentSemester = (await _semesterService.GetCurrentSemester()).ResultObj;
+                UserDto user = _dataRetrievalService.GetData<UserDto>("sessionAccount");
+                SupervisorDto supervisor = (await _supervisorService.GetSupervisorByUserId(user.UserID)).ResultObj;
+                List<ProfessionDto> professions = (await _professionService.GetProfessionsBySupervisorIdAndIsDevHead(supervisor.SupervisorID, true)).ResultObj;
+                ProfessionDto profession = professions.Count != 0 ? professions[0] : null;
+                List<SupervisorDto> supervisors = new List<SupervisorDto>
             {
-                new Supervisor()
+                new SupervisorDto()
                 {
-                    SupervisorId = "chienbd",
+                    SupervisorID = "chienbd",
                     FeEduEmail = "chienbd",
                     PhoneNumber = "0844427705",
-                    SupervisorNavigation = new User() { FullName = "Bùi Đình Chiến", Gender = 1 },
-                    SupervisorProfessions = new List<SupervisorProfession>
+                    SupervisorNavigation = new UserDto() { FullName = "Bùi Đình Chiến", Gender = 1 },
+                    SupervisorProfessions = new List<SupervisorProfessionDto>
                     {
-                        new SupervisorProfession() { Profession = profession, MaxGroup = 3 }
+                        new SupervisorProfessionDto() { Profession = profession, MaxGroup = 3 }
                     },
                     IsActive = true,
                 }
             };
 
-                XLWorkbook workbook = (await _supervisorService.CreateWorkBookBasedOnSupervisorList(supervisors, 9, supervisor.SupervisorId)).ResultObj;
+                XLWorkbook workbook = (await _supervisorService.CreateWorkBookBasedOnSupervisorList(supervisors, 9, supervisor.SupervisorID)).ResultObj;
                 using (var stream = new MemoryStream())
                 {
                     workbook.SaveAs(stream);
