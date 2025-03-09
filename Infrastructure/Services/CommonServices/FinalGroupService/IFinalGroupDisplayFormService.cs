@@ -11,6 +11,6 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
 {
     public interface IFinalGroupDisplayFormService
     {
-        Task<ApiResult<List<FinalGroupDisplayForm>>> ConvertFromFinalList(List<FinalGroup> finalGroupList);
+        Task<ApiResult<List<FinalGroupDisplayForm>>> ConvertFromFinalList(List<FinalGroupDto> finalGroupList);
     }
 }

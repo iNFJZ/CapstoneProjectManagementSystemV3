@@ -65,7 +65,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
                 if (checkUserLogin.IsSuccessed)
                 {
                     var userLogin = await _userService.GetUserByID(affiliateAccount.ResultObj.AffiliateAccountID);
-                    var infor = await _studentService.UpdateSemesterOfStudentByUserId(userLogin.ResultObj.UserId);
+                    var infor = await _studentService.UpdateSemesterOfStudentByUserId(userLogin.ResultObj.UserID);
                     return Ok(new ApiSuccessResult<dynamic>(new
                     {
                         status = true,

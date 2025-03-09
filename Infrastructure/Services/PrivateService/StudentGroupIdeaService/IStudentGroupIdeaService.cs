@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Entities.Common.ApiResult;
-using Infrastructure.Entities.Dto.StudentDto;
 
 namespace Infrastructure.Services.PrivateService.StudentGroupIdeaService
 {

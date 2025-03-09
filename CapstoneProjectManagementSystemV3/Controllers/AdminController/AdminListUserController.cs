@@ -46,7 +46,8 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching list of users");
-                return BadRequest(new { status = false, mess = "Error fetching user list" });
+                //return BadRequest(new { status = false, mess = "Error fetching user list" });
+                return BadRequest(ex.Message);
             }
         }
 

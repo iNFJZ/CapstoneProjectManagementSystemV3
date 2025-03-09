@@ -27,4 +27,11 @@ namespace Infrastructure.Entities.Dto.ViewModel.AdminViewModel
         public DateTime? Created_At { get; set; }
         public IList<NotificationDto> Notifications { get; set; }
     }
+
+    public class UserViewModel
+    {
+        public User User { get; set; }
+        public string Path { get; set; }
+        public string Mess { get; set; }
+    }
 }

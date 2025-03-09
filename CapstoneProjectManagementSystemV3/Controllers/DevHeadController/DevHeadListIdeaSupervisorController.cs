@@ -65,7 +65,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
 
                 var supervisorId = user.UserId;
                 int totalPage = 0;
-                List<GroupIdeasOfSupervisor> listGroupIdea;
+                List<GroupIdeaOfSupervisorDto> listGroupIdea;
 
                 // Fetching the data with paging
                 (totalPage, page, listGroupIdea) = (await _supervisorGroupIdeaService.getGroupIdeaOfSupervisorWithPaging(page, supervisorId)).ResultObj;

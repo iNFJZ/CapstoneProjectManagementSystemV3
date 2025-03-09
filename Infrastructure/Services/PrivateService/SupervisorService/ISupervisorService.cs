@@ -2,7 +2,6 @@
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
 using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
