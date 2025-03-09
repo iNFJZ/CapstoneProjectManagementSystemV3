@@ -10,8 +10,8 @@ namespace Infrastructure.Services.PrivateService.Student_FavoriteGroupIdeaServic
 {
     public interface IStudentFavoriteGroupIdeaService
     {
-        Task<ApiResult<List<StudentFavoriteGroupIdea>>> GetFavoriteIdeaListByStudentId(string studentId);
-        Task<ApiResult<StudentFavoriteGroupIdea>> GetRecord(string studentId, int groupId);
+        Task<ApiResult<List<StudentFavoriteGroupIdeaDto>>> GetFavoriteIdeaListByStudentId(string studentId);
+        Task<ApiResult<StudentFavoriteGroupIdeaDto>> GetRecord(string studentId, int groupId);
         Task<ApiResult<bool>> AddRecord(string studentId, int groupId);
         Task<ApiResult<bool>> DeleteRecord(string studentId, int groupIdeaId);
         Task<ApiResult<bool>> DeleteAllRecordOfAGroupIdea(int groupIdeaId);

@@ -10,10 +10,10 @@ namespace Infrastructure.Services.CommonServices.SemesterService
 {
     public interface ISemesterService
     {
-        Task<ApiResult<Semester>> GetCurrentSemester();
-        Task<ApiResult<Semester>> GetSemesterById(int semesterId);
-        Task<ApiResult<List<Semester>>> GetAllSemester();
-        Task<ApiResult<Semester>> GetLastSemester();
+        Task<ApiResult<SemesterDto>> GetCurrentSemester();
+        Task<ApiResult<SemesterDto>> GetSemesterById(int semesterId);
+        Task<ApiResult<List<SemesterDto>>> GetAllSemester();
+        Task<ApiResult<SemesterDto>> GetLastSemester();
         Task<ApiResult<bool>> UpdateCurrentSemester(Semester semester);
         Task<ApiResult<bool>> AddNewSemester(Semester semester);
         Task<ApiResult<bool>> CloseCurrentSemester();
@@ -21,6 +21,6 @@ namespace Infrastructure.Services.CommonServices.SemesterService
 
         Task<ApiResult<string>> generateGroupInformationMailContent(string groupName, List<StudentGroupIdea> students, string projectEnglishName, string projectVietnamese, string abbreviation, Supervisor supervisor);
 
-        Task<ApiResult<Semester>> GetLastSemesterDeleteAt();
+        Task<ApiResult<SemesterDto>> GetLastSemesterDeleteAt();
     }
 }

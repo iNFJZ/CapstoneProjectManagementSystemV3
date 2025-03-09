@@ -20,9 +20,9 @@ using Infrastructure.Services.CommonServices.MailService;
 using Infrastructure.Services.PrivateService.SupervisorGroupIdeaService;
 using Infrastructure.Services.CommonServices.DataRetrievalService;
 using Infrastructure.Entities;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using CapstoneProjectManagementSystemV3.Controllers.CommonController;
 using System.Transactions;
+using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 
 namespace CapstoneProjectManagementSystemV3.Controllers.DevHeadController
 {

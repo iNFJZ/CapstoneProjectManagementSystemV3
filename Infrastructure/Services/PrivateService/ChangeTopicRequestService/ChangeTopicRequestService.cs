@@ -81,10 +81,10 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
                 var users = await _userRepository.GetByCondition(u => u.RoleId == 3);
                 List<Staff> listStaff = users.Select(u => new Staff
                 {
-                    StaffId = u.UserId ?? "", 
+                    StaffId = u.UserId ?? "",
                     StaffNavigation = new User
                     {
-                        FptEmail = u.FptEmail ?? "" 
+                        FptEmail = u.FptEmail ?? ""
                     }
                 }).ToList();
                 if (listStaff != null)
@@ -96,7 +96,8 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
                     }
                 }
                 return new ApiSuccessResult<bool>(await _changeTopicRequestRepository.UpdateStatusOfChangeTopicRequest(requestId, 0, ""));
-            } else if(status == 2)
+            }
+            else if (status == 2)
             {
                 var devheads = await _supervisorRepository.GetByCondition(s => s.SupervisorProfessions.Any(sp => sp.ProfessionId == finalGroup.Profession.ProfessionId));
                 contentNotification = $"Supervisor {userId} has canceled their confirmation of request change topic for group {finalGroup.GroupName}";
@@ -117,7 +118,7 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
                     FptEmail = u.FptEmail ?? ""
                 }
             }).ToList();
-            if(staffs != null)
+            if (staffs != null)
             {
                 foreach (Staff staff in staffs)
                 {
@@ -154,15 +155,15 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
             return new ApiSuccessResult<int>(count);
         }
 
-        public async Task<ApiResult<bool>> DeleteChangeTopicRequestsByFinalGroup(int finalGropId)
+        public async Task<ApiResult<bool>> DeleteChangeTopicRequestsByFinalGroup(int finalGroupId)
         {
-            var changeTopic = await _changeTopicRequestRepository.GetById(ctr => ctr.FinalGroupId == finalGropId && ctr.DeletedAt == null);
+            var changeTopic = await _changeTopicRequestRepository.GetById(ctr => ctr.FinalGroupId == finalGroupId && ctr.DeletedAt == null);
             changeTopic.DeletedAt = DateTime.Now;
             await _changeTopicRequestRepository.UpdateAsync(changeTopic);
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<List<ChangeTopicRequest>>> GetChangeTopicRequestsBySearchText(string searchText, int status, int semesterId, int offsetNumber, int fetchNumber)
+        public async Task<ApiResult<List<ChangeTopicRequestDto>>> GetChangeTopicRequestsBySearchText(string searchText, int status, int semesterId, int offsetNumber, int fetchNumber)
         {
             if (searchText == null)
             {
@@ -172,26 +173,76 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
             {
                 searchText = string.Concat("%", searchText.Trim().Replace(" ", "").ToUpper(), "%");
             }
-            var result = await _changeTopicRequestRepository.GetByCondition(ctr => ctr.Status == status && ctr.DeletedAt == null &&
+            var changeTopicRequests = await _changeTopicRequestRepository.GetByCondition(ctr => ctr.Status == status && ctr.DeletedAt == null &&
             ctr.FinalGroup.SemesterId == semesterId && (searchText == "" || ctr.FinalGroup.GroupName.ToUpper().Replace(" ", "").Contains(searchText)));
-            List<ChangeTopicRequest> changeTopicRequests = result;
-            return new ApiSuccessResult<List<ChangeTopicRequest>>(changeTopicRequests);
+            var result = new List<ChangeTopicRequestDto>();
+            foreach (var request in changeTopicRequests)
+            {
+                result.Add(new ChangeTopicRequestDto()
+                {
+                    RequestID = request.RequestId,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        GroupName = request.FinalGroup.GroupName
+                    },
+                    OldTopicNameEnglish = request.OldTopicNameEnglish,
+                    NewTopicNameEnglish = request.NewTopicNameEnglish,
+                    EmailSuperVisor = request.EmailSuperVisor,
+                    StaffComment = request.StaffComment,
+                    Status = request.Status.Value
+                });
+            }
+            return new ApiSuccessResult<List<ChangeTopicRequestDto>>(result);
         }
 
-        public async Task<ApiResult<List<ChangeTopicRequest>>> GetChangeTopicRequestsByStudentId(string studentId, int semesterId)
+        public async Task<ApiResult<List<ChangeTopicRequestDto>>> GetChangeTopicRequestsByStudentId(string studentId, int semesterId)
         {
             var student = await _studentRepository.GetByCondition(s => s.StudentId == studentId);
-            var result = await _changeTopicRequestRepository.GetByCondition(c => student.Select(s => s.FinalGroupId).Contains(c.FinalGroupId) &&
+            var changeTopicRequests = await _changeTopicRequestRepository.GetByCondition(c => student.Select(s => s.FinalGroupId).Contains(c.FinalGroupId) &&
             c.FinalGroup.SemesterId == semesterId &&
             c.DeletedAt == null);
-            return new ApiSuccessResult<List<ChangeTopicRequest>>(result);
+            var result = new List<ChangeTopicRequestDto>();
+            foreach (var request in changeTopicRequests)
+            {
+                result.Add(new ChangeTopicRequestDto()
+                {
+                    RequestID = request.RequestId,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        GroupName = request.FinalGroup.GroupName
+                    },
+                    OldTopicNameEnglish = request.OldTopicNameEnglish,
+                    NewTopicNameEnglish = request.NewTopicNameEnglish,
+                    EmailSuperVisor = request.EmailSuperVisor,
+                    StaffComment = request.StaffComment,
+                    Status = request.Status.Value
+                });
+            }
+            return new ApiSuccessResult<List<ChangeTopicRequestDto>>(result);
         }
 
-        public async Task<ApiResult<(int, int, List<ChangeTopicRequest>)>> GetChangeTopicRequestsBySupervisorEmail(string supervisorEmail, string searchText, int status, int semesterId, int offsetNumber, int fetchNumber, bool isDevHead, int[] professions, bool isConfirmationOfDevHeadNeeded, int[] statuses, string supervisorEmails)
+        public async Task<ApiResult<(int, int, List<ChangeTopicRequestDto>)>> GetChangeTopicRequestsBySupervisorEmail(string supervisorEmail, string searchText, int status, int semesterId, int offsetNumber, int fetchNumber, bool isDevHead, int[] professions, bool isConfirmationOfDevHeadNeeded, int[] statuses, string supervisorEmails)
         {
             offsetNumber--;
-            if(offsetNumber < 0) { offsetNumber = 0; }
+            if (offsetNumber < 0) { offsetNumber = 0; }
             List<ChangeTopicRequest> changeTopicRequests = new List<ChangeTopicRequest>();
+            var result = new List<ChangeTopicRequestDto>();
+            foreach (var request in changeTopicRequests)
+            {
+                result.Add(new ChangeTopicRequestDto()
+                {
+                    RequestID = request.RequestId,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        GroupName = request.FinalGroup.GroupName
+                    },
+                    OldTopicNameEnglish = request.OldTopicNameEnglish,
+                    NewTopicNameEnglish = request.NewTopicNameEnglish,
+                    EmailSuperVisor = request.EmailSuperVisor,
+                    StaffComment = request.StaffComment,
+                    Status = request.Status.Value
+                });
+            }
             int totalPage = 0;
             if (status == 0)
             {
@@ -210,22 +261,44 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
                 var temp = topicRequestByProfession;
                 if (temp != null) { changeTopicRequests.AddRange(temp); }
             }
-            return new ApiSuccessResult<(int, int, List<ChangeTopicRequest>)>((offsetNumber,totalPage,changeTopicRequests));
+            return new ApiSuccessResult<(int, int, List<ChangeTopicRequestDto>)>((offsetNumber, totalPage, result));
         }
 
-        public async Task<ApiResult<ChangeTopicRequest>> GetDetailChangeTopicRequestsByRequestId(int requestId)
+        public async Task<ApiResult<ChangeTopicRequestDto>> GetDetailChangeTopicRequestsByRequestId(int requestId)
         {
             var changeTopicRequest = (await _changeTopicRequestRepository.GetByCondition(c =>
         c.RequestId == requestId && c.DeletedAt == null)).FirstOrDefault();
-
-            if (changeTopicRequest == null)
+            var result = new ChangeTopicRequestDto()
             {
-                return new ApiErrorResult<ChangeTopicRequest>("Không tìm thấy yêu cầu đổi đề tài.");
+                RequestID = changeTopicRequest.RequestId,
+                FinalGroup = new FinalGroupDto()
+                {
+                    FinalGroupId = changeTopicRequest.FinalGroupId,
+                    GroupName = changeTopicRequest.FinalGroup.GroupName,
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = changeTopicRequest.FinalGroup.ProfessionId
+                    }
+                },
+                OldTopicNameEnglish = changeTopicRequest.OldTopicNameEnglish,
+                OldTopicNameVietNamese = changeTopicRequest.OldTopicNameVietNamese,
+                NewTopicNameEnglish = changeTopicRequest.NewTopicNameEnglish,
+                NewTopicNameVietNamese = changeTopicRequest.NewTopicNameVietNamese,
+                OldAbbreviation = changeTopicRequest.OldAbbreviation,
+                NewAbbreviation = changeTopicRequest.NewAbbreviation,
+                EmailSuperVisor = changeTopicRequest.EmailSuperVisor,
+                StaffComment = changeTopicRequest.StaffComment,
+                ReasonChangeTopic = changeTopicRequest.ReasonChangeTopic,
+                Status = changeTopicRequest.Status.Value
+            };
+            if (result == null)
+            {
+                return new ApiErrorResult<ChangeTopicRequestDto>("Không tìm thấy yêu cầu đổi đề tài.");
             }
             var finalGroup = (await _finalGroupRepository.GetByCondition(f =>
                 f.FinalGroupId == changeTopicRequest.FinalGroupId)).FirstOrDefault();
             var profession = (await _professionRepository.GetByCondition(p =>
-                p.ProfessionId== finalGroup.ProfessionId)).FirstOrDefault();
+                p.ProfessionId == finalGroup.ProfessionId)).FirstOrDefault();
             if (finalGroup != null)
             {
                 changeTopicRequest.FinalGroup.GroupName = finalGroup.GroupName;
@@ -235,18 +308,27 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
             {
                 changeTopicRequest.FinalGroup.ProfessionId = profession.ProfessionId;
             }
-
-            return new ApiSuccessResult<ChangeTopicRequest>(changeTopicRequest);
+            return new ApiSuccessResult<ChangeTopicRequestDto>(result);
         }
 
-        public async Task<ApiResult<ChangeTopicRequest>> GetNewTopicByChangeTopicRequestId(int changeTopicRequestId)
+        public async Task<ApiResult<ChangeTopicRequestDto>> GetNewTopicByChangeTopicRequestId(int changeTopicRequestId)
         {
-            var result = await _changeTopicRequestRepository.GetById(ctr => ctr.RequestId == changeTopicRequestId && ctr.DeletedAt == null);
-            if(result == null)
+            var changeTopicRequest = await _changeTopicRequestRepository.GetById(ctr => ctr.RequestId == changeTopicRequestId && ctr.DeletedAt == null);
+            var result = new ChangeTopicRequestDto()
             {
-                return new ApiErrorResult<ChangeTopicRequest>("Không tìm thấy đối tượng");
+                FinalGroup = new FinalGroupDto()
+                {
+                    FinalGroupId = changeTopicRequest.FinalGroupId,
+                },
+                NewTopicNameEnglish = changeTopicRequest.NewTopicNameEnglish,
+                NewTopicNameVietNamese = changeTopicRequest.NewTopicNameVietNamese,
+                NewAbbreviation = changeTopicRequest.NewAbbreviation
+            };
+            if (result == null)
+            {
+                return new ApiErrorResult<ChangeTopicRequestDto>("Không tìm thấy đối tượng");
             }
-            return new ApiSuccessResult<ChangeTopicRequest>(result);
+            return new ApiSuccessResult<ChangeTopicRequestDto>(result);
         }
 
         public async Task<ApiResult<bool>> UpdateChangeTopicRequestBySupervisor(bool isDevHead, bool isBeforeDeadline, bool isAccepted, int requestId, bool isConfirmationOfDevHeadNeeded, string userId, HttpRequest httpRequest)
@@ -317,7 +399,7 @@ namespace Infrastructure.Services.PrivateService.ChangeTopicRequestService
             var students = await _studentRepository.GetByCondition(s => s.FinalGroupId == finalGroup.FinalGroupId);
             string attachedLinkForStudent = "/MyGroup/Index";
             string contentNotificationForStudent = "Your group's changing topic request has been rejected";
-            string listEmailMemberInGroup = string.Join(",", students.Select(async s =>(await _userRepository.GetById(u => u.UserId == s.StudentId)).FptEmail));
+            string listEmailMemberInGroup = string.Join(",", students.Select(async s => (await _userRepository.GetById(u => u.UserId == s.StudentId)).FptEmail));
 
             foreach (var student in students)
             {

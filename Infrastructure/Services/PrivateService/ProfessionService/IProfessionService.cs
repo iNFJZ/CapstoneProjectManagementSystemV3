@@ -10,9 +10,9 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
 {
     public interface IProfessionService
     {
-        Task<ApiResult<List<Profession>>> getAllProfession(int semesterId);
-        Task<ApiResult<Profession>> getProfessionById(int professionId);
-        Task<ApiResult<Profession>> GetProfessionByName(string professionFullname, int semesterId);
+        Task<ApiResult<List<ProfessionDto>>> getAllProfession(int semesterId);
+        Task<ApiResult<ProfessionDto>> getProfessionById(int professionId);
+        Task<ApiResult<ProfessionDto>> GetProfessionByName(string professionFullname, int semesterId);
         Task<ApiResult<int>> AddProfessionThenReturnId(Profession profession, int semesterId);
         Task<ApiResult<bool>> UpdateProfession(Profession profession);
         Task<ApiResult<int>> UpdateProfessionV2(Profession profession);
@@ -20,8 +20,8 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
 
         Task<ApiResult<bool>> RemoveProfession(int id);
 
-        Task<ApiResult<List<Profession>>> GetProfessionsBySupervisorIdAndIsDevHead(string supervisorId, bool isDevHead);
-        Task<ApiResult<List<Profession>>> GetAllProfessionWithSpecialty(int semesterId);
-        Task<ApiResult<Profession>> GetProfessionBySpecialty(int specialtyId);
+        Task<ApiResult<List<ProfessionDto>>> GetProfessionsBySupervisorIdAndIsDevHead(string supervisorId, bool isDevHead);
+        Task<ApiResult<List<ProfessionDto>>> GetAllProfessionWithSpecialty(int semesterId);
+        Task<ApiResult<ProfessionDto>> GetProfessionBySpecialty(int specialtyId);
     }
 }

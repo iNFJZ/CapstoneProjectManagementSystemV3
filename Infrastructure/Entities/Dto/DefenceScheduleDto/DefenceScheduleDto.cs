@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Entities
 {
-    public class DefenceScheduleDto:CommonProperty
+    public class DefenceScheduleDto : CommonProperty
     {
         public int DefenceScheduleID { get; set; }
         public int Type { get; set; }

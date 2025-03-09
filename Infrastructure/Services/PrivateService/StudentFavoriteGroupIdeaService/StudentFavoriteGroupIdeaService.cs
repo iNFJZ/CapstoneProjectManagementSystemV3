@@ -75,7 +75,7 @@ namespace Infrastructure.Services.PrivateService.Student_FavoriteGroupIdeaServic
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<List<StudentFavoriteGroupIdea>>> GetFavoriteIdeaListByStudentId(string studentId)
+        public async Task<ApiResult<List<StudentFavoriteGroupIdeaDto>>> GetFavoriteIdeaListByStudentId(string studentId)
         {
             try
             {
@@ -83,34 +83,54 @@ namespace Infrastructure.Services.PrivateService.Student_FavoriteGroupIdeaServic
 
                 if (!favoriteIdeas.Any())
                 {
-                    return new ApiErrorResult<List<StudentFavoriteGroupIdea>>("Không tìm thấy ý tưởng yêu thích nào.");
+                    return new ApiErrorResult<List<StudentFavoriteGroupIdeaDto>>("Không tìm thấy ý tưởng yêu thích nào.");
                 }
 
                 var groupIdeaIds = favoriteIdeas.Select(s => s.GroupIdeaId).ToList();
                 var groupIdeas = await _groupIdeaRepository.GetByCondition(g => groupIdeaIds.Contains(g.GroupIdeaId));
-
 
                 // Map GroupIdea vào từng StudentFavoriteGroupIdea
                 foreach (var idea in favoriteIdeas)
                 {
                     idea.GroupIdea = groupIdeas.FirstOrDefault(g => g.GroupIdeaId == idea.GroupIdeaId);
                 }
-
-                return new ApiSuccessResult<List<StudentFavoriteGroupIdea>>(favoriteIdeas);
+                var result = new List<StudentFavoriteGroupIdeaDto>();
+                foreach (var idea in favoriteIdeas)
+                {
+                    result.Add(new StudentFavoriteGroupIdeaDto()
+                    {
+                        StudentID = idea.StudentId,
+                        GroupIdeaID = idea.GroupIdeaId,
+                        GroupIdea = new GroupIdeaDto()
+                        {
+                            GroupIdeaID = idea.GroupIdeaId,
+                        }
+                    });
+                }
+                return new ApiSuccessResult<List<StudentFavoriteGroupIdeaDto>>(result);
             }
             catch (Exception ex)
             {
-                return new ApiErrorResult<List<StudentFavoriteGroupIdea>>($"Lỗi khi lấy danh sách: {ex.Message}");
+                return new ApiErrorResult<List<StudentFavoriteGroupIdeaDto>>($"Lỗi khi lấy danh sách: {ex.Message}");
             }
         }
-        public async Task<ApiResult<StudentFavoriteGroupIdea>> GetRecord(string studentId, int groupId)
+        public async Task<ApiResult<StudentFavoriteGroupIdeaDto>> GetRecord(string studentId, int groupId)
         {
             var record = await _studentFavoriteGroupIdeaRepository.GetById(s => s.StudentId == studentId && s.GroupIdeaId == groupId && s.DeletedAt == null);
             if (record == null)
             {
-                return new ApiErrorResult<StudentFavoriteGroupIdea>("Không tìm thấy bản ghi phù hợp");
+                return new ApiErrorResult<StudentFavoriteGroupIdeaDto>("Không tìm thấy bản ghi phù hợp");
             }
-            return new ApiSuccessResult<StudentFavoriteGroupIdea>(record); 
+            var result = new StudentFavoriteGroupIdeaDto()
+            {
+                StudentID = record.StudentId,
+                GroupIdeaID = record.GroupIdeaId,
+                GroupIdea = new GroupIdeaDto()
+                {
+                    GroupIdeaID = record.GroupIdeaId,
+                }
+            };
+            return new ApiSuccessResult<StudentFavoriteGroupIdeaDto>(result);
         }
     }
 }

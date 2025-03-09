@@ -16,7 +16,6 @@ using Infrastructure.Services.CommonServices.ExcelService;
 using Infrastructure.Services.CommonServices.MailService;
 using Infrastructure.Services.CommonServices.SemesterService;
 using Infrastructure.Services.PrivateService.ProfessionService;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;

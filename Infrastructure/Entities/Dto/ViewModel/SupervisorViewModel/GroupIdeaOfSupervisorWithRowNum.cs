@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.ViewModel.SupervisorViewModel
+namespace Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel
 {
     public class GroupIdeaOfSupervisorWithRowNum
     {

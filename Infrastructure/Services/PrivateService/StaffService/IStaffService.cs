@@ -10,8 +10,8 @@ namespace Infrastructure.Services.PrivateService.StaffService
 {
     public interface IStaffService
     {
-        Task<ApiResult<Staff>> GetUserIsStaffByRoleId(int roleId);
+        Task<ApiResult<StaffDto>> GetUserIsStaffByRoleId(int roleId);
 
-        Task<ApiResult<List<Staff>>> GetUsersIsStaffByRoleId(int roleId);
+        Task<ApiResult<List<StaffDto>>> GetUsersIsStaffByRoleId(int roleId);
     }
 }

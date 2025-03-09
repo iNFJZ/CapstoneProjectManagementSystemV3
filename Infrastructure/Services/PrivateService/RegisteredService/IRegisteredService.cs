@@ -1,8 +1,8 @@
 ﻿using ClosedXML.Excel;
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
-using Infrastructure.ViewModel.StudentViewModel;
-using Infrastructure.ViewModel.SupervisorViewModel;
+using Infrastructure.Entities.Dto.ViewModel.StudentViewModel;
+using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +13,16 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
 {
     public interface IRegisteredService
     {
-        Task<ApiResult<bool>> AddRegisteredGroup(RegisteredGroup registeredGroup, List<RegisteredGroupSupervisorForSubmitRegistration> supervisorSubmitRegist);
-        Task<ApiResult<RegisteredGroup>> GetRegisteredGroupByGroupIdeaId(int groupIdeaId);
-        Task<ApiResult<RegisteredGroup>> GetRegisteredGroupsBySearch(int semesterId, int status, string searchText, int offsetNumber, int fetchNumber);
+        Task<ApiResult<bool>> AddRegisteredGroup(RegisteredGroupDto registeredGroup, List<RegisteredGroupSupervisorForSubmitRegistration> supervisorSubmitRegist);
+        Task<ApiResult<RegisteredGroupDto>> GetRegisteredGroupByGroupIdeaId(int groupIdeaId);
+        Task<ApiResult<RegisteredGroupDto>> GetRegisteredGroupsBySearch(int semesterId, int status, string searchText, int offsetNumber, int fetchNumber);
         Task<ApiResult<int>> CountRecordRegisteredGroupSearchList(int semesterId, int status, string searchText);
         Task<ApiResult<bool>> UpdateStatusByRegisteredGroupID(int registeredGroupID);
 
         Task<ApiResult<bool>> UpdateStatusOfRegisteredGroup(int registeredGroupId, int status);
-        Task<ApiResult<RegisteredGroup>> GetDetailRegistrationOfStudentByGroupIdeaId(int registeredGroupId);
+        Task<ApiResult<RegisteredGroupDto>> GetDetailRegistrationOfStudentByGroupIdeaId(int registeredGroupId);
         Task<ApiResult<bool>> UpdateStaffCommentByRegisteredGroupID(string staffComment, int registeredGroupId);
-        Task<ApiResult<RegisteredGroup>> GetGroupIDByRegisteredGroupId(int registeredGroupId);
+        Task<ApiResult<RegisteredGroupDto>> GetGroupIDByRegisteredGroupId(int registeredGroupId);
         Task<ApiResult<bool>> DeleteRecord(int id);
 
         Task<ApiResult<bool>> DeleteRegisteredGroup(int registeredGroupId);
@@ -43,18 +43,18 @@ namespace Infrastructure.Services.PrivateService.RegisteredService
 
         Task<ApiResult<XLWorkbook>> CreateWorkBookAllUnsubmittedGroup(int currentSemesterId);
 
-        (int, int, List<RegisteredGroup>) GetListRegisteredGroupsForSupervisor(int semester_ID, string supervisor_ID, string search, int pageNumber, int[] statuses);
+        (int, int, List<RegisteredGroupDto>) GetListRegisteredGroupsForSupervisor(int semester_ID, string supervisor_ID, string search, int pageNumber, int[] statuses);
         Task<ApiResult<RegisteredGroupRequest>> GetRegisteredGroupForSupervisorById(int registeredGroupId, string supervisorId);
 
         Task<ApiResult<bool>> UpdateStatusRegisterGroupForSupervisor(int status, int registeredGroupID, string supervisorID);
 
         Task<List<RegisteredGroupRequest>> GetAssignedGroup(string supervisorIds, int[] professions);
 
-        Task<ApiResult<List<Student>>> GetRegisteredGroupMember(string studentId, bool isLeader);
+        Task<ApiResult<List<StudentDto>>> GetRegisteredGroupMember(string studentId, bool isLeader);
 
         Task<ApiResult<XLWorkbook>> CreateWorkBookBasedOnRegisterGroupList(List<RegisteredGroupRequest> registeredGroupRequests, int currentRow, List<Profession> devHeadProfessions);
 
-        (List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<string>, List<int>) AssignMentorsBasedOnRegisterGroupWorkSheet(IXLWorksheet worksheet, int startRow, List<Profession> professions);
+        (List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<RegisteredGroupRequest>, List<string>, List<int>) AssignMentorsBasedOnRegisterGroupWorkSheet(IXLWorksheet worksheet, int startRow, List<ProfessionDto> professions);
 
         Task<ApiResult<bool>> CheckRegisteredGroupAccept();
 

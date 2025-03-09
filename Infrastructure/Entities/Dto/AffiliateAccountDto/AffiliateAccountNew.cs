@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Entities.Dto.AffiliateAccountDto
+namespace Infrastructure.Entities
 {
     internal class AffiliateAccountNew
     {

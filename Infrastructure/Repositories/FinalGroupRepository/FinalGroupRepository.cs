@@ -1,7 +1,6 @@
 ﻿using DocumentFormat.OpenXml.InkML;
 using Infrastructure.Entities;
 using Infrastructure.Entities.DBContext;
-using Infrastructure.Entities.Dto.StudentDto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

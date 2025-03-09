@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Entities;
-using Infrastructure.ViewModel;
+using Infrastructure.Entities.Dto.ViewModel.AdminViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace Infrastructure.Repositories.UserRepository
     {
         Task<bool> AddUser(User user, int roleId, int professionId, int specialtyId);
         Task<bool> CheckProfileUserHaveAttributeIsNullByUserId(string userId);
-        Task<bool> CheckReferenceDUserData(User user);
+        Task<bool> CheckReferenceDUserData(UserDto user);
         Task<bool> CheckUserByUserIdAndRoleExist(string userId, string role);
         Task<List<string>> GetListFptEmailByGroupIdeaId(int groupIdeaId);
         Task<List<UserWithRowNum>> GetListUserByRoleList(List<int> roleIds);

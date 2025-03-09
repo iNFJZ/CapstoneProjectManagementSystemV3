@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.ViewModel.Quartz
+namespace Infrastructure.Entities.Dto.ViewModel.Quartz
 {
     internal class MyJob
     {

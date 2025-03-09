@@ -43,7 +43,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
 
         public async Task<ApiResult<bool>> CreateChangeFinalGroupRequestDao(string fromStudentId, string toStudentId)
         {
-            Expression<Func<Student, bool>> FromStudentExpression = x => x.StudentId ==fromStudentId;
+            Expression<Func<Student, bool>> FromStudentExpression = x => x.StudentId == fromStudentId;
             var fromStudent = await _studentRepository.GetById(FromStudentExpression);
             Expression<Func<Student, bool>> ToStudentExpression = x => x.StudentId == fromStudentId;
             var toStudent = await _studentRepository.GetById(ToStudentExpression);
@@ -64,21 +64,43 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             cfgExpression.Add(x => x.ToStudentId == toStudentId);
             cfgExpression.Add(x => x.ChangeFinalGroupRequestId == changeFinalGroupRequestId);
             var changeFinalGroup = await _changeFinalGroupRepository.GetByConditionId(cfgExpression);
-            if(changeFinalGroup == null)
+            if (changeFinalGroup == null)
             {
                 return new ApiErrorResult<string>("Không tìm thấy người gửi yêu cầu");
             }
             return new ApiSuccessResult<string>(changeFinalGroup.FromStudentId);
         }
 
-        public async Task<ApiResult<ChangeFinalGroupRequest>> GetInforOfStudentExchangeFinalGroup(int changeFinalGroupRequestId)
+        public async Task<ApiResult<ChangeFinalGroupRequestDto>> GetInforOfStudentExchangeFinalGroup(int changeFinalGroupRequestId)
         {
             Expression<Func<ChangeFinalGroupRequest, bool>> cfgExpression = x => x.ChangeFinalGroupRequestId == changeFinalGroupRequestId;
             var changeFinalGroupRequest = await _changeFinalGroupRepository.GetById(cfgExpression);
-            return new ApiSuccessResult<ChangeFinalGroupRequest>(changeFinalGroupRequest);
+            var result = new ChangeFinalGroupRequestDto()
+            {
+                ChangeFinalGroupRequestId = changeFinalGroupRequest.ChangeFinalGroupRequestId,
+                FromStudent = new StudentDto()
+                {
+                    StudentId = changeFinalGroupRequest.FromStudentId,
+                    IsLeader = changeFinalGroupRequest.FromStudent.IsLeader,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = changeFinalGroupRequest.FromStudent.FinalGroupId.Value,
+                    }
+                },
+                ToStudent = new StudentDto()
+                {
+                    StudentId = changeFinalGroupRequest.ToStudentId,
+                    IsLeader = changeFinalGroupRequest.ToStudent.IsLeader,
+                    FinalGroup = new FinalGroupDto()
+                    {
+                        FinalGroupId = changeFinalGroupRequest.ToStudent.FinalGroupId.Value,
+                    }
+                }
+            };
+            return new ApiSuccessResult<ChangeFinalGroupRequestDto>(result);
         }
 
-        public async Task<ApiResult<List<ChangeFinalGroupRequest>>> GetListChangeFinalGroupRequest(string studentId, int semesterId)
+        public async Task<ApiResult<List<ChangeFinalGroupRequestDto>>> GetListChangeFinalGroupRequest(string studentId, int semesterId)
         {
             List<Expression<Func<ChangeFinalGroupRequest, bool>>> cfgExpression = new List<Expression<Func<ChangeFinalGroupRequest, bool>>>();
             cfgExpression.Add(x => x.ToStudentId == studentId || x.FromStudentId == studentId);
@@ -97,28 +119,32 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             fgExpression.Add(x => x.SemesterId == semesterId);
             fgExpression.Add(x => x.DeletedAt == null);
             var finalFroups = await _finalGroupRepository.GetByConditions(fgExpression);
-            var result = changeFinalGroup.Where(r => finalFroups.Any(g => g.FinalGroupId == r.FromStudent.FinalGroupId) &&
-                                                     finalFroups.Any(g => g.FinalGroupId == r.ToStudent.FinalGroupId))
-                                                     .Select(r => new ChangeFinalGroupRequest
-                                                     {
-                                                         ChangeFinalGroupRequestId = r.ChangeFinalGroupRequestId,
-                                                         FromStudent = new Student()
-                                                         {
-                                                             EmailAddress = r.FromStudent.EmailAddress,
-                                                             GroupName = r.FromStudent.GroupName,
-                                                         },
-                                                         ToStudent = new Student()
-                                                         {
-                                                             EmailAddress = r.ToStudent.EmailAddress,
-                                                             GroupName = r.ToStudent.GroupName,
-                                                         },
-                                                         StatusOfTo = r.StatusOfTo
-                                                     }).ToList();
-            return new ApiSuccessResult<List<ChangeFinalGroupRequest>>(result);
+            var changeFinalGroupRequestList = changeFinalGroup.Where(r => finalFroups.Any(g => g.FinalGroupId == r.FromStudent.FinalGroupId) &&
+                                                     finalFroups.Any(g => g.FinalGroupId == r.ToStudent.FinalGroupId)).ToList();
+            var result = new List<ChangeFinalGroupRequestDto>();
+            foreach (var request in changeFinalGroupRequestList)
+            {
+                result.Add(new ChangeFinalGroupRequestDto()
+                {
+                    ChangeFinalGroupRequestId = request.ChangeFinalGroupRequestId,
+                    FromStudent = new StudentDto()
+                    {
+                        EmailAddress = request.FromStudent.EmailAddress,
+                        GroupName = request.FromStudent.GroupName,
+                    },
+                    ToStudent = new StudentDto()
+                    {
+                        EmailAddress = request.ToStudent.EmailAddress,
+                        GroupName = request.ToStudent.GroupName,
+                    },
+                    StatusOfToStudent = request.StatusOfTo.Value
+                });
+            }
+            return new ApiSuccessResult<List<ChangeFinalGroupRequestDto>>(result);
             throw new NotImplementedException();
         }
 
-        public async Task<ApiResult<List<ChangeFinalGroupRequest>>> GetListChangeFinalGroupRequestBySearchText(string searchText, int status, int semesterId, int offsetNumber, int fetchNumber)
+        public async Task<ApiResult<List<ChangeFinalGroupRequestDto>>> GetListChangeFinalGroupRequestBySearchText(string searchText, int status, int semesterId, int offsetNumber, int fetchNumber)
         {
             if (searchText == null)
             {
@@ -128,11 +154,31 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             {
                 searchText = string.Concat("%", searchText.Trim().Replace(" ", "").ToUpper(), "%");
             }
-            var result = await _changeFinalGroupRepository.GetListChangeFinalGroupRequestBySearchText(searchText,status,semesterId,offsetNumber,fetchNumber);
-            return new ApiSuccessResult<List<ChangeFinalGroupRequest>>(result);
+            var changeFinalGroupRequestList = await _changeFinalGroupRepository.GetListChangeFinalGroupRequestBySearchText(searchText, status, semesterId, offsetNumber, fetchNumber);
+            var result = new List<ChangeFinalGroupRequestDto>();
+            foreach (var request in changeFinalGroupRequestList)
+            {
+                result.Add(new ChangeFinalGroupRequestDto()
+                {
+                    ChangeFinalGroupRequestId = request.ChangeFinalGroupRequestId,
+                    FromStudent = new StudentDto()
+                    {
+                        EmailAddress = request.FromStudent.EmailAddress,
+                        GroupName = request.FromStudent.GroupName,
+                    },
+                    ToStudent = new StudentDto()
+                    {
+                        EmailAddress = request.ToStudent.EmailAddress,
+                        GroupName = request.ToStudent.GroupName,
+                    },
+                    StaffComment = request.StaffComment,
+                    StatusOfStaff = request.StatusOfStaff.Value,
+                });
+            }
+            return new ApiSuccessResult<List<ChangeFinalGroupRequestDto>>(result);
         }
 
-        public async Task<ApiResult<List<ChangeFinalGroupRequest>>> GetListChangeFinalGroupRequestFromOfStudent(string fromStudentId, int semesterId)
+        public async Task<ApiResult<List<ChangeFinalGroupRequestDto>>> GetListChangeFinalGroupRequestFromOfStudent(string fromStudentId, int semesterId)
         {
             List<Expression<Func<ChangeFinalGroupRequest, bool>>> cfgExpression = new List<Expression<Func<ChangeFinalGroupRequest, bool>>>();
             cfgExpression.Add(x => x.FromStudentId == fromStudentId);
@@ -150,7 +196,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             fgExpression.Add(x => x.SemesterId == semesterId);
             fgExpression.Add(x => x.DeletedAt == null);
             var finalFroups = await _finalGroupRepository.GetByConditions(fgExpression);
-            var result = changeFinalGroup.Where(r => finalFroups.Any(g => g.FinalGroupId == r.FromStudent.FinalGroupId) &&
+            var changeFinalGroupRequestList = changeFinalGroup.Where(r => finalFroups.Any(g => g.FinalGroupId == r.FromStudent.FinalGroupId) &&
                                                      finalFroups.Any(g => g.FinalGroupId == r.ToStudent.FinalGroupId))
                                                      .Select(r => new ChangeFinalGroupRequest
                                                      {
@@ -167,10 +213,29 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
                                                          },
                                                          StatusOfTo = r.StatusOfTo
                                                      }).ToList();
-            return new ApiSuccessResult<List<ChangeFinalGroupRequest>>(result);
+            var result = new List<ChangeFinalGroupRequestDto>();
+            foreach (var request in changeFinalGroupRequestList)
+            {
+                result.Add(new ChangeFinalGroupRequestDto()
+                {
+                    ChangeFinalGroupRequestId = request.ChangeFinalGroupRequestId,
+                    FromStudent = new StudentDto()
+                    {
+                        EmailAddress = request.FromStudent.EmailAddress,
+                        GroupName = request.FromStudent.GroupName,
+                    },
+                    ToStudent = new StudentDto()
+                    {
+                        EmailAddress = request.ToStudent.EmailAddress,
+                        GroupName = request.ToStudent.GroupName,
+                    },
+                    StatusOfToStudent = request.StatusOfTo.Value
+                });
+            }
+            return new ApiSuccessResult<List<ChangeFinalGroupRequestDto>>(result);
         }
 
-        public async Task<ApiResult<List<ChangeFinalGroupRequest>>> GetListChangeFinalGroupRequestToOfStudent(string toStudentId, int semesterId)
+        public async Task<ApiResult<List<ChangeFinalGroupRequestDto>>> GetListChangeFinalGroupRequestToOfStudent(string toStudentId, int semesterId)
         {
             List<Expression<Func<ChangeFinalGroupRequest, bool>>> cfgExpression = new List<Expression<Func<ChangeFinalGroupRequest, bool>>>();
             cfgExpression.Add(x => x.ToStudentId == toStudentId);
@@ -188,7 +253,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
             fgExpression.Add(x => x.SemesterId == semesterId);
             fgExpression.Add(x => x.DeletedAt == null);
             var finalFroups = await _finalGroupRepository.GetByConditions(fgExpression);
-            var result = changeFinalGroup.Where(r => finalFroups.Any(g => g.FinalGroupId == r.FromStudent.FinalGroupId) &&
+            var changeFinalGroupRequestList = changeFinalGroup.Where(r => finalFroups.Any(g => g.FinalGroupId == r.FromStudent.FinalGroupId) &&
                                                      finalFroups.Any(g => g.FinalGroupId == r.ToStudent.FinalGroupId))
                                                      .Select(r => new ChangeFinalGroupRequest
                                                      {
@@ -205,12 +270,31 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
                                                          },
                                                          StatusOfTo = r.StatusOfTo
                                                      }).ToList();
-            return new ApiSuccessResult<List<ChangeFinalGroupRequest>>(result);
+            var result = new List<ChangeFinalGroupRequestDto>();
+            foreach (var request in changeFinalGroupRequestList)
+            {
+                result.Add(new ChangeFinalGroupRequestDto()
+                {
+                    ChangeFinalGroupRequestId = request.ChangeFinalGroupRequestId,
+                    FromStudent = new StudentDto()
+                    {
+                        EmailAddress = request.FromStudent.EmailAddress,
+                        GroupName = request.FromStudent.GroupName,
+                    },
+                    ToStudent = new StudentDto()
+                    {
+                        EmailAddress = request.ToStudent.EmailAddress,
+                        GroupName = request.ToStudent.GroupName,
+                    },
+                    StatusOfToStudent = request.StatusOfTo.Value
+                });
+            }
+            return new ApiSuccessResult<List<ChangeFinalGroupRequestDto>>(result);
         }
 
         public async Task<ApiResult<bool>> UpdateGroupForStudentByChangeFinalGroupRequest(ChangeFinalGroupRequest changeFinalGroupRequest)
         {
-            Expression<Func<ChangeFinalGroupRequest , bool>> cfgExpression = x => x.ChangeFinalGroupRequestId == changeFinalGroupRequest.ChangeFinalGroupRequestId;
+            Expression<Func<ChangeFinalGroupRequest, bool>> cfgExpression = x => x.ChangeFinalGroupRequestId == changeFinalGroupRequest.ChangeFinalGroupRequestId;
             var changeFinalGroup = await _changeFinalGroupRepository.GetById(cfgExpression);
             if (changeFinalGroup == null)
             {

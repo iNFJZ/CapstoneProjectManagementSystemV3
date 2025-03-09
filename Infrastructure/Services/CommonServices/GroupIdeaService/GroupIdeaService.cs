@@ -19,7 +19,7 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             _groupIdeaRepository = groupIdeaRepository;
         }
 
-        public async Task<ApiResult<List<GroupIdea>>> GetGroupIdeaSearchList(int semester_Id, int profession_Id, int specialty_Id, string searchText, int offsetNumber, int fetchNumber)
+        public async Task<ApiResult<List<GroupIdeaDto>>> GetGroupIdeaSearchList(int semester_Id, int profession_Id, int specialty_Id, string searchText, int offsetNumber, int fetchNumber)
         {
             string semesterIdToString = semester_Id.ToString();
             string professionIdToString = profession_Id.ToString();
@@ -44,11 +44,38 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             {
                 searchText = String.Concat("%", searchText.Trim().Replace(" ", "").ToUpper(), "%");
             }
-            var result = await _groupIdeaRepository.GetGroupIdeaSearchList(semesterIdToString, professionIdToString, specialtyIdToString, searchText, offsetNumber, fetchNumber);
-            return new ApiSuccessResult<List<GroupIdea>>(result);
+            var groupIdeaSearchList = await _groupIdeaRepository.GetGroupIdeaSearchList(semesterIdToString, professionIdToString, specialtyIdToString, searchText, offsetNumber, fetchNumber);
+            var result = new List<GroupIdeaDto>();
+            foreach (var groupIdea in groupIdeaSearchList)
+            {
+                result.Add(new GroupIdeaDto()
+                {
+                    GroupIdeaID = groupIdea.GroupIdeaId,
+                    ProjectEnglishName = groupIdea.ProjectVietNameseName,
+                    ProjectVietNameseName = groupIdea.ProjectVietNameseName,
+                    ProjectTags = groupIdea.ProjectTags,
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = groupIdea.ProfessionId
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = groupIdea.SpecialtyId
+                    },
+                    Description = groupIdea.Description,
+                    NumberOfMember = groupIdea.NumberOfMember,
+                    MaxMember = groupIdea.MaxMember,
+                    CreatedAt = groupIdea.CreatedAt,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = groupIdea.SemesterId
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<GroupIdeaDto>>(result);
         }
 
-        public async Task<ApiResult<List<GroupIdea>>> GetGroupIdeaSearchList_2(int semester_Id, int profession_Id, int specialty_Id, string searchText, string studentId, int offsetNumber, int fetchNumber)
+        public async Task<ApiResult<List<GroupIdeaDto>>> GetGroupIdeaSearchList_2(int semester_Id, int profession_Id, int specialty_Id, string searchText, string studentId, int offsetNumber, int fetchNumber)
         {
             string semesterIdToString = semester_Id.ToString();
             string professionIdToString = profession_Id.ToString();
@@ -73,8 +100,35 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             {
                 searchText = String.Concat("%", searchText.Trim().Replace(" ", "").ToUpper(), "%");
             }
-            var result = await _groupIdeaRepository.GetGroupIdeaSearchList_2(semesterIdToString, professionIdToString, specialtyIdToString, searchText ,studentId, offsetNumber, fetchNumber);
-            return new ApiSuccessResult<List<GroupIdea>>(result);
+            var groupIdeaSearchList = await _groupIdeaRepository.GetGroupIdeaSearchList_2(semesterIdToString, professionIdToString, specialtyIdToString, searchText, studentId, offsetNumber, fetchNumber);
+            var result = new List<GroupIdeaDto>();
+            foreach (var groupIdea in groupIdeaSearchList)
+            {
+                result.Add(new GroupIdeaDto()
+                {
+                    GroupIdeaID = groupIdea.GroupIdeaId,
+                    ProjectEnglishName = groupIdea.ProjectVietNameseName,
+                    ProjectVietNameseName = groupIdea.ProjectVietNameseName,
+                    ProjectTags = groupIdea.ProjectTags,
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = groupIdea.ProfessionId
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = groupIdea.SpecialtyId
+                    },
+                    Description = groupIdea.Description,
+                    NumberOfMember = groupIdea.NumberOfMember,
+                    MaxMember = groupIdea.MaxMember,
+                    CreatedAt = groupIdea.CreatedAt,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = groupIdea.SemesterId
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<GroupIdeaDto>>(result);
         }
 
         public async Task<ApiResult<int>> getNumberOfResultWhenSearch(int semester_Id, int profession_Id, int specialty_Id, string searchText)
@@ -131,17 +185,41 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             {
                 searchText = String.Concat("%", searchText.Trim().Replace(" ", "").ToUpper(), "%");
             }
-            var result = await _groupIdeaRepository.GetNumberOfResultWhenSearch2(semesterIdToString, professionIdToString, specialtyIdToString, searchText,studentId);
+            var result = await _groupIdeaRepository.GetNumberOfResultWhenSearch2(semesterIdToString, professionIdToString, specialtyIdToString, searchText, studentId);
             return new ApiSuccessResult<int>(result);
         }
 
-        public async Task<ApiResult<GroupIdea>> GetGroupIdeaById(int id)
+        public async Task<ApiResult<GroupIdeaDto>> GetGroupIdeaById(int id)
         {
-            var result = await _groupIdeaRepository.GetGroupIdeaByIdAsync(id);
-            return new ApiSuccessResult<GroupIdea>(result);
+            var groupIdea = await _groupIdeaRepository.GetGroupIdeaByIdAsync(id);
+            var result = new GroupIdeaDto()
+            {
+                GroupIdeaID = groupIdea.GroupIdeaId,
+                ProjectEnglishName = groupIdea.ProjectVietNameseName,
+                ProjectVietNameseName = groupIdea.ProjectVietNameseName,
+                ProjectTags = groupIdea.ProjectTags,
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = groupIdea.ProfessionId
+                },
+                Specialty = new SpecialtyDto()
+                {
+                    SpecialtyID = groupIdea.SpecialtyId
+                },
+                Abrrevation = groupIdea.Abbreviation,
+                Description = groupIdea.Description,
+                NumberOfMember = groupIdea.NumberOfMember,
+                MaxMember = groupIdea.MaxMember,
+                CreatedAt = groupIdea.CreatedAt,
+                Semester = new SemesterDto()
+                {
+                    SemesterID = groupIdea.SemesterId
+                }
+            };
+            return new ApiSuccessResult<GroupIdeaDto>(result);
         }
 
-        public Task<ApiResult<GroupIdea>> GetAllGroupIdeaById(int Id) // khong hieu nghiep vu 
+        public Task<ApiResult<GroupIdeaDto>> GetAllGroupIdeaById(int Id) // khong hieu nghiep vu 
         {
             throw new NotImplementedException();
         }
@@ -232,10 +310,37 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             throw new NotImplementedException();
         }
 
-        public async Task<ApiResult<List<GroupIdea>>> GetGroupIdeasByUserID(string UserID)
+        public async Task<ApiResult<List<GroupIdeaDto>>> GetGroupIdeasByUserID(string UserID)
         {
-            var result = await _groupIdeaRepository.GetGroupIdeasByUserIDAsync(UserID);
-            return new ApiSuccessResult<List<GroupIdea>>(result);
+            var groupIdeaList = await _groupIdeaRepository.GetGroupIdeasByUserIDAsync(UserID);
+            var result = new List<GroupIdeaDto>();
+            foreach (var groupIdea in groupIdeaList)
+            {
+                result.Add(new GroupIdeaDto()
+                {
+                    GroupIdeaID = groupIdea.GroupIdeaId,
+                    ProjectEnglishName = groupIdea.ProjectVietNameseName,
+                    ProjectVietNameseName = groupIdea.ProjectVietNameseName,
+                    ProjectTags = groupIdea.ProjectTags,
+                    Profession = new ProfessionDto()
+                    {
+                        ProfessionID = groupIdea.ProfessionId
+                    },
+                    Specialty = new SpecialtyDto()
+                    {
+                        SpecialtyID = groupIdea.SpecialtyId
+                    },
+                    Description = groupIdea.Description,
+                    NumberOfMember = groupIdea.NumberOfMember,
+                    MaxMember = groupIdea.MaxMember,
+                    CreatedAt = groupIdea.CreatedAt,
+                    Semester = new SemesterDto()
+                    {
+                        SemesterID = groupIdea.SemesterId
+                    }
+                });
+            }
+            return new ApiSuccessResult<List<GroupIdeaDto>>(result);
         }
 
         public async Task<ApiResult<bool>> UpdateStatusOfIdea(int ideaid, bool status)
@@ -253,6 +358,5 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             return new ApiSuccessResult<bool>(true);
         }
 
-        
     }
 }

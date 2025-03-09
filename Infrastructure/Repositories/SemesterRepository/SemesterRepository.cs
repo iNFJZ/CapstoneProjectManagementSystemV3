@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Entities.DBContext;
-using Infrastructure.Entities.Dto.SemesterDto;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

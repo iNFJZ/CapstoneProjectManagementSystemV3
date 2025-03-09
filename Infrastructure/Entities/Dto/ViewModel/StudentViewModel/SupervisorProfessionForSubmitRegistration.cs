@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.ViewModel.StudentViewModel
+namespace Infrastructure.Entities.Dto.ViewModel.StudentViewModel
 {
     public class SupervisorProfessionForSubmitRegistration
     {

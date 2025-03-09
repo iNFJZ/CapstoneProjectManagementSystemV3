@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Entities;
-using Infrastructure.Entities.Dto.SemesterDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

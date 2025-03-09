@@ -12,8 +12,8 @@ namespace Infrastructure.Services.CommonServices.NotificationService
     {
         Task<ApiResult<int>> CountNotificationNotRead(string userId);
         Task<ApiResult<int>> CountAllNotification(string userId);
-        Task<ApiResult<List<Notification>>> GetListAllNotificationByUserId(int numberOfRecord, string userId);
-        Task<ApiResult<List<Notification>>> GetListNotificationNotReadByReceiverID(int numberOfRecord, string userId);
+        Task<ApiResult<List<NotificationDto>>> GetListAllNotificationByUserId(int numberOfRecord, string userId);
+        Task<ApiResult<List<NotificationDto>>> GetListNotificationNotReadByReceiverID(int numberOfRecord, string userId);
         Task<ApiResult<bool>> InsertDataNotification(string userId, string notificationContent, string attachedLink);
 
         Task<ApiResult<string>> GetAttachedLinkByNotificationId(int notificationId);

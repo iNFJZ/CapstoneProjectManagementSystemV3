@@ -10,9 +10,9 @@ namespace Infrastructure.Services.PrivateService.ConfigurationService
 {
     public interface IConfigurationService
     {
-        Task<ApiResult<bool>> Insert(int Specialty, List<With> Withs, int Profession);
-        Task<ApiResult<List<With>>> GetWithsBySpecialtyID(int specialtyID);
+        Task<ApiResult<bool>> Insert(int Specialty, List<WithDto> Withs, int Profession);
+        Task<ApiResult<List<WithDto>>> GetWithsBySpecialtyID(int specialtyID);
 
-        Task<ApiResult<List<With>>> GetWithProfessionBySpecialityId(int specialityId);
+        Task<ApiResult<List<WithDto>>> GetWithProfessionBySpecialityId(int specialityId);
     }
 }

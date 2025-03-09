@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Services.PrivateService.RoleService
 {
-    public interface IRoleService 
+    public interface IRoleService
     {
-        Task<ApiResult<List<Role>>> GetRoles();
+        Task<ApiResult<List<RoleDto>>> GetRoles();
     }
 }

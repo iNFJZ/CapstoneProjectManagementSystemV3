@@ -5,10 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.ViewModel.SupervisorViewModel;
-using Infrastructure.Entities.Dto.StudentDto;
 using Infrastructure.Entities.Common.ApiResult;
 using Microsoft.AspNetCore.Http;
+using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 
 namespace Infrastructure.Services.CommonServices.FinalGroupService
 {
@@ -33,7 +32,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
         Task<ApiResult<bool>> UpdateNewTopicForFinalGroup(ChangeTopicRequest changeTopicRequest);
         Task<ApiResult<string>> GetLatestGroupName(string codeOfGroupName);
         Task<ApiResult<List<FinalGroupDto>>> GetListFinalGroupBySupervisorID(string supervisorId, int semesterId);
-        Task<ApiResult<bool>> ConfirmFinalReport( FinalGroupDto finalGroup);
+        Task<ApiResult<bool>> ConfirmFinalReport(FinalGroupDto finalGroup);
 
         Task<ApiResult<FinalGroupDto>> getFinalGroupDetailForSupervisor(int finalGroupId);
 

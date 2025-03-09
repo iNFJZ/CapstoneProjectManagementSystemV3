@@ -1,5 +1,4 @@
 ﻿using Infrastructure.Entities;
-using Infrastructure.Entities.Dto.SemesterDto;
 using Infrastructure.Repositories.SemesterRepository;
 using Infrastructure.Services.CommonServices.SemesterService;
 using System;

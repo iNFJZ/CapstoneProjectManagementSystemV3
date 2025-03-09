@@ -64,9 +64,9 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
             expressions.Add(e => e.DeletedAt == null);
             expressions.Add(e => e.IsVerifyEmail == true);
             var affiliateAccount = await _affiliateAccountRepository.GetByConditionId(expressions);
-            if(affiliateAccount != null)
+            if (affiliateAccount != null)
             {
-                return new ApiSuccessResult<bool>  (true);
+                return new ApiSuccessResult<bool>(true);
             }
             return new ApiSuccessResult<bool>(false);
         }
@@ -101,7 +101,12 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
                         PasswordHash = affiliateAccount.PasswordHash,
                         IsVerifyEmail = affiliateAccount.IsVerifyEmail,
                         OneTimePassword = affiliateAccount.OneTimePassword,
-                        User = affiliateAccount.AffiliateAccountNavigation
+                        User = new UserDto()
+                        {
+                            UserName = affiliateAccount.AffiliateAccountNavigation.UserName,
+                            FullName = affiliateAccount.AffiliateAccountNavigation.FullName,
+                            FptEmail = affiliateAccount.AffiliateAccountNavigation.FptEmail
+                        }
                     };
                     return new ApiSuccessResult<AffiliateAccountDto>(affiliateAccountDto);
                 }
@@ -126,7 +131,13 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
                 PasswordHash = affiliateAccount.PasswordHash,
                 IsVerifyEmail = affiliateAccount.IsVerifyEmail,
                 OneTimePassword = affiliateAccount.OneTimePassword,
-                User = affiliateAccount.AffiliateAccountNavigation
+                OtpRequestTime = Convert.ToDateTime(affiliateAccount.OtpRequestTime),
+                User = new UserDto()
+                {
+                    UserName = affiliateAccount.AffiliateAccountNavigation.UserName,
+                    FullName = affiliateAccount.AffiliateAccountNavigation.FullName,
+                    FptEmail = affiliateAccount.AffiliateAccountNavigation.FptEmail
+                }
             };
             return new ApiSuccessResult<AffiliateAccountDto>(affiliateAccountDto);
         }
@@ -149,7 +160,7 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
         {
             Expression<Func<AffiliateAccount, bool>> expression = x => x.AffiliateAccountId == BackupAccount_Id;
             var findObj = await _affiliateAccountRepository.GetById(expression);
-            if(findObj == null)
+            if (findObj == null)
             {
                 return new ApiErrorResult<bool>("Không tìm thấy đối tượng");
             }

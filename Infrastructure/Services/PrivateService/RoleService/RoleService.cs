@@ -17,10 +17,19 @@ namespace Infrastructure.Services.PrivateService.RoleService
             _roleRepository = roleRepository;
         }
 
-        public async Task<ApiResult<List<Role>>> GetRoles()
+        public async Task<ApiResult<List<RoleDto>>> GetRoles()
         {
             var roles = (await _roleRepository.GetAll()).ToList();
-            return new ApiSuccessResult<List<Role>>(roles);
+            var result = new List<RoleDto>();
+            foreach (var role in roles)
+            {
+                result.Add(new RoleDto()
+                {
+                    Role_ID = role.RoleId,
+                    RoleName = role.RoleName
+                });
+            }
+            return new ApiSuccessResult<List<RoleDto>>(result);
         }
     }
 }

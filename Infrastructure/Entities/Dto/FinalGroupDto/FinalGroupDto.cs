@@ -1,7 +1,4 @@
 ﻿using Infrastructure.Custom;
-using Infrastructure.Entities.Dto.SemesterDto;
-using Infrastructure.Entities.Dto.SpecialtyDto;
-using Infrastructure.Entities.Dto.StudentDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,9 +29,9 @@ namespace Infrastructure.Entities
         public string UserId { get; set; }
         public string SemesterCode { get; set; }
 
-        public virtual Profession Profession { get; set; } = null!;
-        public virtual Semester Semester { get; set; } = null!;
-        public virtual Specialty Specialty { get; set; } = null!;
-        public virtual Supervisor? Supervisor { get; set; }
+        public virtual ProfessionDto Profession { get; set; } = null!;
+        public virtual SemesterDto Semester { get; set; } = null!;
+        public virtual SpecialtyDto Specialty { get; set; } = null!;
+        public virtual SupervisorDto? Supervisor { get; set; }
     }
 }

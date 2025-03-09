@@ -2,9 +2,8 @@
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common;
 using Infrastructure.Entities.Common.ApiResult;
-using Infrastructure.Entities.Dto.StudentDto;
+using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 using Infrastructure.Repositories.FinalGroupRepository;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +18,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
         private readonly IFinalGroupRepository _finalGroupRepository;
         public FinalGroupService(IFinalGroupRepository finalGroupRepository)
         {
-           _finalGroupRepository = finalGroupRepository;
+            _finalGroupRepository = finalGroupRepository;
             //them vao sau 
         }
 
@@ -32,7 +31,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
         {
 
             await _finalGroupRepository.ConfirmFinalReport(finalGroup);
-            return new ApiSuccessResult<bool>(true);    
+            return new ApiSuccessResult<bool>(true);
         }
 
         public async Task<ApiResult<bool>> CreateFinalGroup(int semesterId, int professionId, int specilatyId, string groupName, string englishName, string abbreviation, string vietnameseName, int maxMember, int numberOfMember)
@@ -59,7 +58,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
             expressions.Add(fg => fg.FinalGroupId == finalGroupId);
             expressions.Add(fg => fg.DeletedAt == null);
             var finalGroup = await _finalGroupRepository.GetByConditionId(expressions);
-            if(finalGroup == null)
+            if (finalGroup == null)
             {
                 return new ApiErrorResult<bool>("Không tìm thấy đối tượng");
             }
@@ -70,7 +69,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
 
         public async Task<ApiResult<List<FinalGroupDto>>> getAllFinalGroups(int semester_Id)
         {
-            var finalGroups =  await _finalGroupRepository.getAllFinalGroups(semester_Id);
+            var finalGroups = await _finalGroupRepository.getAllFinalGroups(semester_Id);
             return new ApiSuccessResult<List<FinalGroupDto>>(finalGroups);
         }
 
@@ -82,7 +81,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
 
         public async Task<ApiResult<FinalGroupDto>> GetFinalGroupByStudentIsLeader(string studentId, int semesterId)
         {
-            var finalGroup = await _finalGroupRepository.GetFinalGroupByStudentIsLeader(studentId,semesterId);
+            var finalGroup = await _finalGroupRepository.GetFinalGroupByStudentIsLeader(studentId, semesterId);
             return new ApiSuccessResult<FinalGroupDto>(finalGroup);
         }
 
@@ -94,7 +93,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
 
         public async Task<ApiResult<List<FinalGroupDto>>> GetFullMemberFinalGroupSearchList(int semester_Id, int profession_Id, int specialty_Id, string searchText, int offsetNumber, int fetchNumber)
         {
-            var finalGroups = await _finalGroupRepository.GetFullMemberFinalGroupSearchList(semester_Id,profession_Id,specialty_Id,searchText,offsetNumber,fetchNumber);
+            var finalGroups = await _finalGroupRepository.GetFullMemberFinalGroupSearchList(semester_Id, profession_Id, specialty_Id, searchText, offsetNumber, fetchNumber);
             return new ApiSuccessResult<List<FinalGroupDto>>(finalGroups);
         }
 
@@ -178,7 +177,7 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
             {
                 return new ApiErrorResult<bool>("Không tìm thấy đối tượng");
             }
-            finalGroup.NumberOfMember += 1 ;
+            finalGroup.NumberOfMember += 1;
             return new ApiSuccessResult<bool>(true);
         }
 
