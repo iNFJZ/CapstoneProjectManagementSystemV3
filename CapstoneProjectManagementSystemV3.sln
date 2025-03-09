@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneProjectManagementSy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{944488FA-AF9F-4094-AE81-EFCBDDB6A1CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CapstoneProjectManagementSystemV3UI", "CapstoneProjectManagementSystemV3UI\CapstoneProjectManagementSystemV3UI.csproj", "{49A98932-36C0-499B-805F-75ADBDA53E2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneProjectManagementSystemV3UI", "CapstoneProjectManagementSystemV3UI\CapstoneProjectManagementSystemV3UI.csproj", "{49A98932-36C0-499B-805F-75ADBDA53E2F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CapstoneProjectManagementSystemV3Tests.UnitTest", "CapstoneProjectManagementSystemV3Tests\CapstoneProjectManagementSystemV3Tests.UnitTest.csproj", "{ECC9223B-A4FD-4A49-9307-6E4073A4EA35}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{49A98932-36C0-499B-805F-75ADBDA53E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49A98932-36C0-499B-805F-75ADBDA53E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49A98932-36C0-499B-805F-75ADBDA53E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECC9223B-A4FD-4A49-9307-6E4073A4EA35}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC9223B-A4FD-4A49-9307-6E4073A4EA35}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC9223B-A4FD-4A49-9307-6E4073A4EA35}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC9223B-A4FD-4A49-9307-6E4073A4EA35}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

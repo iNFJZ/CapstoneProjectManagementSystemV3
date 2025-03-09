@@ -62,8 +62,8 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             }
         }
 
-        [HttpPost("create-supervisor-leader")]
-        public async Task<IActionResult> CreateSupervisorLeader([FromBody] Supervisor supervisor)
+        [HttpPost("create-department-leader")]
+        public async Task<IActionResult> CreateDepartmentLeader([FromBody] Supervisor supervisor)
         {
             try
             {
