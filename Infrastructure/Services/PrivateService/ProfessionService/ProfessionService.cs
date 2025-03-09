@@ -37,7 +37,7 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
             _supervisorGroupIdeaReporitory = supervisorGroupIdeaReporitory;
         }
 
-        public async Task<ApiResult<int>> AddProfessionThenReturnId(Profession profession, int semesterId)
+        public async Task<ApiResult<int>> AddProfessionThenReturnId(ProfessionDto profession, int semesterId)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
                 {
                     ProfessionAbbreviation = profession.ProfessionAbbreviation,
                     ProfessionFullName = profession.ProfessionFullName,
-                    SemesterId = profession.SemesterId
+                    SemesterId = profession.Semester.SemesterID
                 };
                 await _professionRepository.CreateAsync(newProfession);
                 return new ApiSuccessResult<int>(newProfession.ProfessionId);
@@ -222,10 +222,10 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<bool>> UpdateProfession(Profession profession)
+        public async Task<ApiResult<bool>> UpdateProfession(ProfessionDto profession)
         {
             List<Expression<Func<Profession, bool>>> professionExpression = new List<Expression<Func<Profession, bool>>>();
-            professionExpression.Add(p => p.ProfessionId == profession.ProfessionId);
+            professionExpression.Add(p => p.ProfessionId == profession.ProfessionID);
             professionExpression.Add(p => p.DeletedAt == null);
             var professionReult = await _professionRepository.GetByConditionId(professionExpression);
             professionReult.ProfessionAbbreviation = profession.ProfessionAbbreviation;
@@ -235,9 +235,9 @@ namespace Infrastructure.Services.PrivateService.ProfessionService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<int>> UpdateProfessionV2(Profession profession)
+        public async Task<ApiResult<int>> UpdateProfessionV2(ProfessionDto profession)
         {
-            var professionResult = await _professionRepository.UpsertProfessionAsyncV2(profession.ProfessionId, profession.ProfessionAbbreviation, profession.ProfessionFullName, profession.Semester.SemesterId);
+            var professionResult = await _professionRepository.UpsertProfessionAsyncV2(profession.ProfessionID, profession.ProfessionAbbreviation, profession.ProfessionFullName, profession.Semester.SemesterID);
             return new ApiSuccessResult<int>(professionResult);
         }
     }

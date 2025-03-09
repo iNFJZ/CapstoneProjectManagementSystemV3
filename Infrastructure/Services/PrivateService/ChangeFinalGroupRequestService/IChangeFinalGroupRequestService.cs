@@ -21,7 +21,7 @@ namespace Infrastructure.Services.PrivateService.ChangeFinalGroupRequestService
                 (string searchText, int status, int semesterId, int offsetNumber, int fetchNumber);
         Task<ApiResult<int>> CountRecordChangeFinalGroupBySearchText(string searchText, int status, int semesterId);
         Task<ApiResult<ChangeFinalGroupRequestDto>> GetInforOfStudentExchangeFinalGroup(int changeFinalGroupRequestId);
-        Task<ApiResult<bool>> UpdateGroupForStudentByChangeFinalGroupRequest(ChangeFinalGroupRequest changeFinalGroupRequest);
+        Task<ApiResult<bool>> UpdateGroupForStudentByChangeFinalGroupRequest(ChangeFinalGroupRequestDto changeFinalGroupRequest);
         Task<ApiResult<bool>> UpdateStatusOfStaffByChangeFinalGroupRequestId(int changeFinalGroupRequestId, string staffComment);
     }
 }

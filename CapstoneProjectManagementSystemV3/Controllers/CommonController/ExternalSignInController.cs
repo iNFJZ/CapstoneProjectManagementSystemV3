@@ -12,11 +12,13 @@ using System.Text.RegularExpressions;
 using System.Text.Json;
 using Infrastructure.Entities.Common;
 using Infrastructure.Services.CommonServices.UserService;
+using Infrastructure.Entities.Dto.ViewModel.AdminViewModel;
 
 namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
 {
     [Route("api/[controller]")]
     [ApiController]
+
     public class ExternalSignInController : BaseApiController
     {
         private readonly IStudentService _studentService;
@@ -27,13 +29,13 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
         private readonly IFinalGroupService _finalGroupService;
         private readonly ILogger<ExternalSignInController> _logger;
         private readonly IDataRetrievalService _dataRetrievalService;
-        public ExternalSignInController(IStudentService studentService, 
-            IStudentGroupIdeaService studentGroupIdeaService, 
-            IStaffService staffService, 
-            ISemesterService semesterService, 
+        public ExternalSignInController(IStudentService studentService,
+            IStudentGroupIdeaService studentGroupIdeaService,
+            IStaffService staffService,
+            ISemesterService semesterService,
             IUserService userService,
-            IFinalGroupService finalGroupService, 
-            ILogger<ExternalSignInController> logger, 
+            IFinalGroupService finalGroupService,
+            ILogger<ExternalSignInController> logger,
             IDataRetrievalService dataRetrievalService)
         {
             _studentService = studentService;
@@ -50,16 +52,6 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
         {
             try
             {
-                if (!string.IsNullOrEmpty(campus))
-                {
-                    HttpContext.Session.SetString("campus",campus);
-                }
-                else
-                {
-                    await HttpContext.SignOutAsync();
-                    return BadRequest(new ApiSuccessResult<string>("Please select campus!"));
-                }
-
                 string checkPoint = $"https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={token}";
                 using var client = new HttpClient();
                 var response = await client.GetStringAsync(checkPoint);
@@ -81,36 +73,86 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
                 };
 
                 var curSemester = (await _semesterService.GetCurrentSemester()).ResultObj;
-                if (curSemester != null && !(await _studentService.IsFirstSemesterDoCapstoneProject(loginInfo.UserId, curSemester.SemesterId)).IsSuccessed)
+                if (curSemester != null && !(await _studentService.IsFirstSemesterDoCapstoneProject(loginInfo.UserId, curSemester.SemesterID)).IsSuccessed)
                 {
-                    loginInfo.UserId += $"-{curSemester.SemesterId}";
+                    loginInfo.UserId += $"-{curSemester.SemesterID}";
                 }
 
                 var existingUser = (await _userService.GetUserByID(loginInfo.UserId)).ResultObj;
                 if (existingUser != null)
                 {
-                    loginInfo.Role = new Role { RoleId = existingUser.Role.RoleId };
-                    await _userService.UpdateAvatar(loginInfo.Avatar, loginInfo.UserId);
-                     _dataRetrievalService.SetData("sessionAccount", loginInfo);
+                    if (existingUser.Role.Role_ID == 3) //staff
+                    {
+                        var role = new Role()
+                        {
+                            RoleId = 3
+                        };
+                        loginInfo.Role = role; // role staff
+                        await _userService.UpdateAvatar(loginInfo.Avatar, loginInfo.UserId);
+                        //_dataRetrievalService.SetData("sessionAccount", loginInfo);
 
-                    return Ok(new ApiSuccessResult<dynamic>(new { role = existingUser.Role.RoleId }));
+                        return Ok(new ApiSuccessResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "SemesterManage/Index", Mess = "" }));
+                    }
+                    else if (existingUser.Role.Role_ID == 2)//Update login by role staff 2/6/2023
+                    {
+                        //Current semester not start return Login with message
+                        if (curSemester == null)
+                        {
+                            HttpContext.Session.Remove("sessionAccount");
+                            await HttpContext.SignOutAsync();
+                            return Ok(new ApiErrorResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "User/SignIn", Mess = "Semester not start!" }));
+                            //return RedirectToAction("SignIn", "User", new { message = ErrorMessage });
+                        }
+                        var role = new Role()
+                        {
+                            RoleId = 2
+                        };
+                        loginInfo.Role = role; // role mentor
+                        _userService.UpdateAvatar(loginInfo.Avatar, loginInfo.UserId);
+                        return Ok(new ApiSuccessResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "HomeSupervisor/Index" }));
+                    }
+                    else if (existingUser.Role.Role_ID == 4)
+                    {
+                        //Current semester not start return Login with message
+                        if (curSemester == null)
+                        {
+                            HttpContext.Session.Remove("sessionAccount");
+                            await HttpContext.SignOutAsync();
+                            //ErrorMessage = "Semester not start!";
+                            return Ok(new ApiErrorResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "User/SignIn", Mess = "Semester not start!" }));
+                        }
+                        var role = new Role()
+                        {
+                            RoleId = 4
+                        };
+                        loginInfo.Role = role; // role devhead
+                        _userService.UpdateAvatar(loginInfo.Avatar, loginInfo.UserId);
+                        return Ok(new ApiSuccessResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "HomeDevHead/Index" }));
+                    }
+                    else if (existingUser.Role.Role_ID == 5)
+                    {
+                        var role = new Role()
+                        {
+                            RoleId = 5
+                        };
+                        loginInfo.Role = role; // role admin
+                        _userService.UpdateAvatar(loginInfo.Avatar, loginInfo.UserId);
+                        return Ok(new ApiSuccessResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "ListUser/Index" }));
+                    }
                 }
 
                 if (Regex.IsMatch(loginInfo.FptEmail, "[A-Za-z][0-9]{5,}@fpt.edu.vn"))
                 {
                     if (curSemester == null)
                     {
-                        await HttpContext.SignOutAsync();
-                        return BadRequest(new ApiSuccessResult<string>("Semester not started!"));
+                        return Ok(new ApiErrorResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "SignIn/User", Mess = "Semester not started!" }));
                     }
-
                     loginInfo.Role = new Role { RoleId = 1 };
-                    _dataRetrievalService.SetData("sessionAccount", loginInfo);
-                    return Ok(new ApiSuccessResult<string>("Student logged in successfully"));
-                }
+                    return Ok(new ApiSuccessResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "StudentHome/Index", Mess = "Student logged in successfully" }));
 
-                await HttpContext.SignOutAsync();
-                return BadRequest(new ApiSuccessResult<string>("Your account does not have access to the system"));
+                }
+                return Ok(new ApiErrorResult<UserViewModel>(new UserViewModel { User = loginInfo, Path = "SignIn/User", Mess = "Your account does not have access to the system" }));
+
             }
             catch (Exception ex)
             {
@@ -119,4 +161,5 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
             }
         }
     }
+}
 }

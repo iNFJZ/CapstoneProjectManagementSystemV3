@@ -152,10 +152,10 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<bool>> UpdateNewTopicForFinalGroup(ChangeTopicRequest changeTopicRequest)
+        public async Task<ApiResult<bool>> UpdateNewTopicForFinalGroup(ChangeTopicRequestDto changeTopicRequest)
         {
             List<Expression<Func<FinalGroup, bool>>> expressions = new List<Expression<Func<FinalGroup, bool>>>();
-            expressions.Add(fg => fg.FinalGroupId == changeTopicRequest.FinalGroupId);
+            expressions.Add(fg => fg.FinalGroupId == changeTopicRequest.FinalGroup.FinalGroupId);
             var finalGroup = await _finalGroupRepository.GetByConditionId(expressions);
             if (finalGroup == null)
             {

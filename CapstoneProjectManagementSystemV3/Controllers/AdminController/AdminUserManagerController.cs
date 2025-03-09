@@ -22,12 +22,13 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         private readonly ISupervisorService _supervisorService;
         private readonly ILogger<AdminUserManagerController> _logger;
         private readonly IDataRetrievalService _dataRetrievalService;
-        public AdminUserManagerController(IUserService userService, IRoleService roleService,
-                                INotificationService notificationService,
-                                IStaffService staffService,
-                                ISupervisorService supervisorService, 
-                                ILogger<AdminUserManagerController> logger,
-                                IDataRetrievalService dataRetrievalService)
+        public AdminUserManagerController(IUserService userService,
+            IRoleService roleService,
+            INotificationService notificationService,
+            IStaffService staffService,
+            ISupervisorService supervisorService,
+            ILogger<AdminUserManagerController> logger,
+            IDataRetrievalService dataRetrievalService)
         {
             _userService = userService;
             _roleService = roleService;
@@ -38,24 +39,23 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             _dataRetrievalService = dataRetrievalService;
         }
         [HttpGet("admin_index")]
-        public async Task<IActionResult> GetUserList(string username)
+        public async Task<IActionResult> GetUserList()
         {
             try
             {
                 _logger.LogInformation("Fetching user list");
                 var user = _dataRetrievalService.GetData<User>("sessionAccount");
-
-                var roles =( await _roleService.GetRoles()).ResultObj.ToList();
-                var listRoleId = roles.Select(x => x.RoleId).Where(x => x != 1).ToList();
+                var roles = (await _roleService.GetRoles()).ResultObj.ToList();
+                var listRoleId = roles.Select(x => x.Role_ID).Where(x => x != 1).ToList();
                 var listUser = await _userService.GetListUserByRoleList(listRoleId);
 
-                return Ok(new ApiSuccessResult<dynamic>(new
+                return Ok(new
                 {
                     status = true,
                     sessionRole = user.Role.RoleId,
                     roles,
                     users = listUser
-                }));
+                });
             }
             catch (Exception ex)
             {
@@ -81,24 +81,24 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
 
                 if (user == null)
                 {
-                    return Ok(new ApiSuccessResult<bool>(false));
+                    return Ok(new ApiErrorResult<bool>(false.ToString()));
                 }
                 // Gọi API lấy danh sách Role
                 var rolesResult = await _roleService.GetRoles();
                 if (!rolesResult.IsSuccessed || rolesResult.ResultObj == null)
                 {
-                    return Ok(new ApiSuccessResult<bool>(false));
+                    return Ok(new ApiErrorResult<bool>(false.ToString()));
                 }
-                List<Role> roles = rolesResult.ResultObj;
+                List<RoleDto> roles = rolesResult.ResultObj;
 
                 // Lọc danh sách Role ID không phải 1
-                List<int> listRoleId = roles.Select(x => x.RoleId).Where(x => x != 1).ToList();
+                List<int> listRoleId = roles.Select(x => x.Role_ID).Where(x => x != 1).ToList();
 
                 // Gọi API lấy danh sách User theo Role ID
                 var usersResult = await _userService.GetListUserByRoleList(listRoleId);
                 if (!usersResult.IsSuccessed || usersResult.ResultObj == null)
                 {
-                    return Ok(new ApiSuccessResult<bool>(false));
+                    return Ok(new ApiErrorResult<bool>(false));
                 }
 
                 return Ok(new ApiSuccessResult<bool>(true));
@@ -106,7 +106,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "API Get Users Error");
-                return StatusCode(500, new ApiSuccessResult<bool>(false));
+                return StatusCode(500, new ApiErrorResult<bool>(false));
             }
         }
         [HttpGet("check-reference/{userId}")]
@@ -118,7 +118,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
                 var user = (await _userService.GetUserByID(userId)).ResultObj;
                 bool checkReference = (await _userService.CheckReferenceDUserData(user)).IsSuccessed;
 
-                int result = user.Role.RoleId switch
+                int result = user.Role.Role_ID switch
                 {
                     3 => checkReference ? 0 : 2,
                     4 => checkReference ? 1 : 2,
@@ -130,7 +130,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking reference");
-                return BadRequest(new ApiSuccessResult<int>(-1));
+                return BadRequest(new ApiErrorResult<int>(-1));
             }
         }
 
@@ -142,27 +142,27 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
                 _logger.LogInformation("Deleting user");
                 var user = (await _userService.GetUserByID(userId)).ResultObj;
                 bool delete = (await _userService.DeleteUser(user)).IsSuccessed;
-
                 return Ok(new ApiSuccessResult<bool>(delete));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting user");
-                return BadRequest(new ApiSuccessResult<int>(0));
+                return BadRequest(new ApiErrorResult<int>(0));
             }
         }
 
         [HttpPost("update-role-user")]
-        public async Task<IActionResult> UpdateRoleUser([FromBody] User userRole)
+        public async Task<IActionResult> UpdateRoleUser([FromBody] UserDto updatedRoleUser)
         {
             try
             {
-                return Ok(new ApiSuccessResult<User>(userRole));
+
+                return Ok(new ApiSuccessResult<UserDto>(updatedRoleUser));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating user role");
-                return BadRequest(new ApiSuccessResult<int>(0));
+                return BadRequest(new ApiErrorResult<int>(0));
             }
         }
     }

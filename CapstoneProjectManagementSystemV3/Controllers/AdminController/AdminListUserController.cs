@@ -17,9 +17,9 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         private readonly IDataRetrievalService _dataRetrievalService;
         private readonly ISupervisorService _supervisorService;
         private readonly IRoleService _roleService;
-        public AdminListUserController(ILogger<AdminListUserController> logger, 
-            IUserService userService, 
-            IDataRetrievalService dataRetrievalService, 
+        public AdminListUserController(ILogger<AdminListUserController> logger,
+            IUserService userService,
+            IDataRetrievalService dataRetrievalService,
             ISupervisorService supervisorService, IRoleService roleService)
         {
             _logger = logger;
@@ -30,33 +30,23 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         }
 
         [HttpGet("list-users")]
-        public async Task<IActionResult> GetUsers(int page, string?search, int role)
+        public async Task<IActionResult> GetUsers(int page, string? search, int? role)
         {
             try
             {
                 _logger.LogInformation("Fetching list of users");
                 search = search ?? string.Empty;
-
                 var roles = (await _roleService.GetRoles()).ResultObj;
                 int totalPage;
                 List<UserWithRowNum> users;
-                (totalPage, page, users) = (await _userService.GetListUserForAdminPaging(page, search.Trim(), role)).ResultObj;
+                (totalPage, page, users) = (await _userService.GetListUserForAdminPaging(page, search.Trim(), role ??= 0)).ResultObj;
 
-                return Ok(new ApiSuccessResult<dynamic>(new
-                {
-                    status = true,
-                    totalPage,
-                    pageIndex = page,
-                    search,
-                    role,
-                    roles,
-                    users
-                }));
+                return Ok(new { status = true, totalPage, pageIndex = page, search, role, roles, users });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching list of users");
-                return BadRequest(new ApiSuccessResult<dynamic>(new { status = false, mess = "Error fetching user list" }));
+                return BadRequest(new { status = false, mess = "Error fetching user list" });
             }
         }
 
@@ -66,20 +56,20 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             try
             {
                 _logger.LogInformation("Fetching user details");
-                var roles = await _roleService.GetRoles();
+                var roles = await _roleService.GetRoles(); // không hiểu dòng này để làm gì 
                 var userDetail = await _userService.GetUserByID(userId);
 
-                return Ok(new ApiSuccessResult<dynamic>(new
+                return Ok(new ApiResult<dynamic>
                 {
-                    status = true,
-                    roles,
-                    user = userDetail
-                }));
+                    IsSuccessed = true,
+                    //roles,//không hiểu
+                    ResultObj = userDetail
+                });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error fetching user details");
-                return BadRequest(new ApiSuccessResult<dynamic>(new { status = false, mess = "Error fetching user details" }));
+                return BadRequest(new { status = false, mess = "Error fetching user details" });
             }
         }
 
@@ -92,20 +82,20 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
                 var user = (await _userService.GetUserByID(userId)).ResultObj;
                 bool checkReference = (await _userService.CheckReferenceDUserData(user)).IsSuccessed;
 
-                if (user.Role.RoleId == 3)
+                if (user.Role.Role_ID == 3)
                 {
-                    return Ok(new ApiSuccessResult<dynamic>(new { status = checkReference ? 0 : 2 }));
+                    return Ok(new { status = checkReference ? 0 : 2 });
                 }
-                else if (user.Role.RoleId == 4)
+                else if (user.Role.Role_ID == 4)
                 {
-                    return Ok(new ApiSuccessResult<dynamic>(new { status = checkReference ? 1 : 2 }));
+                    return Ok(new { status = checkReference ? 1 : 2 });
                 }
-                return Ok(new ApiSuccessResult<dynamic>(new { status = false, mess = "Invalid user role" }));
+                return Ok(new ApiResult<dynamic> { IsSuccessed = false, Message = "Invalid user role" });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking user reference");
-                return BadRequest(new ApiSuccessResult<dynamic>(new { status = false, mess = "Error checking reference data" }));
+                return BadRequest(new { status = false, mess = "Error checking reference data" });
             }
         }
 
