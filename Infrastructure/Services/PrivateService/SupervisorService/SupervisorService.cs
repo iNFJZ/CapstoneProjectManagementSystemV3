@@ -3,8 +3,6 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
-using Infrastructure.Entities.Dto.RoleDto;
-using Infrastructure.Entities.Dto.UserDto;
 using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 using Infrastructure.Repositories.ProfessionRepository;
 using Infrastructure.Repositories.RegisteredRepository;
