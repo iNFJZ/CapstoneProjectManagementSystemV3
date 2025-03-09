@@ -1,5 +1,8 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
+using Infrastructure.Entities.Dto.SemesterDto;
+using Infrastructure.Entities.Dto.SpecialtyDto;
+using Infrastructure.Entities.Dto.ViewModel.SupervisorViewModel;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.GroupIdeaOfSupervisorProfessionRepository;
 using Infrastructure.Repositories.GroupIdeaRepository;
@@ -40,7 +43,7 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
             _supervisorRepository = supervisorRepository;
         }
 
-        public async Task<ApiResult<bool>> CreateNewGroupIdeaOfMentor(string Supervisor, List<GroupIdeaOfSupervisorProfession> groupIdeaOfSupervisorProfessions, string ProjectEnglishName, string ProjetVietnameseName, string Abbreviation, string Description, string ProjectTags, int Semester, int NumberOfMember, int MaxMember)
+        public async Task<ApiResult<bool>> CreateNewGroupIdeaOfMentor(string Supervisor, List<GroupIdeaOfSupervisorProfessionDto> groupIdeaOfSupervisorProfessions, string ProjectEnglishName, string ProjetVietnameseName, string Abbreviation, string Description, string ProjectTags, int Semester, int NumberOfMember, int MaxMember)
         {
             try
             {
@@ -57,26 +60,33 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
                     MaxMember = MaxMember,
                     CreatedAt = DateTime.UtcNow,
                     IsActive = true,
-                    GroupIdeaOfSupervisorProfessions = groupIdeaOfSupervisorProfessions
+                    GroupIdeaOfSupervisorProfessions = groupIdeaOfSupervisorProfessions.Select(dto => new GroupIdeaOfSupervisorProfession
+                    {
+                        GroupIdeaId = dto.GroupIdea.GroupIdeaID,
+                        ProfessionId = dto.Profession.ProfessionID,
+                        SpecialtyId = dto.Specialty.SpecialtyID
+                    }).ToList()
                 };
 
                 await _supervisorGroupIdeaReporitory.CreateAsync(groupIdea);
+
 
                 foreach (var profession in groupIdeaOfSupervisorProfessions)
                 {
                     var groupIdeaProfession = new GroupIdeaOfSupervisorProfession
                     {
                         GroupIdeaId = groupIdea.GroupIdeaId,
-                        ProfessionId = profession.ProfessionId,
-                        SpecialtyId = profession.SpecialtyId
+                        ProfessionId = profession.Profession.ProfessionID,
+                        SpecialtyId = profession.Specialty.SpecialtyID
                     };
                     await _groupIdeaOfSupervisorProfessionRepository.CreateAsync(groupIdeaProfession);
                 }
 
                 return new ApiSuccessResult<bool>(true);
             }
-            catch (Exception ex) { 
-                return new ApiErrorResult<bool>( ex.Message);
+            catch (Exception ex)
+            {
+                return new ApiErrorResult<bool>(ex.Message);
             }
             throw new NotImplementedException();
         }
@@ -93,12 +103,12 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
             return new ApiSuccessResult<bool>(true);
         }
 
-        public async Task<ApiResult<GroupIdeasOfSupervisor>> GetAllGroupIdeaById(int Id)
+        public async Task<ApiResult<GroupIdeaOfSupervisorDto>> GetAllGroupIdeaById(int Id)
         {
             var groupIdea = await _supervisorGroupIdeaReporitory.GetById(g => g.GroupIdeaId == Id);
             if (groupIdea == null)
             {
-                return new ApiErrorResult<GroupIdeasOfSupervisor>("Không tìm thấy Group Idea.");
+                return new ApiErrorResult<GroupIdeaOfSupervisorDto>("Không tìm thấy Group Idea.");
             }
 
             // Truy vấn lấy danh sách các ngành nghề liên quan từ GroupIdeaOfSupervisor_Profession
@@ -111,42 +121,85 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
                 profession.Profession = professionDetail;
             }
 
+            var professionDtos = professions.Select(profession => new GroupIdeaOfSupervisorProfessionDto
+            {
+                GroupIdea = new GroupIdeaOfSupervisorDto()
+                {
+                    GroupIdeaID = profession.GroupIdeaId,
+                },
+                Profession = new ProfessionDto()
+                {
+                    ProfessionID = profession.ProfessionId,
+                    ProfessionFullName = profession.Profession.ProfessionFullName,
+                },
+                Supervisor = new SupervisorDto()
+                {
+                    SupervisorID = profession.GroupIdea.SupervisorId,
+                },
+                Specialty = new SpecialtyDto()
+                {
+                    SpecialtyID = profession.SpecialtyId.Value,
+                }
+            }).ToList();
+
             // Gán danh sách ngành nghề vào GroupIdeasOfSupervisor
             groupIdea.GroupIdeaOfSupervisorProfessions = professions.ToList();
-            return new ApiSuccessResult<GroupIdeasOfSupervisor>(groupIdea);
+            var result = new GroupIdeaOfSupervisorDto()
+            {
+                GroupIdeaID = groupIdea.GroupIdeaId,
+                Supervisor = new SupervisorDto()
+                {
+                    SupervisorID = groupIdea.SupervisorId,
+                },
+                GroupIdeaOfSupervisorProfessions = professionDtos,
+                ProjectEnglishName = groupIdea.ProjectEnglishName,
+                ProjectVietNameseName = groupIdea.ProjectVietNameseName,
+                Abrrevation = groupIdea.Abbreviation,
+                Description = groupIdea.Description,
+                ProjectTags = groupIdea.ProjectTags,
+                Semester = new SemesterDto()
+                {
+                    SemesterID = groupIdea.SemesterId,
+                },
+                NumberOfMember = groupIdea.NumberOfMember,
+                MaxMember = groupIdea.MaxMember,
+                CreatedAt = groupIdea.CreatedAt,
+                IsActive = groupIdea.IsActive,
+            };
+            return new ApiSuccessResult<GroupIdeaOfSupervisorDto>(result);
         }
 
-        public async Task<ApiResult<List<GroupIdeaOfSupervisorProfession>>> getAllProfessionSpecialyByGroupIdeaID(int groupIdeaID)
+        public async Task<ApiResult<List<GroupIdeaOfSupervisorProfessionDto>>> getAllProfessionSpecialyByGroupIdeaID(int groupIdeaID)
         {
             var groupIdeas = await _groupIdeaOfSupervisorProfessionRepository.GetByCondition(gp => gp.GroupIdeaId == groupIdeaID);
 
             if (groupIdeas == null || !groupIdeas.Any())
             {
-                return new ApiSuccessResult<List<GroupIdeaOfSupervisorProfession>>(new List<GroupIdeaOfSupervisorProfession>());
+                return new ApiSuccessResult<List<GroupIdeaOfSupervisorProfessionDto>>(new List<GroupIdeaOfSupervisorProfessionDto>());
             }
 
-            var result = groupIdeas.Select(gp => new GroupIdeaOfSupervisorProfession()
+            var result = groupIdeas.Select(gp => new GroupIdeaOfSupervisorProfessionDto()
             {
-                Profession = new Profession()
+                Profession = new ProfessionDto()
                 {
                     ProfessionFullName = gp.Profession?.ProfessionFullName ?? ""
                 },
-                Specialty = new Specialty()
+                Specialty = new SpecialtyDto()
                 {
                     SpecialtyFullName = gp.Specialty?.SpecialtyFullName ?? ""
                 }
             }).ToList();
 
-            return new ApiSuccessResult<List<GroupIdeaOfSupervisorProfession>>(result);
+            return new ApiSuccessResult<List<GroupIdeaOfSupervisorProfessionDto>>(result);
         }
 
-        public async Task<ApiResult<GroupIdeasOfSupervisor>> GetGroupIdeaOfSupervisorByGroupIdeaId(int groupIdeaId)
+        public async Task<ApiResult<GroupIdeaOfSupervisorDto>> GetGroupIdeaOfSupervisorByGroupIdeaId(int groupIdeaId)
         {
             var groupIdea = await _supervisorGroupIdeaReporitory.GetById(g => g.GroupIdeaId == groupIdeaId);
 
             if (groupIdea == null)
             {
-                return new ApiErrorResult<GroupIdeasOfSupervisor>("Không tìm thấy Group Idea.");
+                return new ApiErrorResult<GroupIdeaOfSupervisorDto>("Không tìm thấy Group Idea.");
             }
 
             // Lấy danh sách ngành nghề và chuyên ngành liên quan đến GroupIdea_ID
@@ -174,19 +227,39 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
             }
 
             groupIdea.GroupIdeaOfSupervisorProfessions = professionsWithSpecialties;
-
-            return new ApiSuccessResult<GroupIdeasOfSupervisor>(groupIdea);
+            var result = new GroupIdeaOfSupervisorDto()
+            {
+                GroupIdeaID = groupIdeaId,
+                ProjectEnglishName = groupIdea.ProjectEnglishName ?? "",
+                ProjectVietNameseName = groupIdea.ProjectVietNameseName ?? "",
+                Abrrevation = groupIdea.Abbreviation ?? "",
+                Description = groupIdea.Description ?? "",
+                CreatedAt = groupIdea.CreatedAt,
+                Supervisor = new SupervisorDto()
+                {
+                    SupervisorID = groupIdea.SupervisorId,
+                },
+                //Specialty = new SpecialtyDto()
+                //{
+                //    SpecialtyFullName = groupIdea.
+                //},
+                //Profession = new ProfessionDto()
+                //{
+                //    ProfessionFullName
+                //}
+            };
+            return new ApiSuccessResult<GroupIdeaOfSupervisorDto>(result);
         }
 
-        public async Task<ApiResult<List<GroupIdeasOfSupervisor>>> GetGroupIdeaOfSupervisorsBySupervisorAndProfession(string supervisorID, int[] pros)
+        public async Task<ApiResult<List<GroupIdeaOfSupervisorDto>>> GetGroupIdeaOfSupervisorsBySupervisorAndProfession(string supervisorID, int[] pros)
         {
-            var groupIdeaIds = (await _groupIdeaOfSupervisorProfessionRepository.GetByCondition(gp => 
-            gp.Profession.SupervisorProfessions.Select(p => p.SupervisorId).FirstOrDefault() == supervisorID && 
+            var groupIdeaIds = (await _groupIdeaOfSupervisorProfessionRepository.GetByCondition(gp =>
+            gp.Profession.SupervisorProfessions.Select(p => p.SupervisorId).FirstOrDefault() == supervisorID &&
             pros.Contains(gp.ProfessionId))).Select(gp => gp.GroupIdeaId).ToList();
 
             if (groupIdeaIds == null || !groupIdeaIds.Any())
             {
-                return new ApiErrorResult<List<GroupIdeasOfSupervisor>>("Không tìm thấy Group Idea nào.");
+                return new ApiErrorResult<List<GroupIdeaOfSupervisorDto>>("Không tìm thấy Group Idea nào.");
             }
 
             // Lấy danh sách GroupIdeasOfSupervisor theo danh sách GroupIdea_ID đã lấy được
@@ -197,23 +270,32 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
                     GroupIdeaId = g.GroupIdeaId,
                     ProjectEnglishName = g.ProjectEnglishName
                 }).ToList();
-            return new ApiSuccessResult<List<GroupIdeasOfSupervisor>>(groupIdeas);
+            var result = new List<GroupIdeaOfSupervisorDto>();
+            foreach (var groupIdea in groupIdeas)
+            {
+                result.Add(new GroupIdeaOfSupervisorDto()
+                {
+                    GroupIdeaID = groupIdea.GroupIdeaId,
+                    ProjectEnglishName = groupIdea.ProjectEnglishName,
+                });
+            }
+            return new ApiSuccessResult<List<GroupIdeaOfSupervisorDto>>(result);
         }
 
-        public async Task<ApiResult<(int, int, List<GroupIdeasOfSupervisor>)>> getGroupIdeaOfSupervisorWithPaging(int pageNumber, string supervisorId)
+        public async Task<ApiResult<(int, int, List<GroupIdeaOfSupervisorDto>)>> getGroupIdeaOfSupervisorWithPaging(int pageNumber, string supervisorId)
         {
-            List<GroupIdeasOfSupervisor> listGroupIdea = new List<GroupIdeasOfSupervisor>();
+            List<GroupIdeaOfSupervisorDto> listGroupIdea = new List<GroupIdeaOfSupervisorDto>();
             var supervisors = await _supervisorRepository.GetById(sp => sp.SupervisorId == supervisorId);
-            var result = (await _groupIdeaOfSupervisorProfessionRepository
+            var groupIdeas = (await _groupIdeaOfSupervisorProfessionRepository
                         .GetByCondition(gp => gp.ProfessionId == supervisors.SupervisorProfessions.Select(s => s.ProfessionId).FirstOrDefault()))
                         .Select(gp => gp.GroupIdeaId);
             // Tính tổng số bản ghi
             int totalRecord = (await _supervisorGroupIdeaReporitory
                 .GetByCondition(g => g.IsActive == true && g.DeletedAt == null && g.Supervisor.IsActive == true &&
-                    g.SupervisorId != supervisorId && result.Contains(g.GroupIdeaId))).Count();
+                    g.SupervisorId != supervisorId && groupIdeas.Contains(g.GroupIdeaId))).Count();
             if (totalRecord == 0)
             {
-                return new ApiSuccessResult<(int, int, List<GroupIdeasOfSupervisor>)>((0, 0, listGroupIdea));
+                return new ApiSuccessResult<(int, int, List<GroupIdeaOfSupervisorDto>)>((0, 0, listGroupIdea));
             }
 
             // Tính phân trang
@@ -222,8 +304,8 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
             int recordSkippedLater = pagingQueryResult[3];
 
             // Lấy dữ liệu có phân trang
-            var supervisorGroupIdea = (await _supervisorGroupIdeaReporitory.GetByCondition(g => g.IsActive == true && g.DeletedAt == null && g.Supervisor.IsActive == true &&
-                   g.SupervisorId != supervisorId && result.Contains(g.GroupIdeaId)))
+            var supervisorGroupIdeas = (await _supervisorGroupIdeaReporitory.GetByCondition(g => g.IsActive == true && g.DeletedAt == null && g.Supervisor.IsActive == true &&
+                   g.SupervisorId != supervisorId && groupIdeas.Contains(g.GroupIdeaId)))
                .OrderByDescending(g => g.CreatedAt)
                 .Skip(recordSkippedBefore)
                 .Take(recordSkippedLater - recordSkippedBefore)
@@ -243,8 +325,27 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
                         SupervisorId = g.SupervisorId ?? ""
                     }
                 }).ToList();
-
-            return new ApiSuccessResult<(int, int, List<GroupIdeasOfSupervisor>)>((pagingQueryResult[0], pagingQueryResult[1], supervisorGroupIdea));
+            var result = new List<GroupIdeaOfSupervisorDto>();
+            foreach (var idea in supervisorGroupIdeas)
+            {
+                result.Add(new GroupIdeaOfSupervisorDto()
+                {
+                    GroupIdeaID = idea.GroupIdeaId,
+                    ProjectEnglishName = idea.ProjectEnglishName ?? "",
+                    ProjectVietNameseName = idea.ProjectVietNameseName ?? "",
+                    Abrrevation = idea.Abbreviation ?? "",
+                    Description = idea.Description ?? "",
+                    ProjectTags = idea.ProjectTags ?? "",
+                    NumberOfMember = idea.NumberOfMember,
+                    IsActive = idea.IsActive,
+                    CreatedAt = idea.CreatedAt ?? DateTime.MinValue,
+                    Supervisor = new SupervisorDto
+                    {
+                        SupervisorID = idea.SupervisorId ?? ""
+                    }
+                });
+            }
+            return new ApiSuccessResult<(int, int, List<GroupIdeaOfSupervisorDto>)>((pagingQueryResult[0], pagingQueryResult[1], result));
         }
         private int[] PagingQuery(int totalRecord, int pageNumber, int pageSize = 10)
         {
@@ -262,22 +363,22 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
             return new int[] { totalPage, pageNumber, recordSkippedBefore, recordSkippedLater };
         }
 
-        public Task<ApiResult<(int, int, List<GroupIdeasOfSupervisor>)>> getGroupIdeaOfSupervisorWithPagingForStudent(int pageNumber, int professionID)
+        public Task<ApiResult<(int, int, List<GroupIdeaOfSupervisorDto>)>> getGroupIdeaOfSupervisorWithPagingForStudent(int pageNumber, int professionID)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<List<GroupIdeasOfSupervisor>>> GetGroupIdeaRegistedOfSupervisor(string supervisorID)
+        public Task<ApiResult<List<GroupIdeaOfSupervisorDto>>> GetGroupIdeaRegistedOfSupervisor(string supervisorID)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<List<GroupIdeasOfSupervisor>>> GetGroupIdeasBySupervisorID(string SupervisorID)
+        public Task<ApiResult<List<GroupIdeaOfSupervisorProfessionDto>>> GetGroupIdeasBySupervisorID(string SupervisorID)
         {
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<List<GroupIdeasOfSupervisor>>> GetGroupIdeasBySupervisorIDFilterByStatusandSearchText(string SupervisorID, int filterStatus, string query)
+        public Task<ApiResult<List<GroupIdeaOfSupervisorDto>>> GetGroupIdeasBySupervisorIDFilterByStatusandSearchText(string SupervisorID, int filterStatus, string query)
         {
             throw new NotImplementedException();
         }
@@ -287,7 +388,7 @@ namespace Infrastructure.Services.PrivateService.SupervisorGroupIdeaService
             throw new NotImplementedException();
         }
 
-        public Task<ApiResult<bool>> UpdateAllIdea(GroupIdeasOfSupervisor groupIdea, int semesterId)
+        public Task<ApiResult<bool>> UpdateAllIdea(GroupIdeaOfSupervisorDto groupIdea, int semesterId)
         {
             throw new NotImplementedException();
         }

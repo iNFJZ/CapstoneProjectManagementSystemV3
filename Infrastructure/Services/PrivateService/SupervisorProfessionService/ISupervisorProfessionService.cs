@@ -10,6 +10,6 @@ namespace Infrastructure.Services.PrivateService.SupervisorProfessionService
 {
     public interface ISupervisorProfessionService
     {
-        Task<ApiResult<List<Profession>>> GetProfessionsBySupervisorID(string supervisorId, int semesterId);
+        Task<ApiResult<List<ProfessionDto>>> GetProfessionsBySupervisorID(string supervisorId, int semesterId);
     }
 }
