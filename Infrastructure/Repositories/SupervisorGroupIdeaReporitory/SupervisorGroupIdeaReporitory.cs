@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Entities.DBContext;
-using Infrastructure.ViewModel.SupervisorViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

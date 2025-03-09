@@ -14,6 +14,12 @@ namespace Infrastructure.Entities.Common.ApiResult
         {
         }
 
+        public ApiErrorResult(T resultObj)
+        {
+            IsSuccessed = false;
+            ResultObj = resultObj;
+        }
+
         public ApiErrorResult(string message)
         {
             IsSuccessed = false;

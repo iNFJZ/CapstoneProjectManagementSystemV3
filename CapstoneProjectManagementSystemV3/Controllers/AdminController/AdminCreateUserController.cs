@@ -40,7 +40,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         }
 
         [HttpPost("create-staff")]
-        public async Task<IActionResult> CreateStaff([FromBody] User user)
+        public async Task<IActionResult> CreateStaff([FromBody] UserDto user)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         }
 
         [HttpPost("create-supervisor-leader")]
-        public async Task<IActionResult> CreateSupervisorLeader([FromBody] Supervisor supervisor)
+        public async Task<IActionResult> CreateSupervisorLeader([FromBody] SupervisorDto supervisor)
         {
             try
             {

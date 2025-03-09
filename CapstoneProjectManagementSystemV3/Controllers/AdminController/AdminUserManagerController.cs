@@ -98,7 +98,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
                 var usersResult = await _userService.GetListUserByRoleList(listRoleId);
                 if (!usersResult.IsSuccessed || usersResult.ResultObj == null)
                 {
-                    return Ok(new ApiErrorResult<bool>(false));
+                    return Ok(new ApiErrorResult<bool>(false.ToString()));
                 }
 
                 return Ok(new ApiSuccessResult<bool>(true));
@@ -106,7 +106,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "API Get Users Error");
-                return StatusCode(500, new ApiErrorResult<bool>(false));
+                return StatusCode(500, new ApiErrorResult<bool>(false.ToString()));
             }
         }
         [HttpGet("check-reference/{userId}")]
@@ -130,7 +130,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error checking reference");
-                return BadRequest(new ApiErrorResult<int>(-1));
+                return BadRequest(new ApiErrorResult<int>("Bad Request"));
             }
         }
 
@@ -147,7 +147,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error deleting user");
-                return BadRequest(new ApiErrorResult<int>(0));
+                return BadRequest(new ApiErrorResult<int>("Bad Request"));
             }
         }
 
@@ -162,7 +162,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error updating user role");
-                return BadRequest(new ApiErrorResult<int>(0));
+                return BadRequest(new ApiErrorResult<int>("Bad Request"));
             }
         }
     }

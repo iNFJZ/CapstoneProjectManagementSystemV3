@@ -20,13 +20,13 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
             _specialtyRepository = specialtyRepository;
         }
 
-        public async Task<ApiResult<List<FinalGroupDisplayForm>>> ConvertFromFinalList(List<FinalGroup> finalGroupList)
+        public async Task<ApiResult<List<FinalGroupDisplayForm>>> ConvertFromFinalList(List<FinalGroupDto> finalGroupList)
         {
             List<FinalGroupDisplayForm> finalGroupDisplayFormList = new List<FinalGroupDisplayForm>();
             if (finalGroupList == null) return new ApiSuccessResult<List<FinalGroupDisplayForm>>(finalGroupDisplayFormList);
             else
             {
-                foreach (FinalGroup item in finalGroupList)
+                foreach (FinalGroupDto item in finalGroupList)
                 {
                     List<Expression<Func<Specialty, bool>>> specialtyExpression = new List<Expression<Func<Specialty, bool>>>();
                     specialtyExpression.Add(s => s.SpecialtyId == item.SpecialtyId);

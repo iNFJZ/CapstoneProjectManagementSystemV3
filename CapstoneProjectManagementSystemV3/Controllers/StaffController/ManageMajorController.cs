@@ -102,29 +102,29 @@ namespace CapstoneProjectManagementSystemV3.Controllers.StaffController
                 {
                     await _professionService.UpdateProfession(profession);
 
-                    foreach (Specialty spec in profession.Specialties)
+                    foreach (SpecialtyDto spec in profession.Specialties)
                     {
-                        if (spec.SpecialtyId == 0) // Thêm mới chuyên ngành
+                        if (spec.SpecialtyID == 0) // Thêm mới chuyên ngành
                         {
-                            Specialty specialty = new Specialty
+                            SpecialtyDto specialty = new SpecialtyDto
                             {
                                 SpecialtyAbbreviation = spec.SpecialtyAbbreviation,
                                 SpecialtyFullName = spec.SpecialtyFullName,
                                 CodeOfGroupName = spec.CodeOfGroupName,
-                                Profession = new Profession { ProfessionId = profession.ProfessionID },
+                                Profession = new ProfessionDto { ProfessionID = profession.ProfessionID },
                                 MaxMember = spec.MaxMember
                             };
                             _specialtyService.AddSpecialtyThenReturnId(specialty, semesterId);
                         }
                         else // Cập nhật chuyên ngành cũ
                         {
-                            Specialty specialty = new Specialty
+                            SpecialtyDto specialty = new SpecialtyDto
                             {
-                                SpecialtyId = spec.SpecialtyId,
+                                SpecialtyID = spec.SpecialtyID,
                                 SpecialtyAbbreviation = spec.SpecialtyAbbreviation,
                                 SpecialtyFullName = spec.SpecialtyFullName,
                                 CodeOfGroupName = spec.CodeOfGroupName,
-                                Profession = new Profession { ProfessionId = profession.ProfessionId },
+                                Profession = new ProfessionDto { ProfessionID = profession.ProfessionID },
                                 MaxMember = spec.MaxMember
                             };
                             _specialtyService.UpdateSpecialty(specialty);
@@ -142,7 +142,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.StaffController
         }
         [HttpPost]
         [Route("/UpdateMajorV2")]
-        public async Task<IActionResult> UpdateMajorV2([FromBody] Profession data)
+        public async Task<IActionResult> UpdateMajorV2([FromBody] ProfessionDto data)
         {
             try
             {
@@ -154,23 +154,22 @@ namespace CapstoneProjectManagementSystemV3.Controllers.StaffController
                     return BadRequest(new ApiResult<string> { IsSuccessed = false, Message = "No active semester found." });
                 }
 
-                int semesterId = currentSemester.SemesterId;
-                data.Semester = new Semester { SemesterId = semesterId };
+                int semesterId = currentSemester.SemesterID;
+                data.Semester = new SemesterDto { SemesterID = semesterId };
 
                 // Cập nhật hoặc thêm mới ngành học (Profession)
                 int professionId = (await _professionService.UpdateProfessionV2(data)).ResultObj;
 
-                foreach (Specialty spec in data.Specialties)
+                foreach (SpecialtyDto spec in data.Specialties)
                 {
-                    Specialty specialty = new Specialty
+                    SpecialtyDto specialty = new SpecialtyDto
                     {
-                        ProfessionId = spec.ProfessionId,
                         SpecialtyAbbreviation = spec.SpecialtyAbbreviation,
                         SpecialtyFullName = spec.SpecialtyFullName,
                         CodeOfGroupName = spec.CodeOfGroupName,
-                        Profession = new Profession { ProfessionId = professionId },
+                        Profession = new ProfessionDto { ProfessionID = professionId },
                         MaxMember = spec.MaxMember,
-                        Semester = new Semester { SemesterId = semesterId }
+                        Semester = new SemesterDto { SemesterID = semesterId }
                     };
 
                     _specialtyService.UpdateSpecialtyV2(specialty);
