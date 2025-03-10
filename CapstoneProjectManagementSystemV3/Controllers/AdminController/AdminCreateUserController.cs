@@ -69,7 +69,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
             {
                 _logger.LogInformation("Create Department Leader");
                 var supervisor = (await _supervisorService.GetSupervisorById(userCreate.UserID)).ResultObj;
-                bool checkDuplicateUser = (await _userService.checkDuplicateUser(supervisor.SupervisorNavigation.FptEmail.Trim())).ResultObj;
+                bool checkDuplicateUser = (await _userService.checkDuplicateUser(userCreate.FptEmail.Trim())).ResultObj;
                 bool checkDuplicateFEMail = !string.IsNullOrWhiteSpace(supervisor.FeEduEmail) &&(await _supervisorService.checkDuplicateFEEduEmail(supervisor.FeEduEmail.Trim())).ResultObj;
 
                 if (checkDuplicateFEMail)
