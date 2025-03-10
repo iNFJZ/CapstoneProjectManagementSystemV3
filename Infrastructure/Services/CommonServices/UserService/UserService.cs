@@ -140,23 +140,21 @@ namespace Infrastructure.Services.CommonServices.UserService
         {
             try
             {
-                Expression<Func<User, bool>> expression = x => x.UserId == user.UserID;
-                var findUser = await _userRepository.GetById(expression);
+              
+                var findUser = await _userRepository.GetById(x => x.UserId == user.UserID);
                 if (findUser != null)
                 {
                     findUser.DeletedAt = DateTime.Now;
                     await _userRepository.UpdateAsync(findUser);
                     if (user.RoleID == 3)
                     {
-                        Expression<Func<Staff, bool>> expressionStaff = x => x.StaffId == user.UserID;
-                        var findStaff = await _staffRepository.GetById(expressionStaff);
+                        var findStaff = await _staffRepository.GetById(x => x.StaffId == user.UserID);
                         findStaff.DeletedAt = DateTime.Now;
                         await _staffRepository.UpdateAsync(findStaff);
                     }
                     else
                     {
-                        Expression<Func<Supervisor, bool>> expressionSupervisor = x => x.SupervisorId == user.UserID;
-                        var findSupervisor = await _supervisorRepository.GetById(expressionSupervisor);
+                        var findSupervisor = await _supervisorRepository.GetById(x => x.SupervisorId == user.UserID);
                         findSupervisor.DeletedAt = DateTime.Now;
                         await _supervisorRepository.UpdateAsync(findSupervisor);
                     }
@@ -300,10 +298,7 @@ namespace Infrastructure.Services.CommonServices.UserService
 
         public async Task<ApiResult<List<UserDto>>> GetUserByRoleID(int roleId)
         {
-            List<Expression<Func<User, bool>>> expressions = new List<Expression<Func<User, bool>>>();
-            expressions.Add(e => e.RoleId == roleId);
-            expressions.Add(e => e.DeletedAt == null);
-            var findUser = await _userRepository.GetByConditions(expressions);
+            var findUser = await _userRepository.GetByCondition(e => e.RoleId == roleId && e.DeletedAt == null);
             if (findUser == null)
             {
                 return new ApiErrorResult<List<UserDto>>("Không tìm thấy đối tượng");
@@ -334,8 +329,7 @@ namespace Infrastructure.Services.CommonServices.UserService
         {
             try
             {
-                Expression<Func<User, bool>> expression = x => x.UserId == userId;
-                var findUser = await _userRepository.GetById(expression);
+                var findUser = await _userRepository.GetById(x => x.UserId == userId);
                 if (findUser == null)
                 {
                     return new ApiErrorResult<bool>("Không tìm thấy đối tượng");
