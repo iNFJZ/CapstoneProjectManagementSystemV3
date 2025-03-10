@@ -2,6 +2,7 @@
 using Infrastructure.Entities.Common.ApiResult;
 using Infrastructure.Repositories.AffiliateAccountRepository;
 using Infrastructure.Repositories.PasswordHash;
+using Infrastructure.Repositories.UserRepository;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,14 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
     {
         private readonly IAffiliateAccountRepository _affiliateAccountRepository;
         private readonly IPasswordHash _passwordHash;
+        private readonly IUserRepository _userRepository;
         public AffiliateAccountService(IAffiliateAccountRepository affiliateAccountRepository,
-            IPasswordHash passwordHash)
+            IPasswordHash passwordHash,
+            IUserRepository userRepository)
         {
             _affiliateAccountRepository = affiliateAccountRepository;
             _passwordHash = passwordHash;
+            _userRepository = userRepository;
         }
 
         public async Task<ApiResult<bool>> AddOTP(string affiliateAccountId, string otp)
@@ -91,9 +95,10 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
                 if (email != null)
                 {
                     List<Expression<Func<AffiliateAccount, bool>>> expressions = new List<Expression<Func<AffiliateAccount, bool>>>();
-                    expressions.Add(e => e.PersonalEmail.Contains(email));
+                    expressions.Add(e => e.PersonalEmail == email);
                     expressions.Add(e => e.DeletedAt == null);
                     var affiliateAccount = await _affiliateAccountRepository.GetByConditionId(expressions);
+                    var user = await _userRepository.GetById(u => u.UserId == affiliateAccount.AffiliateAccountId);
                     var affiliateAccountDto = new AffiliateAccountDto()
                     {
                         AffiliateAccountID = affiliateAccount.AffiliateAccountId,
@@ -103,9 +108,9 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
                         OneTimePassword = affiliateAccount.OneTimePassword,
                         User = new UserDto()
                         {
-                            UserName = affiliateAccount.AffiliateAccountNavigation.UserName,
-                            FullName = affiliateAccount.AffiliateAccountNavigation.FullName,
-                            FptEmail = affiliateAccount.AffiliateAccountNavigation.FptEmail
+                            UserName = user.UserName,
+                            FullName = user.FullName,
+                            FptEmail = user.FptEmail
                         }
                     };
                     return new ApiSuccessResult<AffiliateAccountDto>(affiliateAccountDto);

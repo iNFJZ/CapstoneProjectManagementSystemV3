@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Infrastructure.Entities;
 using Newtonsoft.Json;
 using Infrastructure.Services.CommonServices.SessionExtensionService;
+using Infrastructure.Entities.Common.ApiResult;
 
 namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
 {
@@ -18,51 +19,52 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
     {
         private readonly ISessionExtensionService _sessionExtensionService;
         private readonly IConfiguration _configuration;
-        private readonly ILogger<UserController> _logger;
-
         [TempData]
         public string ErrorMessage { get; set; }    //ErrorMessage is used to report the error and push to the client by tempdata
         public string SuccessMessaage { get; set; } //SuccessMessaage is used to report the success and push to the client by tempdata
-        public UserController( ISessionExtensionService sessionExtensionService , IConfiguration configuration, ILogger<UserController> logger)
+        public UserController(
+                                ISessionExtensionService sessionExtensionService
+            , IConfiguration configuration
+            )
         {
             _sessionExtensionService = sessionExtensionService;
             _configuration = configuration;
-            _logger = logger;
         }
 
         public IActionResult SignIn() // view page signin 
         {
             try
             {
-                //var user = _sessionExtensionService.GetObjectFromJson<User>(Httpontext.Session, "sessionAccount");
+                var user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
+
+                if (user == null)
+                {
+                    return View("/views/common_view/404NotFound.cshtml");
+                }
+                else
+                {
+                    if (user.Role.RoleId == 1)
+                    {
+                        return RedirectToAction("index", "studenthome");
+                    }
+                    else if (user.Role.RoleId == 3)
+                    {
+                        return RedirectToAction("index", "semestermanage");
+                    }
+                    else if (user.Role.RoleId == 5)
+                    {
+                        return RedirectToAction("index", "listuser");
+                    }
+                    else if (user.Role.RoleId == 4)
+                    {
+                        return RedirectToAction("index", "createideadevhead");
+                    }
+                    else
+                    {
+                        return RedirectToAction("index", "createideasupervisor");
+                    }
+                }
                 return View("/Views/Common_View/SignIn.cshtml");
-                //if (user == null)
-                //{
-                //    return View("/Views/Common_View/SignIn.cshtml");
-                //}
-                //else
-                //{
-                //    if (user.Role.Role_ID == 1)
-                //    {
-                //        return RedirectToAction("Index", "StudentHome");
-                //    }
-                //    else if (user.Role.Role_ID == 3)
-                //    {
-                //        return RedirectToAction("Index", "SemesterManage");
-                //    }
-                //    else if (user.Role.Role_ID == 5)
-                //    {
-                //        return RedirectToAction("Index", "ListUser");
-                //    }
-                //    else if (user.Role.Role_ID == 4)
-                //    {
-                //        return RedirectToAction("Index", "CreateIdeaDevHead");
-                //    }
-                //    else
-                //    {
-                //        return RedirectToAction("Index", "CreateIdeaSupervisor");
-                //    }
-                //}
             }
             catch
             {
@@ -74,40 +76,35 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
         {
             try
             {
+                var user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
+                if (user == null)
+                {
+                    return View("/Views/Common_View/SignInByAffiliateAccount.cshtml");
+                }
+                else
+                {
+                    if (user.Role.RoleId == 1)
+                    {
+                        return RedirectToAction("index", "studenthome");
+                    }
+                    else if (user.Role.RoleId == 3)
+                    {
+                        return RedirectToAction("index", "semestermanage");
+                    }
+                    else if (user.Role.RoleId == 5)
+                    {
+                        return RedirectToAction("index", "listuser");
+                    }
+                    else if (user.Role.RoleId == 4)
+                    {
+                        return RedirectToAction("index", "createideadevhead");
+                    }
+                    else
+                    {
+                        return RedirectToAction("index", "createideasupervisor");
+                    }
+                }
                 return View("/Views/Common_View/SignInByAffiliateAccount.cshtml");
-
-                //var user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
-                //if (user == null)
-                //{
-                //    return View("/Views/Common_View/SignInByAffiliateAccount.cshtml");
-                //}
-                //else
-                //{
-                //    if (user.Role.Role_ID == 1)
-                //    {
-                //        return RedirectToAction("Index", "StudentHome");
-                //    }
-                //    else if (user.Role.Role_ID == 3)
-                //    {
-                //        return RedirectToAction("Index", "SemesterManage");
-                //    }
-                //    else if (user.Role.Role_ID == 2)
-                //    {
-                //        return RedirectToAction("Index", "ManageMentor");
-                //    }
-                //    else if (user.Role.Role_ID == 5)
-                //    {
-                //        return RedirectToAction("Index", "ListUser");
-                //    }
-                //    else if (user.Role.Role_ID == 4)
-                //    {
-                //        return RedirectToAction("Index", "SupervisorChangeTopicRequest");
-                //    }
-                //    else
-                //    {
-                //        return RedirectToAction("Index", "CreateIdeaSupervisor");
-                //    }
-                //}
             }
             catch
             {
@@ -123,16 +120,6 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
             {
                 using (var client = new HttpClient())
                 {
-                    if (campus != "" && campus != null)
-                    {
-                        HttpContext.Session.SetString("campus", campus);
-                    }
-                    else
-                    {
-                        ErrorMessage = "Please select campus!";
-                        _logger.LogError(ErrorMessage);
-                        return RedirectToAction("SignInByAffiliateAccount", "User", new { message = ErrorMessage });
-                    }
                     client.BaseAddress = new Uri(_configuration["BaseAddress"]);
                     client.DefaultRequestHeaders.Add("X-Connection-String", campus);
                     string apiUrl = $"/api/User/sign-in-ByAffiliateAccount?personalEmail={personalEmail}&passwordHash={passwordHash}";
@@ -141,14 +128,57 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                     {
 
                         var jsonString = await response.Content.ReadAsStringAsync();
-                        var user = JsonConvert.DeserializeObject<User>(jsonString);
+                        var user = JsonConvert.DeserializeObject<ApiResult<User>>(jsonString);
+                        user.ResultObj.Role.Users = null;
+                        var userSS = new User()
+                        {
+                            Avatar = user.ResultObj.Avatar,
+                            UserId = user.ResultObj.UserId,
+                            UserName = user.ResultObj.UserName,
+                        };
                         if (user != null)
                         {
-                            //HttpContext.Session.Remove("sessionAccount");
-                            _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
-                            _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", user);
-                            //return RedirectToAction("Index", "StudentHome");
-                            return View("/Views/Admin_View/ListUser/Index.cshtml");
+                            if(user.ResultObj.Role.RoleId == 1)
+                            {
+                                //HttpContext.Session.Remove("sessionAccount");
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", userSS);
+                                //return RedirectToAction("Index", "StudentHome");
+                                return RedirectToAction("Index", "StudentHome");
+                            }
+                            else if (user.ResultObj.Role.RoleId == 2)
+                            {
+                                //HttpContext.Session.Remove("sessionAccount");
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", userSS);
+                                //return RedirectToAction("Index", "StudentHome");
+                                return RedirectToAction("Index", "SupervisorHome");
+                            }
+                            else if(user.ResultObj.Role.RoleId == 3)
+                            {
+                                //HttpContext.Session.Remove("sessionAccount");
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", userSS);
+                                //return RedirectToAction("Index", "StudentHome");
+                                return RedirectToAction("Index", "StaffHome");
+                            }
+                            else if(user.ResultObj.Role.RoleId == 4)
+                            {
+                                //HttpContext.Session.Remove("sessionAccount");
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", userSS);
+                                //return RedirectToAction("Index", "StudentHome");
+                                return RedirectToAction("Index", "DebHeadHome");
+                            }
+                            else if(user.ResultObj.Role.RoleId == 5)
+                            {
+                                //HttpContext.Session.Remove("sessionAccount");
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
+                                _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "sessionAccount", userSS);
+                                //return RedirectToAction("Index", "StudentHome");
+                                return RedirectToAction("Index", "AdminHome");
+                            }
+                            return RedirectToAction("SignInByAffiliateAccount", "User", new { message = ErrorMessage });
                         }
                         else
                         {
@@ -170,50 +200,6 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                 return View("/Views/Common_View/404NotFound.cshtml");
             }
         }
-
-        public IActionResult ForgotPassword()
-        {
-            try
-            {
-                var user = _sessionExtensionService.GetObjectFromJson<User>(HttpContext.Session, "sessionAccount");
-                if (user == null)
-                {
-                    return View("/Views/Common_View/ForgotPassword.cshtml");
-                }
-                else
-                {
-                    if (user.Role.RoleId == 1)
-                    {
-                        return RedirectToAction("Index", "StudentHome");
-                    }
-                    else if (user.Role.RoleId == 3)
-                    {
-                        return RedirectToAction("Index", "SemesterManage");
-                    }
-                    else if (user.Role.RoleId == 2)
-                    {
-                        return RedirectToAction("Index", "ManageMentor");
-                    }
-                    else if (user.Role.RoleId == 5)
-                    {
-                        return RedirectToAction("Index", "ListUser");
-                    }
-                    else if (user.Role.RoleId == 4)
-                    {
-                        return RedirectToAction("Index", "SupervisorChangeTopicRequest");
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-            catch
-            {
-                return View("/Views/Common_View/404NotFound.cshtml");
-            }
-        }
-
         public async Task<IActionResult> SignOut()
         {
             try

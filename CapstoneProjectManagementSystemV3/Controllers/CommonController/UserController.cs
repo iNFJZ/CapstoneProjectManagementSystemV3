@@ -10,6 +10,7 @@ using Infrastructure.Services.CommonServices.PasswordHasherService;
 using Infrastructure.Services.CommonServices.MailService;
 using Infrastructure.Services.CommonServices.SessionExtensionService;
 using Infrastructure.Entities.Common.ApiResult;
+using Infrastructure.Services.PrivateService.RoleService;
 
 namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
 {
@@ -24,12 +25,13 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
         private readonly ISessionExtensionService _sessionExtensionService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IStudentService _studentService;
+        private readonly IRoleService _roleService;
         //ILog log = LogManager.GetLogger(typeof(UserController));
         public string ErrorMessage { get; set; }    //ErrorMessage is used to report the error and push to the client by tempdata
         public string SuccessMessaage { get; set; } //SuccessMessaage is used to report the success and push to the client by tempdata
         public UserController(IAffiliateAccountService affiliateAccountService, IPasswordHasherService passwordHasherService
             , IMailService mailService, IUserService userService, ISessionExtensionService sessionExtensionService
-            , IHttpContextAccessor httpContextAccessor
+            , IHttpContextAccessor httpContextAccessor, IRoleService roleService
             , IStudentService studentService)
 
         {
@@ -40,6 +42,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
             _sessionExtensionService = sessionExtensionService;
             _httpContextAccessor = httpContextAccessor;
             _studentService = studentService;
+            _roleService = roleService;
         }
         [HttpPost("sign-in-ByAffiliateAccount")]
         public async Task<IActionResult> SignInByAffiliateAccount(string personalEmail, string passwordHash)
@@ -49,27 +52,31 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
                 var connectionString = GetConnectionString();
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    return Ok(new ApiSuccessResult<dynamic>(new
+                    return Ok(new ApiErrorResult<dynamic>(new
                     {
                         status = false,
                         mess = "Không có thông tin database",
                         Path = "User/SignInByAffiliateAccount"
                     }));
                 }
-                
+
                 //get infor affiliate account by function GetBackupAccountByEmail with parameter is personalEmail
-                var affiliateAccount = await _affiliateAccountService.GetAffiliateAccountByEmail(personalEmail);
+                var affiliateAccount = (await _affiliateAccountService.GetAffiliateAccountByEmail(personalEmail)).ResultObj;
                 // check login with affiliate accoutn and password hash 
-                var checkUserLogin = await _affiliateAccountService.CheckAffiliateAccountAndPasswordHash(personalEmail, passwordHash);
+                var checkUserLogin = (await _affiliateAccountService.CheckAffiliateAccountAndPasswordHash(personalEmail, passwordHash)).ResultObj;
+
                 //if it return true -> login sucssess and set to session redirect homepage of student 
-                if (checkUserLogin.IsSuccessed)
+                if (checkUserLogin == true)
                 {
-                    var userLogin = await _userService.GetUserByID(affiliateAccount.ResultObj.AffiliateAccountID);
+                    var userLogin = await _userService.GetUserByID(affiliateAccount.AffiliateAccountID);
                     var infor = await _studentService.UpdateSemesterOfStudentByUserId(userLogin.ResultObj.UserID);
+                    var role = userLogin.ResultObj.RoleID;
+                    _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "User", userLogin);
                     return Ok(new ApiSuccessResult<dynamic>(new
                     {
                         status = true,
-                        obj = infor,
+                        obj = userLogin,
+                        role = role,
                         mess = "Thành công",
                         Path = "StudentHome/Index"
                     }));
@@ -77,7 +84,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
                 // if it return false -> login error will redirect page SignInByAffiliateAccount with notify error message
                 else
                 {
-                    return Ok(new ApiSuccessResult<dynamic>(new
+                    return Ok (new ApiErrorResult<dynamic>(new
                     {
                         status = false,
                         mess = "Email or Password invalid",
@@ -87,7 +94,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
             }
             catch
             {
-                return Ok(new ApiSuccessResult<dynamic>(new
+                return Ok(new ApiErrorResult<dynamic>(new
                 {
                     status = false,
                     mess = "Email or Password invalid",
@@ -109,7 +116,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
             }
             catch
             {
-                return Ok(new ApiSuccessResult<dynamic>(new
+                return Ok(new ApiErrorResult<dynamic>(new
                 {
                     status = false,
                     mess = "Email or Password invalid",
