@@ -32,6 +32,9 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
                     specialtyExpression.Add(s => s.SpecialtyId == item.SpecialtyId);
                     specialtyExpression.Add(s => s.DeletedAt == null);
                     var specialty = await _specialtyRepository.GetByConditionId(specialtyExpression);
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8629 // Nullable value type may be null.
+#pragma warning disable CS8629 // Nullable value type may be null.
                     FinalGroupDisplayForm finalGroupDisplayForm = new FinalGroupDisplayForm()
                     {
                         FinalGroupID = item.FinalGroupId,
@@ -42,6 +45,9 @@ namespace Infrastructure.Services.CommonServices.FinalGroupService
                         NumberOfMember = item.NumberOfMember.Value,
                         CreatedAt = item.CreatedAt
                     };
+#pragma warning restore CS8629 // Nullable value type may be null.
+#pragma warning restore CS8629 // Nullable value type may be null.
+#pragma warning restore CS8601 // Possible null reference assignment.
                     finalGroupDisplayFormList.Add(finalGroupDisplayForm);
                 }
                 return new ApiSuccessResult<List<FinalGroupDisplayForm>>(finalGroupDisplayFormList);

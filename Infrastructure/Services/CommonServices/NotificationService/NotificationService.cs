@@ -49,7 +49,9 @@ namespace Infrastructure.Services.CommonServices.NotificationService
             {
                 return new ApiErrorResult<string>("Không tìm thấy liên kết");
             }
+#pragma warning disable CS8604 // Possible null reference argument.
             return new ApiSuccessResult<string>(result.AttachedLink);
+#pragma warning restore CS8604 // Possible null reference argument.
         }
 
         public async Task<ApiResult<List<NotificationDto>>> GetListAllNotificationByUserId(int numberOfRecord, string userId)
@@ -106,7 +108,9 @@ namespace Infrastructure.Services.CommonServices.NotificationService
                 AttachedLink = attachedLink
             };
             await _notificationRepository.CreateAsync(newNotification);
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             _realtimeHub.SendMessage(userId, attachedLink);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             return new ApiSuccessResult<bool>(true);
         }
 

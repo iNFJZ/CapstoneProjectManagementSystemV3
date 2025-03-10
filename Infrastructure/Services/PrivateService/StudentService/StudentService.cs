@@ -930,7 +930,7 @@ namespace Infrastructure.Services.PrivateService.StudentService
         }
 
         public async Task<ApiResult<bool>> UpdateSemesterOfStudentByUserId(string userId)
-        {
+        {                                                                                                                                                                                                                                                                                                                                                                              
 
             try
             {

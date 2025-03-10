@@ -101,9 +101,26 @@ namespace Infrastructure.Repositories
 
         public async Task<T> GetById(Expression<Func<T, bool>> expression)
         {
-            var a = await _db.Set<T>().Where(expression).FirstOrDefaultAsync();
-            return a;
+            try
+            {
+                if (_db == null)
+                {
+                    throw new InvalidOperationException("Database context is not initialized.");
+                }
+
+                if (expression == null)
+                {
+                    throw new ArgumentNullException(nameof(expression), "The filter expression cannot be null.");
+                }
+
+                var entity = await _db.Set<T>().Where(expression).FirstOrDefaultAsync();
+                return entity; // Có thể trả về null nếu không tìm thấy
+            }catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+            }
         }
+
         public async Task<T> GetByConditionId(List<Expression<Func<T, bool>>> expressions)
         {
             if (expressions == null || expressions.Count == 0)

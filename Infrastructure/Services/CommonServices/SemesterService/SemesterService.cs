@@ -111,9 +111,12 @@ namespace Infrastructure.Services.CommonServices.SemesterService
             try
             {
                 var currentTime = DateTime.UtcNow;
+#pragma warning disable CS8629 // Nullable value type may be null.
                 var users = await _userRepository.GetByCondition(u => !new List<int> { 2, 3, 4, 5 }.Contains(u.RoleId.Value));
+#pragma warning restore CS8629 // Nullable value type may be null.
                 var students = await _studentRepository.GetByCondition(s => s.DeletedAt == null);
                 // Xóa mềm tất cả các bảng liên quan
+#pragma warning disable CS8629 // Nullable value type may be null.
                 var entitiesToUpdate = new List<object>
                 {
                     await _studentGroupIdeaRepository.GetByCondition(s => s.DeletedAt == null),
@@ -131,6 +134,7 @@ namespace Infrastructure.Services.CommonServices.SemesterService
                     await _userRepository.GetByCondition(u => u.DeletedAt == null && students.Any(s => s.StudentId == u.UserId) && !new List<int> { 2, 3, 4, 5 }.Contains(u.RoleId.Value)),
                     await _semesterRepository.GetByCondition(s => s.DeletedAt == null)
                     };
+#pragma warning restore CS8629 // Nullable value type may be null.
 
                 foreach (var entityList in entitiesToUpdate)
                 {
@@ -203,6 +207,7 @@ namespace Infrastructure.Services.CommonServices.SemesterService
         {
             var semesterList = await _semesterRepository.GetByCondition(s => s.StatusCloseBit == true && s.DeletedAt == null);
             var lastSemester = semesterList.OrderBy(s => s.SemesterId).FirstOrDefault();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var result = new SemesterDto()
             {
                 SemesterID = lastSemester.SemesterId,
@@ -211,6 +216,7 @@ namespace Infrastructure.Services.CommonServices.SemesterService
                 StartTime = lastSemester.StartTime,
                 EndTime = lastSemester.EndTime
             };
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             return new ApiSuccessResult<SemesterDto>(result);
         }
 
@@ -218,11 +224,13 @@ namespace Infrastructure.Services.CommonServices.SemesterService
         {
             var semesterDeleteList = await _semesterRepository.GetByCondition(s => s.DeletedAt != null);
             var lastSemester = semesterDeleteList.OrderBy(s => s.SemesterId).FirstOrDefault();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             var result = new SemesterDto()
             {
                 SubjectMailTemplate = lastSemester.SubjectMailTemplate,
                 BodyMailTemplate = lastSemester.BodyMailTemplate
             };
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             return new ApiSuccessResult<SemesterDto>(result);
         }
 

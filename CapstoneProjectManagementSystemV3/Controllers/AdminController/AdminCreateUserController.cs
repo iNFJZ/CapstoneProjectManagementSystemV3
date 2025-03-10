@@ -40,16 +40,16 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         }
 
         [HttpPost("create-staff")]
-        public async Task<IActionResult> CreateStaff([FromBody] UserDto user)
+        public async Task<IActionResult> CreateStaff([FromBody] UserCreateRequest user)
         {
             try
             {
                 _logger.LogInformation("Create Staff");
-                bool checkDuplicateUser = (await _userService.checkDuplicateUser(user.FptEmail.Trim())).IsSuccessed;
-                if (checkDuplicateUser)
-                    return Ok(new ApiSuccessResult<dynamic>(new { status = false, mess = "User already exists" }));
+                bool checkDuplicateUser = (await _userService.checkDuplicateUser(user.FptEmail.Trim())).ResultObj;
+                if (checkDuplicateUser == true)
+                    return Ok(new ApiErrorResult<dynamic>(new { status = false, mess = "User already exists" }));
 
-                if (( await _userService.CreateStaffForAdmin(user)).IsSuccessed == true)
+                if ((await _userService.CreateStaffForAdmin(user)).ResultObj == true)
                 {
                     return Ok(new ApiSuccessResult<dynamic>(new { status = true, mess = "Staff created successfully" }));
                 }

@@ -39,7 +39,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
 
                 if (user == null)
                 {
-                    return View("/views/common_view/404NotFound.cshtml");
+                    return View("/Views/Common_View/SignIn.cshtml");
                 }
                 else
                 {
@@ -64,7 +64,6 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                         return RedirectToAction("index", "createideasupervisor");
                     }
                 }
-                return View("/Views/Common_View/SignIn.cshtml");
             }
             catch
             {
@@ -129,6 +128,11 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
 
                         var jsonString = await response.Content.ReadAsStringAsync();
                         var user = JsonConvert.DeserializeObject<ApiResult<User>>(jsonString);
+                        if(user.IsSuccessed == false || user.ResultObj == null)
+                        {
+                            ErrorMessage = user.Message;
+                            return RedirectToAction("SignInByAffiliateAccount", "User", new { message = ErrorMessage });
+                        }
                         user.ResultObj.Role.Users = null;
                         var userSS = new User()
                         {
@@ -138,7 +142,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                         };
                         if (user != null)
                         {
-                            if(user.ResultObj.Role.RoleId == 1)
+                            if(user.ResultObj.RoleId == 1)
                             {
                                 //HttpContext.Session.Remove("sessionAccount");
                                 _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
@@ -146,7 +150,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                                 //return RedirectToAction("Index", "StudentHome");
                                 return RedirectToAction("Index", "StudentHome");
                             }
-                            else if (user.ResultObj.Role.RoleId == 2)
+                            else if (user.ResultObj.RoleId == 2)
                             {
                                 //HttpContext.Session.Remove("sessionAccount");
                                 _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
@@ -154,7 +158,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                                 //return RedirectToAction("Index", "StudentHome");
                                 return RedirectToAction("Index", "SupervisorHome");
                             }
-                            else if(user.ResultObj.Role.RoleId == 3)
+                            else if(user.ResultObj.RoleId == 3)
                             {
                                 //HttpContext.Session.Remove("sessionAccount");
                                 _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
@@ -162,7 +166,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                                 //return RedirectToAction("Index", "StudentHome");
                                 return RedirectToAction("Index", "StaffHome");
                             }
-                            else if(user.ResultObj.Role.RoleId == 4)
+                            else if(user.ResultObj.RoleId == 4)
                             {
                                 //HttpContext.Session.Remove("sessionAccount");
                                 _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);
@@ -170,7 +174,7 @@ namespace CapstoneProjectManagementSystem.Controllers.Common_Controller
                                 //return RedirectToAction("Index", "StudentHome");
                                 return RedirectToAction("Index", "DebHeadHome");
                             }
-                            else if(user.ResultObj.Role.RoleId == 5)
+                            else if(user.ResultObj.RoleId == 5)
                             {
                                 //HttpContext.Session.Remove("sessionAccount");
                                 _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "campus", campus);

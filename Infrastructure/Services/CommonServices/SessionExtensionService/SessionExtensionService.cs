@@ -14,7 +14,9 @@ namespace Infrastructure.Services.CommonServices.SessionExtensionService
         {
             var value = session.Get(key);
 
+#pragma warning disable CS8603 // Possible null reference return.
             return value == null ? default(T) :JsonSerializer.Deserialize<T>(value);
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         public void SetObjectAsJson<T>(ISession session, string key, T value)

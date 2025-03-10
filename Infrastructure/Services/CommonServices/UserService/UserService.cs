@@ -39,8 +39,7 @@ namespace Infrastructure.Services.CommonServices.UserService
         }
         public async Task<ApiResult<bool>> checkDuplicateUser(string userID)
         {
-            Expression<Func<User, bool>> expression = x => x.UserId == userID;
-            var findUser = await _userRepository.GetById(expression);
+            var findUser = await _userRepository.GetById(x => x.UserId == userID);
             if (findUser == null)
             {
                 return new ApiSuccessResult<bool>(false);
@@ -80,7 +79,7 @@ namespace Infrastructure.Services.CommonServices.UserService
             return new ApiSuccessResult<bool>(false);
         }
 
-        public async Task<ApiResult<bool>> CreateStaffForAdmin(UserDto user)
+        public async Task<ApiResult<bool>> CreateStaffForAdmin(UserCreateRequest user)
         {
             try
             {
@@ -185,6 +184,7 @@ namespace Infrastructure.Services.CommonServices.UserService
 
         public async Task<ApiResult<(int, int, List<UserWithRowNum>)>> GetListUserForAdminPaging(int pageNumber, string search, int role)
         {
+#pragma warning disable CS0168 // Variable is declared but never used
             try
             {
                 // Query đếm tổng số bản ghi phù hợp
@@ -200,6 +200,8 @@ namespace Infrastructure.Services.CommonServices.UserService
                 int recordSkippedLater = pagingQueryResult[3];
 
                 // Query lấy danh sách user theo trang
+#pragma warning disable CS8629 // Nullable value type may be null.
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 var users = query.OrderBy(u => u.UserId)
                     .Skip(recordSkippedBefore)
                     .Take(recordSkippedLater - recordSkippedBefore)
@@ -216,6 +218,8 @@ namespace Infrastructure.Services.CommonServices.UserService
                             RoleName = u.Role.RoleName == "DevHead" ? "Department Leader" : u.Role.RoleName
                         }
                     }).ToList();
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+#pragma warning restore CS8629 // Nullable value type may be null.
 
                 // Gán lại RowNum theo thứ tự từ 1 trở đi
                 int index = recordSkippedBefore + 1;
@@ -227,6 +231,7 @@ namespace Infrastructure.Services.CommonServices.UserService
             {
                 return new ApiSuccessResult<(int, int, List<UserWithRowNum>)>((0, 0, new List<UserWithRowNum>()));
             }
+#pragma warning restore CS0168 // Variable is declared but never used
         }
         private int[] pagingQuery(int totalRecord, int pageNumber, int pageSize = 10)
         {
@@ -257,6 +262,7 @@ namespace Infrastructure.Services.CommonServices.UserService
         public async Task<ApiResult<UserDto>> GetUserByFptEmail(string fptEmail, int roleLoginAs)
         {
             var user = await _userRepository.GetUserByFptEmailAsync(fptEmail, roleLoginAs);
+#pragma warning disable CS8629 // Nullable value type may be null.
             var result = new UserDto()
             {
                 UserID = user.UserId,
@@ -269,15 +275,13 @@ namespace Infrastructure.Services.CommonServices.UserService
                     Role_ID = user.RoleId.Value
                 }
             };
+#pragma warning restore CS8629 // Nullable value type may be null.
             return new ApiSuccessResult<UserDto>(result);
         }
 
         public async Task<ApiResult<UserDto>> GetUserByID(string userId)
         {
-            List<Expression<Func<User, bool>>> expressions = new List<Expression<Func<User, bool>>>();
-            expressions.Add(e => e.UserId == userId);
-            expressions.Add(e => e.DeletedAt == null);
-            var findUser = await _userRepository.GetByConditionId(expressions);
+            var findUser = await _userRepository.GetById(e => e.UserId == userId && e.DeletedAt == null);
             if (findUser == null)
             {
                 return new ApiErrorResult<UserDto>("Không tìm thấy đối tượng");
@@ -291,6 +295,7 @@ namespace Infrastructure.Services.CommonServices.UserService
                     FptEmail = findUser.FptEmail,
                     Avatar = findUser.Avatar,
                     FullName = findUser.FullName,
+                    RoleID = findUser.RoleId.Value,
                     Role = new RoleDto()
                     {
                         Role_ID = findUser.RoleId.Value
@@ -315,6 +320,7 @@ namespace Infrastructure.Services.CommonServices.UserService
                 var result = new List<UserDto>();
                 foreach (var item in findUser)
                 {
+#pragma warning disable CS8629 // Nullable value type may be null.
                     result.Add(new UserDto()
                     {
                         UserID = item.UserId,
@@ -327,6 +333,7 @@ namespace Infrastructure.Services.CommonServices.UserService
                             Role_ID = item.RoleId.Value
                         }
                     });
+#pragma warning restore CS8629 // Nullable value type may be null.
                 }
                 return new ApiSuccessResult<List<UserDto>>(result);
             }

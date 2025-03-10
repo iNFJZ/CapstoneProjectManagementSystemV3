@@ -1,4 +1,5 @@
-﻿using Infrastructure.Entities;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
 using Infrastructure.Repositories.AffiliateAccountRepository;
 using Infrastructure.Repositories.PasswordHash;
@@ -43,13 +44,12 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
 
         public async Task<ApiResult<bool>> CheckAffiliateAccountAndPasswordHash(string personalEmail, string passwordHash)
         {
-            List<Expression<Func<AffiliateAccount, bool>>> expressions = new List<Expression<Func<AffiliateAccount, bool>>>();
-            expressions.Add(e => e.PersonalEmail.Contains(personalEmail));
-            expressions.Add(e => e.DeletedAt == null);
-            var affiliateAccount = await _affiliateAccountRepository.GetByConditionId(expressions);
+            var affiliateAccount = await _affiliateAccountRepository.GetById(s => s.PersonalEmail == personalEmail && s.DeletedAt == null);
             if (affiliateAccount != null)
             {
+#pragma warning disable CS8604 // Possible null reference argument.
                 var check = _passwordHash.PasswordVerificationResult(affiliateAccount.PasswordHash, passwordHash);
+#pragma warning restore CS8604 // Possible null reference argument.
                 if (check == true)
                     return new ApiSuccessResult<bool>(true);
                 else
@@ -64,7 +64,9 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
         public async Task<ApiResult<bool>> CheckPersonalEmailExist(string personalEmail)
         {
             List<Expression<Func<AffiliateAccount, bool>>> expressions = new List<Expression<Func<AffiliateAccount, bool>>>();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
             expressions.Add(e => e.PersonalEmail.Contains(personalEmail));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
             expressions.Add(e => e.DeletedAt == null);
             expressions.Add(e => e.IsVerifyEmail == true);
             var affiliateAccount = await _affiliateAccountRepository.GetByConditionId(expressions);
@@ -94,10 +96,11 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
             {
                 if (email != null)
                 {
-                    List<Expression<Func<AffiliateAccount, bool>>> expressions = new List<Expression<Func<AffiliateAccount, bool>>>();
-                    expressions.Add(e => e.PersonalEmail == email);
-                    expressions.Add(e => e.DeletedAt == null);
-                    var affiliateAccount = await _affiliateAccountRepository.GetByConditionId(expressions);
+                    var affiliateAccount = await _affiliateAccountRepository.GetById( s => s.PersonalEmail == email && s.DeletedAt == null);
+                    if(affiliateAccount == null)
+                    {
+                       return new ApiErrorResult<AffiliateAccountDto>("Tai khoan da bi xoa hoac khong ton tai");
+                    }
                     var user = await _userRepository.GetById(u => u.UserId == affiliateAccount.AffiliateAccountId);
                     var affiliateAccountDto = new AffiliateAccountDto()
                     {
@@ -121,6 +124,7 @@ namespace Infrastructure.Services.CommonServices.AffiliateAccountService
             {
                 return new ApiErrorResult<AffiliateAccountDto>("Tham số truyền vào trống");
             }
+#pragma warning restore CS0168 // Variable is declared but never used
         }
 
         public async Task<ApiResult<AffiliateAccountDto>> GetAffiliateAccountById(string BackupAccount_Id)

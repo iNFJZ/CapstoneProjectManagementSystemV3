@@ -1,6 +1,7 @@
 ﻿using Infrastructure.Entities;
 using Infrastructure.Entities.Common.ApiResult;
 using Infrastructure.Entities.Dto.ViewModel.AdminViewModel;
+using Infrastructure.Entities.InputModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace Infrastructure.Services.CommonServices.UserService
         Task<ApiResult<string>> GetNameStudentByUserId(string userId);
         Task<ApiResult<UserDto>> GetUserByFptEmail(string fptEmail, int roleLoginAs);
         Task<ApiResult<(int, int, List<UserWithRowNum>)>> GetListUserForAdminPaging(int pageNumber, string search, int role);
-        Task<ApiResult<bool>> CreateStaffForAdmin(UserDto user);
+        Task<ApiResult<bool>> CreateStaffForAdmin(UserCreateRequest user);
 
         Task<ApiResult<List<UserDto>>> GetUserByRoleID(int roleId);
 
