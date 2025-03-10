@@ -31,7 +31,9 @@ namespace Infrastructure.Services.CommonServices.MailService
             try
             {
                 IHttpContextAccessor _httpContextAccessor = new HttpContextAccessor();
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
                 var campus = _httpContextAccessor.HttpContext.Session.GetString(SessionKeyCampus);
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
                 if (!string.IsNullOrEmpty(campus))
                 {
                     switch (campus)

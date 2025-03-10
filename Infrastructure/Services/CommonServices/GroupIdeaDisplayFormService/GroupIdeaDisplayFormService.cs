@@ -51,6 +51,10 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaDisplayFormService
                     var user = await _userRepository.GetById(u => u.UserId == studentGroupIdea.StudentId);
                     var profession = await _professionRepository.GetById(p => p.ProfessionId == item.Profession.ProfessionId && p.DeletedAt == null);
                     var specialty = await _specialtyRepository.GetById(s => s.SpecialtyId == item.Specialty.SpecialtyId && s.DeletedAt == null);
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
                     GroupIdeaDisplayForm groupIdeaDisplayForm = new GroupIdeaDisplayForm()
                     {
                         GroupIdeaID = item.GroupIdeaId,
@@ -65,6 +69,10 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaDisplayFormService
                         AvailableSlot = (item.MaxMember - item.NumberOfMember),
                         Semester_Id = item.Semester.SemesterId
                     };
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
                     groupIdeaDisplayForms.Add(groupIdeaDisplayForm);
                 }
                 return new ApiSuccessResult<List<GroupIdeaDisplayForm>>(groupIdeaDisplayForms);

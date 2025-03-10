@@ -61,15 +61,19 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
                 }
 
                 //get infor affiliate account by function GetBackupAccountByEmail with parameter is personalEmail
-                var affiliateAccount = (await _affiliateAccountService.GetAffiliateAccountByEmail(personalEmail)).ResultObj;
+                var affiliateAccount = (await _affiliateAccountService.GetAffiliateAccountByEmail(personalEmail));
+                if (affiliateAccount.IsSuccessed == false)
+                {
+                    return Ok(affiliateAccount);
+                }
                 // check login with affiliate accoutn and password hash 
                 var checkUserLogin = (await _affiliateAccountService.CheckAffiliateAccountAndPasswordHash(personalEmail, passwordHash)).ResultObj;
 
                 //if it return true -> login sucssess and set to session redirect homepage of student 
                 if (checkUserLogin == true)
                 {
-                    var userLogin = await _userService.GetUserByID(affiliateAccount.AffiliateAccountID);
-                    var infor = await _studentService.UpdateSemesterOfStudentByUserId(userLogin.ResultObj.UserID);
+                    var userLogin = await _userService.GetUserByID(affiliateAccount.ResultObj.AffiliateAccountID);
+                    //var infor = await _studentService.UpdateSemesterOfStudentByUserId(userLogin.ResultObj.UserID);
                     var role = userLogin.ResultObj.RoleID;
                     _sessionExtensionService.SetObjectAsJson(HttpContext.Session, "User", userLogin);
                     return Ok(new ApiSuccessResult<dynamic>(new
@@ -84,7 +88,7 @@ namespace CapstoneProjectManagementSystemV3.Controllers.CommonController
                 // if it return false -> login error will redirect page SignInByAffiliateAccount with notify error message
                 else
                 {
-                    return Ok (new ApiErrorResult<dynamic>(new
+                    return Ok(new ApiErrorResult<dynamic>(new
                     {
                         status = false,
                         mess = "Email or Password invalid",

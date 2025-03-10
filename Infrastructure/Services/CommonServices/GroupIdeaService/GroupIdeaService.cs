@@ -48,6 +48,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             var result = new List<GroupIdeaDto>();
             foreach (var groupIdea in groupIdeaSearchList)
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
                 result.Add(new GroupIdeaDto()
                 {
                     GroupIdeaID = groupIdea.GroupIdeaId,
@@ -71,6 +74,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
                         SemesterID = groupIdea.SemesterId
                     }
                 });
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
             return new ApiSuccessResult<List<GroupIdeaDto>>(result);
         }
@@ -104,6 +110,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             var result = new List<GroupIdeaDto>();
             foreach (var groupIdea in groupIdeaSearchList)
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
                 result.Add(new GroupIdeaDto()
                 {
                     GroupIdeaID = groupIdea.GroupIdeaId,
@@ -127,6 +136,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
                         SemesterID = groupIdea.SemesterId
                     }
                 });
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
             return new ApiSuccessResult<List<GroupIdeaDto>>(result);
         }
@@ -192,6 +204,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
         public async Task<ApiResult<GroupIdeaDto>> GetGroupIdeaById(int id)
         {
             var groupIdea = await _groupIdeaRepository.GetGroupIdeaByIdAsync(id);
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
             var result = new GroupIdeaDto()
             {
                 GroupIdeaID = groupIdea.GroupIdeaId,
@@ -216,6 +231,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
                     SemesterID = groupIdea.SemesterId
                 }
             };
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
             return new ApiSuccessResult<GroupIdeaDto>(result);
         }
 
@@ -316,6 +334,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
             var result = new List<GroupIdeaDto>();
             foreach (var groupIdea in groupIdeaList)
             {
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
+#pragma warning disable CS8601 // Possible null reference assignment.
                 result.Add(new GroupIdeaDto()
                 {
                     GroupIdeaID = groupIdea.GroupIdeaId,
@@ -339,6 +360,9 @@ namespace Infrastructure.Services.CommonServices.GroupIdeaService
                         SemesterID = groupIdea.SemesterId
                     }
                 });
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
+#pragma warning restore CS8601 // Possible null reference assignment.
             }
             return new ApiSuccessResult<List<GroupIdeaDto>>(result);
         }

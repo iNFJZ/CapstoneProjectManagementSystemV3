@@ -28,13 +28,17 @@ namespace Infrastructure.Services.CommonServices.DataRetrievalService
             var httpContext = _httpContextAccessor.HttpContext;
             if (httpContext == null)
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return default;
+#pragma warning restore CS8603 // Possible null reference return.
             }
 
             // Kiểm tra lấy dữ liệu từ Header
             if (useHeader && httpContext.Request.Headers.TryGetValue(key, out var headerValue))
             {
+#pragma warning disable CS8603 // Possible null reference return.
                 return JsonSerializer.Deserialize<T>(headerValue);
+#pragma warning restore CS8603 // Possible null reference return.
             }
 
             // Kiểm tra lấy dữ liệu từ Cache
@@ -43,7 +47,9 @@ namespace Infrastructure.Services.CommonServices.DataRetrievalService
                 return cacheValue;
             }
 
+#pragma warning disable CS8603 // Possible null reference return.
             return default;
+#pragma warning restore CS8603 // Possible null reference return.
         }
 
         /// <summary>
