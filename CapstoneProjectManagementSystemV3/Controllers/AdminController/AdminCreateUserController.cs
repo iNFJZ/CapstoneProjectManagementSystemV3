@@ -63,19 +63,20 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
         }
 
         [HttpPost("create-supervisor-leader")]
-        public async Task<IActionResult> CreateSupervisorLeader([FromBody] SupervisorDto supervisor)
+        public async Task<IActionResult> CreateSupervisorLeader([FromBody] UserCreateRequest userCreate)
         {
             try
             {
                 _logger.LogInformation("Create Department Leader");
-                bool checkDuplicateUser = (await _userService.checkDuplicateUser(supervisor.SupervisorNavigation.FptEmail.Trim())).IsSuccessed;
-                bool checkDuplicateFEMail = !string.IsNullOrWhiteSpace(supervisor.FeEduEmail) &&(await _supervisorService.checkDuplicateFEEduEmail(supervisor.FeEduEmail.Trim())).IsSuccessed;
+                var supervisor = (await _supervisorService.GetSupervisorById(userCreate.UserID)).ResultObj;
+                bool checkDuplicateUser = (await _userService.checkDuplicateUser(userCreate.FptEmail.Trim())).ResultObj;
+                bool checkDuplicateFEMail = !string.IsNullOrWhiteSpace(supervisor.FeEduEmail) &&(await _supervisorService.checkDuplicateFEEduEmail(supervisor.FeEduEmail.Trim())).ResultObj;
 
                 if (checkDuplicateFEMail)
-                    return Ok(new ApiSuccessResult<dynamic>(new { status = false, mess = "FE Email already exists" }));
+                    return Ok(new ApiErrorResult<dynamic>(new { status = false, mess = "FE Email already exists" }));
 
                 if (checkDuplicateUser)
-                    return Ok(new ApiSuccessResult<dynamic>(new { status = false, mess = "User already exists" }));
+                    return Ok(new ApiErrorResult<dynamic>(new { status = false, mess = "User already exists" }));
 
                 if (!checkDuplicateUser && !checkDuplicateFEMail)
                 {
@@ -84,12 +85,12 @@ namespace CapstoneProjectManagementSystemV3.Controllers.AdminController
                         return Ok(new ApiSuccessResult<dynamic>(new { status = true, mess = "Department Leader created successfully" }));
                     }
                 }
-                return Ok(new ApiSuccessResult<dynamic>(new { status = false, mess = "Failed to create Department Leader" }));
+                return Ok(new ApiErrorResult<dynamic>(new { status = false, mess = "Failed to create Department Leader" }));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Create Department Leader error");
-                return Ok(new ApiSuccessResult<dynamic>(new { status = false, mess = "An error occurred while creating Department Leader" }));
+                return Ok(new ApiErrorResult<dynamic>(new { status = false, mess = "An error occurred while creating Department Leader" }));
             }
         }
     }
