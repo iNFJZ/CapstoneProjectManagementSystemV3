@@ -7,7 +7,7 @@
     ViewData["Title"] = "List User Page";
     var lstUser = ViewBag.users as List<User>;
 }
-<link rel="stylesheet" href="/css/admin/admin_listuser.css">
+<link rel="stylesheet" href="/css/admin/admin_listuserupdate.css">
 <div class="homepage" id="listuser">
     @await Html.PartialAsync("/Views/Shared/Admin/_LayoutSidebarLeftAdmin.cshtml")
 
@@ -29,19 +29,19 @@
                     </div>
                     *@
                     <div class="gridcolumn">
-                        <label for="role" style="padding-top: 8px; margin-left: 50px">Choose a role:  </label>
+                        @* <label for="role" style="padding-top: 8px; margin-left: 50px">Choose a role:  </label> *@
 
 
-                        <select name="role" id="role">
+                       @*  <select name="role" id="role">
                             <option value="">All Role</option>
                             @foreach (var r in (ViewBag.roles as List<CapstoneProjectManagementSystemV3UI.Models.Role>) ?? new List<CapstoneProjectManagementSystemV3UI.Models.Role>())
                             {
                                 <option value="@r.roleId">@r.roleName</option>
                             }
-                        </select>
+                        </select> *@
                     </div>
                 </div>
-                <div class="button"><input type="submit" value="Search" class="filterButton" id="btnSearch"></div>
+                @* <div class="button"><input type="submit" value="Search" class="filterButton" id="btnSearch"></div> *@
             </form>
             <div>
                 <div>
